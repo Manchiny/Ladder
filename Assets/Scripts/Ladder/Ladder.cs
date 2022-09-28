@@ -1,35 +1,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static LevelConfiguration;
 
 public class Ladder : MonoBehaviour
 {
     [SerializeField] private LadderStepFabric _fabric;
     [SerializeField] private Transform[] _borders;
     [Space]
-    [SerializeField] private int _stepsCount;
     [SerializeField] private HandsMover _hands;
 
-    private const int DynamicChance = 20;
-    private const int HalfStepChance = 15;
-
+    private LevelConfiguration _levelConfiguration;
     private List<LadderStep> _steps = new();
+
     public LadderStep NextFreeStep { get; private set; }
 
     public enum LadderSide
     {
         Left,
-        Right
-    }
-
-    private void Awake()
-    {
-        ConfigureLadder();
-    }
-
-    private void Start()
-    {
-        _hands.StepTaked += OnStepRelease;
+        Right,
+        Default
     }
 
     private void OnDisable()
@@ -37,19 +27,39 @@ public class Ladder : MonoBehaviour
         _hands.StepTaked -= OnStepRelease;
     }
 
+    public void Init(LevelConfiguration levelConfiguration)
+    {
+        _levelConfiguration = levelConfiguration;
+        _fabric.Init();
+
+        _hands.StepTaked += OnStepRelease;
+        ConfigureLadder();
+        InitHands(false);
+    }
+
+    public void Restart()
+    {
+        InitHands(true);
+    }
+
     private void ConfigureLadder()
     {
         ResizeBorders();
         CreateSteps();
+    }
 
-        _hands.Init(_steps[0], _steps[1]);
+    private void InitHands(bool isReinit)
+    {
+        _hands.Init(_steps[0], _steps[1], isReinit);
         NextFreeStep = _steps[2];
     }
 
 
     private void ResizeBorders()
     {
-        float totalHeight = GameConstants.LadderDeltaStep * (_stepsCount + 2);
+        float totalHeight = GameConstants.LadderDeltaStep * (_levelConfiguration.StepsCount + 2);
+
+        Debug.Log($"Ladder total height = {totalHeight}");
 
         foreach (var border in _borders)
         {
@@ -69,35 +79,30 @@ public class Ladder : MonoBehaviour
         float currentHeight = 0f;
         Vector3 position = Vector3.zero;
 
-        for (int i = 0; i < _stepsCount; i++)
+        for (int i = 0; i < _levelConfiguration.StepsCount; i++)
         {
             position.y = currentHeight;
 
-            int random = Random.Range(0, 100);
+            LadderStep step = null;
+            LadderStepType type = _levelConfiguration.GetRandomType(i);
 
-            LadderStep step;
-
-            if (random <= DynamicChance)
-                step = _fabric.CreateDynamicStep(SideByStepId(i), position);
-            else if (random > DynamicChance && random <= HalfStepChance + DynamicChance)
-                step = _fabric.CreateHalfStep(SideByStepId(i), position);
-            else
-                step = _fabric.CreateDefaultStep(position);
+            step = _fabric.CreateStep(type, position, SideByStepId(i));
 
             currentHeight += GameConstants.LadderDeltaStep;
+
             step.Init(i);
             _steps.Add(step);
         }
 
         position.y = currentHeight;
         var finishStep = _fabric.CreateFinishStep(position);
-        finishStep.Init(_stepsCount);
+        finishStep.Init(_levelConfiguration.StepsCount);
         _steps.Add(finishStep);
         currentHeight += GameConstants.LadderDeltaStep;
 
         position.y = currentHeight;
         var finishButton = _fabric.CreateFinishButton(position);
-        finishButton.Init(_stepsCount + 1);
+        finishButton.Init(_levelConfiguration.StepsCount + 1);
         _steps.Add(finishButton);
 
         _steps.OrderBy(step => step.Id);
@@ -107,7 +112,6 @@ public class Ladder : MonoBehaviour
     {
         //if (_steps.Count > step.Id - 1)
         NextFreeStep = _steps.Where(s => s.Id == step.Id + 1).FirstOrDefault();
-
         Debug.Log($"Last step: {step.Id}, NextStep: {NextFreeStep?.Id}");
     }
 

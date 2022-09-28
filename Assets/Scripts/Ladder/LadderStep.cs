@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static Ladder;
 
 public class LadderStep : MonoBehaviour
 {
@@ -15,13 +16,19 @@ public class LadderStep : MonoBehaviour
         Id = id;
     }
 
-    public virtual void OnHandCollided(HandChecker checker)
+    public void OnHandCollided(HandChecker checker)
     {
         _checkers.Add(checker);
+        UpdateState();
     }
 
-    public virtual void OnHandExit(HandChecker checker)
+    public void OnHandExit(HandChecker checker)
     {
         _checkers.Remove(checker);
+        UpdateState();
     }
+
+    protected virtual void UpdateState() { }
+
+    public virtual LadderStep GetPrefab(LadderSide side) => this;
 }

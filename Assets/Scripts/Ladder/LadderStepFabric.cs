@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using static Ladder;
+using static LevelConfiguration;
 
 public class LadderStepFabric : MonoBehaviour
 {
@@ -9,14 +11,31 @@ public class LadderStepFabric : MonoBehaviour
     [SerializeField] private LadderStep _finishLadderStepPrefab;
     [SerializeField] private FinishButtonStep _finishButtonPrefab;
 
-    public LadderStep CreateDefaultStep(Vector3 position) => CreateStep(_defaultLadderStepPrefab, position);
-    public LadderStep CreateDynamicStep(LadderSide side, Vector3 position) => CreateStep(_ladderStepDynamic.GetPrefab(side), position);
-    public LadderStep CreateHalfStep(LadderSide side, Vector3 position) => CreateStep(_ladderStepHalfs.GetPrefab(side), position);
+    private Dictionary<LadderStepType, LadderStep> _prefabs = new();
+
+    public void Init()
+    {
+        _prefabs.Add(LadderStepType.Default, _defaultLadderStepPrefab);
+        _prefabs.Add(LadderStepType.HalfDefualt, _ladderStepHalfs);
+        _prefabs.Add(LadderStepType.HalfDynamic, _ladderStepDynamic);
+    }
+
+    public LadderStep CreateStep(LadderStepType type, Vector3 position, LadderSide side = LadderSide.Default)
+    {
+        if(_prefabs.TryGetValue(type, out LadderStep step))
+        {
+            return CreateStep(step.GetPrefab(side), position);
+        }
+        else
+        {
+            Debug.LogError($"Can't create ladder step! Prefabs don't contains prefab type {type}!");
+            return null;
+        }
+    }
+
     public LadderStep CreateFinishStep(Vector3 position) => CreateStep(_finishLadderStepPrefab, position);
     public LadderStep CreateFinishButton(Vector3 position) => CreateStep(_finishButtonPrefab, position);
 
-    private LadderStep CreateStep(LadderStep stepPrefab, Vector3 position)
-    {
-        return Instantiate(stepPrefab, position, Quaternion.identity, transform);
-    }
+    private LadderStep CreateStep(LadderStep stepPrefab, Vector3 position) => Instantiate(stepPrefab, position, Quaternion.identity, transform);
+    
 }

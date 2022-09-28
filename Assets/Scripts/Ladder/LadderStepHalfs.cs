@@ -6,7 +6,7 @@ public class LadderStepHalfs : LadderStep
     [SerializeField] private LadderStep _leftPrefab;
     [SerializeField] private LadderStep _rightPrefab;
 
-    public LadderStep GetPrefab(LadderSide side)
+    public override LadderStep GetPrefab(LadderSide side)
     {
         if (side == LadderSide.Left)
             return _leftPrefab;

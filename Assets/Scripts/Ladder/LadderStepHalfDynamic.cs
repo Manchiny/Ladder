@@ -14,20 +14,9 @@ public class LadderStepHalfDynamic : LadderStep
         Increasing
     }
 
-    public override void OnHandCollided(HandChecker checker)
+    protected override void UpdateState()
     {
-        base.OnHandCollided(checker);
-
-        if (CanBeTaked)
-            _animator.speed = 0;
-    }
-
-    public override void OnHandExit(HandChecker checker)
-    {
-        base.OnHandExit(checker);
-
-        if(CanBeTaked == false)
-             _animator.speed = 1;
+        _animator.speed = CanBeTaked ? 0 : 1;
     }
 
     private Phase GetPhase()

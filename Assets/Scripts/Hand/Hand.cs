@@ -22,6 +22,7 @@ public class Hand : MonoBehaviour
 
     public event Action<LadderStep> Taked;
     public event Action<Hand> Failed;
+    public event Action Loosed;
 
     public void Init(LadderStep initStep)
     {
@@ -43,7 +44,8 @@ public class Hand : MonoBehaviour
 
             transform.DOMoveY(0, duration)
                  .SetLink(gameObject)
-                 .SetEase(Ease.Linear);
+                 .SetEase(Ease.Linear)
+                 .OnComplete(() => Loosed?.Invoke());
         }
     }
 
