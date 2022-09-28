@@ -1,18 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LadderStep : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int Id { get; private set; }
+
+    public void Init(int id)
+    {
+        Id = id;
+    }
+
+    public virtual void OnTaked()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public virtual void OnRelease()
     {
-        
+
     }
 }
