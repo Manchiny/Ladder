@@ -13,12 +13,12 @@ public class LadderStepCollider : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent(out HandChecker checker))
-           _ladderStep.OnTaked();
+           _ladderStep.OnHandCollided(checker);
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.TryGetComponent(out HandChecker checker))
-            _ladderStep.OnRelease();
+            _ladderStep.OnHandExit(checker);
     }
 }

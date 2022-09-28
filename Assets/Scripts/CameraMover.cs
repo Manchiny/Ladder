@@ -5,7 +5,7 @@ public class CameraMover : MonoBehaviour
     [SerializeField] private HandsMover _handsMover;
 
     private const float OffsetY = 2.35f;
-    private const float MoveSpeed = 2f;
+    private const float MoveSpeed = 7f;
 
     private Vector3 _targetPosition;
     private Vector3 _smoothedPosition;

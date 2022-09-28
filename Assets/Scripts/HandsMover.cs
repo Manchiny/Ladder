@@ -36,6 +36,9 @@ public class HandsMover : MonoBehaviour
         _leftHand.Taked += OnStepTaked;
         _rightHand.Taked += OnStepTaked;
 
+        _leftHand.Failed += OnFail;
+        _rightHand.Failed += OnFail;
+
         _downHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;
     }
 
@@ -48,6 +51,12 @@ public class HandsMover : MonoBehaviour
     private void OnStepTaked(LadderStep step)
     {
         StepTaked?.Invoke(step);
+    }
+
+    private void OnFail(Hand hand)
+    {
+        _leftHand.MoveDown();
+        _rightHand.MoveDown();
     }
 
     private void TryMove()

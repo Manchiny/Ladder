@@ -12,7 +12,6 @@ public class Ladder : MonoBehaviour
 
     private const int DynamicChance = 20;
     private const int HalfStepChance = 15;
-    private const float LadderDeltaStep = 1.5f;
 
     private List<LadderStep> _steps = new();
     public LadderStep NextFreeStep { get; private set; }
@@ -50,7 +49,7 @@ public class Ladder : MonoBehaviour
 
     private void ResizeBorders()
     {
-        float totalHeight = LadderDeltaStep * (_stepsCount + 2);
+        float totalHeight = GameConstants.LadderDeltaStep * (_stepsCount + 2);
 
         foreach (var border in _borders)
         {
@@ -85,7 +84,7 @@ public class Ladder : MonoBehaviour
             else
                 step = _fabric.CreateDefaultStep(position);
 
-            currentHeight += LadderDeltaStep;
+            currentHeight += GameConstants.LadderDeltaStep;
             step.Init(i);
             _steps.Add(step);
         }
@@ -94,7 +93,7 @@ public class Ladder : MonoBehaviour
         var finishStep = _fabric.CreateFinishStep(position);
         finishStep.Init(_stepsCount);
         _steps.Add(finishStep);
-        currentHeight += LadderDeltaStep;
+        currentHeight += GameConstants.LadderDeltaStep;
 
         position.y = currentHeight;
         var finishButton = _fabric.CreateFinishButton(position);
