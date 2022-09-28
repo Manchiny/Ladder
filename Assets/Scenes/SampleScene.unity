@@ -438,7 +438,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &672679056
 BoxCollider:
@@ -724,7 +724,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1218250326
 Transform:
@@ -757,7 +757,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1254583415
 Transform:
@@ -893,7 +893,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1326557536
 Transform:
@@ -942,6 +942,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _defaultLadderStepPrefab: {fileID: 4674057483830744167, guid: c4b44d11857b90e40b6e57f4ec7eb460, type: 3}
   _ladderStepDynamic: {fileID: 7911351511768689797, guid: 88f973c06cb553b4287ca90a78e2f62d, type: 3}
+  _ladderStepHalfs: {fileID: 1804982447398104044, guid: 0657f84fddc5b8d4e9edf0ef9a42b030, type: 3}
+  _finishLadderStepPrefab: {fileID: 4674057483830744167, guid: f278be3f8d9899d46b4979fcec1a3ae3, type: 3}
+  _finishButtonPrefab: {fileID: 3490332527678233838, guid: a1993cc924ebc6e408ca19b2e3f9cea2, type: 3}
 --- !u!4 &1631594832
 Transform:
   m_ObjectHideFlags: 0
@@ -979,7 +982,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1794264350
 Transform:

@@ -191,9 +191,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6250076149019478384, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2422315340263230684, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1014268425052216762, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
       propertyPath: m_Name
       value: LadderStepHalfDynamic
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8144394004440419581, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
@@ -308,9 +328,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6250076149019478384, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2422315340263230684, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1014268425052216762, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
       propertyPath: m_Name
       value: LadderStepHalfDynamic_r
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8144394004440419581, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
@@ -329,26 +369,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -6250076149019478384, guid: 4609376c99296ad45a40cbd7b2d7053f, type: 3}
   m_PrefabInstance: {fileID: 8587986550802559400}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &8587986549580376729
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8930569434819857657}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 715c2cc1a8d32ec46b7b70f22a36bfbc, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!65 &8587986549592994854
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -374,3 +394,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3564b0e39f375ea4899c79d77c79d9ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &8587986549580376729
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8930569434819857657}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 715c2cc1a8d32ec46b7b70f22a36bfbc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 5290004455482664197}
   - component: {fileID: 4674057483830744167}
   m_Layer: 0
-  m_Name: DefaultLadderStep
+  m_Name: FinishLadderStep
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -275,7 +275,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 214375eb4c1961e48a01a4fc30ed4e59, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

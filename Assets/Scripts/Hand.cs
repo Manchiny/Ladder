@@ -30,13 +30,16 @@ public class Hand : MonoBehaviour
 
     public bool TryMove(LadderStep step)
     {
-        if (_isProcess)
+        if (_isProcess || step == null)
             return false;
 
         _needHeight = step.transform.position.y;
         _targetStep = step;
 
-        MoveUp();
+        if (step is FinishButtonStep)
+            PressFinishButton();
+        else
+            MoveUp();
 
         return true;
     }
@@ -52,7 +55,6 @@ public class Hand : MonoBehaviour
     private void MoveUp()
     {
         _isProcess = true;
-
         _animations.PlayRelease();
 
         transform.DOMoveY(_needHeight, MoveDuration)
@@ -64,6 +66,21 @@ public class Hand : MonoBehaviour
 
                  _animations.PlayClasp();
 
+                 _isProcess = false;
+             });
+    }
+
+    private void PressFinishButton()
+    {
+        _isProcess = true;
+        _animations.PlayRelease();
+
+        transform.DOMove(_targetStep.transform.position, MoveDuration)
+             .SetLink(gameObject)
+             .SetEase(Ease.Linear)
+             .OnComplete(() =>
+             {
+                 Taked?.Invoke(_targetStep);
                  _isProcess = false;
              });
     }
