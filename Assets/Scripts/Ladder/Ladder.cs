@@ -74,7 +74,6 @@ public class Ladder : MonoBehaviour
     private void InitHands(bool isReinit)
     {
         _hands.Init(_steps[0], _steps[1], isReinit);
-       // NextFreeStep = _steps[2];
     }
 
 
@@ -86,13 +85,9 @@ public class Ladder : MonoBehaviour
 
         foreach (var border in _borders)
         {
-            Vector3 borderPosition = border.transform.position;
             Vector3 borderScale = border.transform.localScale;
 
             borderScale.y = totalHeight;
-            borderPosition.y = totalHeight / 2f;
-
-            border.transform.position = borderPosition;
             border.transform.localScale = borderScale;
         }
     }

@@ -3,9 +3,9 @@ using UnityEngine;
 public class CameraMover : MonoBehaviour
 {
     [SerializeField] private HandsMover _handsMover;
-
-    private const float OffsetY = 2.7f;
-    private const float MoveSpeed = 10f;
+    [Space]
+    [SerializeField] private float _offsetY = 4f;
+    [SerializeField] private float _moveSpeed = 10f;
 
     private Vector3 _targetPosition;
     private Vector3 _smoothedPosition;
@@ -18,9 +18,9 @@ public class CameraMover : MonoBehaviour
     private void UpdateCameraPosition()
     {
         _targetPosition = transform.position;
-        _targetPosition.y = _handsMover.GetAverageValue - OffsetY;
+        _targetPosition.y = _handsMover.GetAverageValue - _offsetY;
 
-        _smoothedPosition = Vector3.Lerp(transform.position, _targetPosition, MoveSpeed * Time.deltaTime);
+        _smoothedPosition = Vector3.Lerp(transform.position, _targetPosition, _moveSpeed * Time.deltaTime);
         transform.position = _smoothedPosition;
     }
 }
