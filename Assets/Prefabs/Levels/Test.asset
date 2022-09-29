@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdc079e8bef212f4aa9af669eb09ad9b, type: 3}
-  m_Name: Level_00
+  m_Name: Test
   m_EditorClassIdentifier: 
   _ladderStepsCount: 50
   _notDefaultLadderSteps:
@@ -18,4 +18,4 @@ MonoBehaviour:
     _chanse: 15
   - _stepType: 2
     _chanse: 20
-  _backgroundColor: {r: 0.5294118, g: 0.9607843, b: 0.8745098, a: 0}
+  _backgroundColor: {r: 0.9411765, g: 0.9254902, b: 0.6313726, a: 0}

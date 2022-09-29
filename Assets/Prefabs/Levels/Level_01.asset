@@ -18,3 +18,4 @@ MonoBehaviour:
     _chanse: 20
   - _stepType: 2
     _chanse: 20
+  _backgroundColor: {r: 0.9411765, g: 0.9254902, b: 0.6313726, a: 0}

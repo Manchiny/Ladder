@@ -40,6 +40,7 @@ public class Game : MonoBehaviour
         _levels.Init();
         _currentLevel = _levels.GetLevelConfiguration(0);
 
+        Camera.main.backgroundColor = _currentLevel.BackgroundColor;
         _ladder.Init(_currentLevel);
 
         _hands.Loosed += OnLoose;
