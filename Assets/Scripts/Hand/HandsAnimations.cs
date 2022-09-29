@@ -8,7 +8,7 @@ public class HandsAnimations
     private const string ReleaseKey = "Release";
 
     private const float CrossFadeDuration = 0.1f;
-    private const float FailReleaseDelay = 0.5f;
+    private const float FailReleaseDelay = 0.2f;
 
     private Animator _animator;
     private MonoBehaviour _monoBehaviour;
@@ -27,19 +27,27 @@ public class HandsAnimations
 
     public void PlayFail()
     {
+        StopCoroutine();
         _animationCoroutine = _monoBehaviour.StartCoroutine(PlayFailAnimation());
     }
 
     private void PlayAnimation(string key)
     {
         _animator.StopPlayback();
+        StopCoroutine();
+        
         _animator.CrossFade(key, CrossFadeDuration);
     }
 
     private IEnumerator PlayFailAnimation()
     {
-        PlayClasp();
         yield return new WaitForSeconds(FailReleaseDelay);
         PlayRelease();
+    }
+
+    private void StopCoroutine()
+    {
+        if (_animationCoroutine != null)
+            _monoBehaviour.StopCoroutine(_animationCoroutine);
     }
 }

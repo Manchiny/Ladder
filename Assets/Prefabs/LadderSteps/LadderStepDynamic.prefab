@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f6dad4f729197643a20e2c39813d68a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _side: 2
   _leftPrefab: {fileID: 8587986550061513546}
   _rightPrefab: {fileID: 8587986549558353817}
 --- !u!1 &8587986549558353815
@@ -93,6 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bd61750146d1a247b49e2e1df71a655, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _side: 1
   _animator: {fileID: 8587986549580376729}
 --- !u!1 &8587986550061513544
 GameObject:
@@ -139,6 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bd61750146d1a247b49e2e1df71a655, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _side: 0
   _animator: {fileID: 8587986551047385816}
 --- !u!1001 &8587986550086569282
 PrefabInstance:

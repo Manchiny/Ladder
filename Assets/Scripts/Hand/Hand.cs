@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System;
 using UnityEngine;
+using static Ladder;
 
 public class Hand : MonoBehaviour
 {
@@ -10,43 +11,44 @@ public class Hand : MonoBehaviour
     private const float MoveDownStepDuration = 0.2f;
 
     private bool _isProcess;
+    private Tween _fallingTween;
 
-    private float _needHeight;
     private LadderStep _targetStep;
-
     private HandsAnimations _animations;
 
-    public bool CanMove => _isProcess == false && IsFailed == false;
-    public bool IsFailed { get; private set; }
+    public LadderSide Side { get; private set; }
+    public bool IsFalling { get; private set; }
+    public LadderStep LastTakedStep { get; private set; }
+    public bool CanMove => _isProcess == false && IsFalling == false;
     public float GetHeight => transform.position.y;
 
     public event Action<LadderStep> Taked;
     public event Action<Hand> Failed;
     public event Action Loosed;
 
-    public void Init(LadderStep initStep)
+    public void Init(LadderStep initStep, LadderSide side)
     {
-        MoveForce(initStep);
+        Side = side;
 
         _animations = new HandsAnimations(_animator, this);
-        _animations.PlayIdle();
+        ForceTake(initStep);
 
-        IsFailed = false;
+        IsFalling = false;
     }
 
-    public void MoveDown()
+    public void FallDown()
     {
-        if (_needHeight != 0)
-        {
+        if (IsFalling)
             _animations.PlayFail();
+        else
+            _animations.PlayRelease();
 
-            float duration = (_needHeight / GameConstants.LadderDeltaStep) * MoveDownStepDuration;
+        float duration = (_targetStep.Height / GameConstants.LadderDeltaStep) * MoveDownStepDuration;
 
-            transform.DOMoveY(0, duration)
-                 .SetLink(gameObject)
-                 .SetEase(Ease.Linear)
-                 .OnComplete(() => Loosed?.Invoke());
-        }
+        _fallingTween = transform.DOMoveY(0, duration)
+                                 .SetLink(gameObject)
+                                 .SetEase(Ease.Linear)
+                                 .OnComplete(() => Loosed?.Invoke());
     }
 
     public bool TryMove(LadderStep step)
@@ -54,67 +56,89 @@ public class Hand : MonoBehaviour
         if (CanMove == false || step == null)
             return false;
 
-        _needHeight = step.transform.position.y;
         _targetStep = step;
 
         if (step is FinishButtonStep)
-            PressFinishButton();
+            PressFinishButton(step);
         else
-            MoveUp();
+            MoveUpStep(step);
 
         return true;
     }
 
-    private void MoveForce(LadderStep step)
+    public bool ForceTake(LadderStep step)
     {
-        Vector3 position = transform.position;
-        position.y = step.transform.position.y;
+        if (_isProcess)
+            return false;
 
-        transform.position = position;
+        _animations.PlayClasp();
+
+        _isProcess = true;
+
+        _targetStep = step;
+        _fallingTween.Kill();
+
+        transform.DOMoveY(step.Height, MoveDownStepDuration)
+             .SetLink(gameObject)
+             .SetEase(Ease.Linear)
+             .OnComplete(() => Take(step));
+
+        return true;
     }
 
-    private void MoveUp()
+    private void MoveUpStep(LadderStep step)
     {
         _isProcess = true;
         _animations.PlayRelease();
 
-        transform.DOMoveY(_needHeight, MoveUpDuration)
+        transform.DOMoveY(step.Height, MoveUpDuration)
              .SetLink(gameObject)
              .SetEase(Ease.Linear)
              .OnComplete(() =>
              {
-                 TryTake(_targetStep);
+                 TryTake(step);
+                 _isProcess = false;
              });
     }
 
-    private void TryTake(LadderStep step)
+    private bool TryTake(LadderStep step)
     {
         _animations.PlayClasp();
 
-        if (step.CanBeTaked)
+        if (step.CanBeTaked(Side))
         {
-            Taked?.Invoke(_targetStep);
+            Take(step);
+            return true;
         }
         else
         {
-            IsFailed = true;
+            IsFalling = true;
             Failed?.Invoke(this);
-        }
 
-        _isProcess = false;
+            return false;
+        }
     }
 
-    private void PressFinishButton()
+    private void Take(LadderStep step)
+    {
+        LastTakedStep = step;
+        IsFalling = false;
+        _isProcess = false;
+
+        Taked?.Invoke(step);
+    }
+
+    private void PressFinishButton(LadderStep step)
     {
         _isProcess = true;
         _animations.PlayRelease();
 
-        transform.DOMove(_targetStep.transform.position, MoveUpDuration)
+        transform.DOMove(step.transform.position, MoveUpDuration)
              .SetLink(gameObject)
              .SetEase(Ease.Linear)
              .OnComplete(() =>
              {
-                 Taked?.Invoke(_targetStep);
+                 Taked?.Invoke(step);
                  _isProcess = false;
              });
     }

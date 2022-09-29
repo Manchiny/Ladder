@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Ladder;
 
 public class LadderStepHalfDynamic : LadderStep
 {
@@ -6,7 +7,7 @@ public class LadderStepHalfDynamic : LadderStep
 
     private const string IncriasingAnimationName = "Increasing";
 
-    public override bool CanBeTaked => CheckersCount > 1 || (CheckersCount > 0 && GetPhase() == Phase.Increasing);
+    public override bool CanBeTaked(LadderSide side) => base.CanBeTaked(side) && (CheckersCount > 1 || (CheckersCount > 0 && GetPhase() == Phase.Increasing));
 
     private enum Phase
     {
@@ -14,9 +15,9 @@ public class LadderStepHalfDynamic : LadderStep
         Increasing
     }
 
-    protected override void UpdateState()
+    protected override void UpdateState(LadderSide side)
     {
-        _animator.speed = CanBeTaked ? 0 : 1;
+        _animator.speed = CanBeTaked(side) ? 0 : 1;
     }
 
     private Phase GetPhase()

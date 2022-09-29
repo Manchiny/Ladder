@@ -13,7 +13,8 @@ public class Ladder : MonoBehaviour
     private LevelConfiguration _levelConfiguration;
     private List<LadderStep> _steps = new();
 
-    public LadderStep NextFreeStep { get; private set; }
+    public LadderStep NextFreeStep(LadderStep lastStep) => lastStep == null ? _steps[2] : _steps.Where(step => step.Id == lastStep.Id + 1).FirstOrDefault();
+    public LadderStep NextFreeStep(int lastStepId) => _steps.Where(step => step.Id == lastStepId + 1).FirstOrDefault();
 
     public enum LadderSide
     {
@@ -22,17 +23,11 @@ public class Ladder : MonoBehaviour
         Default
     }
 
-    private void OnDisable()
-    {
-        _hands.StepTaked -= OnStepRelease;
-    }
-
     public void Init(LevelConfiguration levelConfiguration)
     {
         _levelConfiguration = levelConfiguration;
         _fabric.Init();
 
-        _hands.StepTaked += OnStepRelease;
         ConfigureLadder();
         InitHands(false);
     }
@@ -42,6 +37,34 @@ public class Ladder : MonoBehaviour
         InitHands(true);
     }
 
+    public LadderStep GetNearestStep(float height, int maxStepIndex)
+    {
+        int stepsCountToSearch = 3;
+        List<LadderStep> stepsToSearch = new List<LadderStep>();
+
+        for (int i = maxStepIndex; i > 0; i--)
+        {
+            if (stepsToSearch.Count >= stepsCountToSearch)
+                break;
+
+            LadderStep step = _steps[i];
+           
+            if (step.Height <= height)
+                stepsToSearch.Add(step);
+        }
+
+
+        if (stepsToSearch.Count > 0)
+        {           
+            stepsToSearch.OrderBy(step => (step.Height - height));
+            return stepsToSearch.First();    
+        }
+
+        return null;
+    }
+
+    public LadderStep GetStepById(int id) => _steps.Where(step => step.Id == id).FirstOrDefault();
+    
     private void ConfigureLadder()
     {
         ResizeBorders();
@@ -51,7 +74,7 @@ public class Ladder : MonoBehaviour
     private void InitHands(bool isReinit)
     {
         _hands.Init(_steps[0], _steps[1], isReinit);
-        NextFreeStep = _steps[2];
+       // NextFreeStep = _steps[2];
     }
 
 
@@ -106,13 +129,6 @@ public class Ladder : MonoBehaviour
         _steps.Add(finishButton);
 
         _steps.OrderBy(step => step.Id);
-    }
-
-    private void OnStepRelease(LadderStep step)
-    {
-        //if (_steps.Count > step.Id - 1)
-        NextFreeStep = _steps.Where(s => s.Id == step.Id + 1).FirstOrDefault();
-        Debug.Log($"Last step: {step.Id}, NextStep: {NextFreeStep?.Id}");
     }
 
     private LadderSide SideByStepId(int stepId) => stepId % 2 == 0 ? LadderSide.Right : LadderSide.Left;
