@@ -8,6 +8,8 @@ public class Game : MonoBehaviour
     [SerializeField] private LevelDatabase _levels;
     [SerializeField] private WindowsController _windowsController;
     [SerializeField] private UserInput _userInput;
+    [Space]
+    [SerializeField] private GameEffects _effects;
 
     private LevelConfiguration _currentLevel;
     private UserData _user;
@@ -45,6 +47,7 @@ public class Game : MonoBehaviour
         _hands.Loosed -= OnLoose;
         _hands.Failed -= OnFail;
         _hands.Completed -= OnLevelComplete;
+        _hands.Catched -= OnCatch;
 
         _userInput.Touched -= _hands.TryMove;
         _userInput.Untouched -= _hands.StopMovement;
@@ -65,7 +68,8 @@ public class Game : MonoBehaviour
   
         _hands.Loosed += OnLoose;
         _hands.Failed += OnFail;
-        _hands.Completed += OnLevelComplete;     
+        _hands.Completed += OnLevelComplete;
+        _hands.Catched += OnCatch;
 
         _userInput.Touched += _hands.TryMove;
         _userInput.Untouched += _hands.StopMovement; 
@@ -82,7 +86,8 @@ public class Game : MonoBehaviour
 
     private void OnFail()
     {
-        Debug.Log("On fail");
+        _effects.PlayFallingEffect();
+
         TapToCatchWindow.Show(_userInput, _hands, OnEnoughTaps);
 
         void OnEnoughTaps()
@@ -91,10 +96,17 @@ public class Game : MonoBehaviour
         }
     }
 
+    private void OnCatch()
+    {
+        _effects.StopFallingEffect();
+    }
+
     private void OnLoose()
     {
         Debug.Log("Game Loosed");
         _userInput.gameObject.SetActive(false);
+
+        _effects.StopFallingEffect();
 
         RestartGame();
     }
