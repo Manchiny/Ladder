@@ -27,6 +27,12 @@ public class Game : MonoBehaviour
         Destroy(this);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.F1) == true)
+            LevelCompleteWindow.Show(null);
+    }
+
     private void Start()
     {
         Init();
@@ -36,6 +42,7 @@ public class Game : MonoBehaviour
     {
         _hands.Loosed -= OnLoose;
         _hands.Failed -= OnFail;
+        _hands.Completed -= OnLevelComplete;
 
         _userInput.Touched -= _hands.TryMove;
         _userInput.Untouched -= _hands.StopMovement;
@@ -56,17 +63,19 @@ public class Game : MonoBehaviour
 
         _hands.Loosed += OnLoose;
         _hands.Failed += OnFail;
-
-        LevelStartWindow.Show(_userInput);
+        _hands.Completed += OnLevelComplete;     
 
         _userInput.Touched += _hands.TryMove;
         _userInput.Untouched += _hands.StopMovement;
+        
+        LevelStartWindow.Show(_userInput);
 
     }
 
     private void OnFail()
     {
-        TapToCatchWindow.Show(_userInput, OnEnoughTaps);
+        Debug.Log("On fail");
+        TapToCatchWindow.Show(_userInput, _hands, OnEnoughTaps);
 
         void OnEnoughTaps()
         {
@@ -80,6 +89,12 @@ public class Game : MonoBehaviour
         _userInput.gameObject.SetActive(false);
 
         RestartGame();
+    }
+
+    private void OnLevelComplete()
+    {
+        _userInput.gameObject.SetActive(false);
+        LevelCompleteWindow.Show(RestartGame);
     }
 
     private void RestartGame()

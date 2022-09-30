@@ -19,6 +19,8 @@ public class HandsMover : MonoBehaviour
 
     public event Action Failed;
     public event Action Loosed;
+    public event Action Completed;
+    public event Action Catched;
 
     private void OnDisable()
     {
@@ -84,6 +86,7 @@ public class HandsMover : MonoBehaviour
             {
                 _downHand.ForceTake(downStep);
                 upperHand.ForceTake(upperStep);
+                Catched?.Invoke();
             }
             else if (downStep.CanBeTaked(upperHand.Side) && upperStep.CanBeTaked(_downHand.Side))
             {
@@ -124,6 +127,9 @@ public class HandsMover : MonoBehaviour
     {
         _isFalling = false;
         Debug.Log($"Step {step.Id} taked");
+
+        if (step is FinishButtonStep)
+            Completed?.Invoke();
     }
 
     private void OnFail(Hand hand)

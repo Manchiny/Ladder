@@ -8,6 +8,7 @@ public class WindowsHolder
         [typeof(HoldAndReleaseWindow)] = "Windows/HoldAndReleaseWindow",
         [typeof(LevelStartWindow)] = "Windows/LevelStartWindow",
         [typeof(TapToCatchWindow)] = "Windows/TapToCatchWindow",
+        [typeof(LevelCompleteWindow)] = "Windows/LevelCompleteWindow",
     };
 }
 

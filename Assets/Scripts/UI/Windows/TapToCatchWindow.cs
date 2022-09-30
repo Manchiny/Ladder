@@ -11,18 +11,23 @@ public class TapToCatchWindow : AbstractWindow
 
     private UserInput _userInput;
     private int _tapCounter;
+    private HandsMover _hands;
 
     private float _lastClickTime;
 
     private event Action _enoughTapsRecived;
 
-    public static TapToCatchWindow Show(UserInput userInput, Action onEnoughTapsRecived) =>
-                Game.Windows.ScreenChange<TapToCatchWindow>(true, w => w.Init(userInput, onEnoughTapsRecived));
+    public static TapToCatchWindow Show(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived) =>
+                Game.Windows.ScreenChange<TapToCatchWindow>(true, w => w.Init(userInput, hands, onEnoughTapsRecived));
 
-    protected void Init(UserInput userInput, Action onEnoughTapsRecived)
+    protected void Init(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived)
     {
+        Debug.Log("Tap to catch window init...");
         _infoText.text = "TAP TAP TAP";
         _enoughTapsRecived = onEnoughTapsRecived;
+
+        _hands = hands;
+        _hands.Catched += Close;
 
         _userInput = userInput;
         _userInput.Touched += OnStartTouch;
@@ -48,10 +53,7 @@ public class TapToCatchWindow : AbstractWindow
         _lastClickTime = Time.realtimeSinceStartup;
         
         if(_tapCounter >= GameConstants.NeedTapsToCatch)
-        {
             _enoughTapsRecived?.Invoke();
-            Close();
-        }
     }
 
     private void OnEndTouch()
@@ -62,5 +64,8 @@ public class TapToCatchWindow : AbstractWindow
     protected override void OnClose()
     {
         _userInput.Touched -= OnStartTouch;
+        _userInput.Untouched -= OnEndTouch;
+
+        _hands.Catched -= Close;
     }
 }

@@ -8,13 +8,15 @@ public class Hand : MonoBehaviour
     [SerializeField] private Animator _animator;
 
     private const float MoveUpDuration = 0.5f;
-    private const float MoveDownStepDuration = 0.2f;
+    private const float ForceMoveStepDuration = 0.2f;
 
     private bool _isProcess;
     private Tween _fallingTween;
 
     private LadderStep _targetStep;
     private HandsAnimations _animations;
+
+    private Vector3 _defaultPosition;
 
     public LadderSide Side { get; private set; }
     public bool IsFalling { get; private set; }
@@ -26,8 +28,15 @@ public class Hand : MonoBehaviour
     public event Action<Hand> Failed;
     public event Action Loosed;
 
+    private void Start()
+    {
+        _defaultPosition = transform.localPosition;
+    }
+
     public void Init(LadderStep initStep, LadderSide side)
     {
+        transform.localPosition = _defaultPosition;
+
         Side = side;
 
         _animations = new HandsAnimations(_animator, this);
@@ -43,7 +52,7 @@ public class Hand : MonoBehaviour
         else
             _animations.PlayRelease();
 
-        float duration = (_targetStep.Height / GameConstants.LadderDeltaStep) * MoveDownStepDuration;
+        float duration = (_targetStep.Height / GameConstants.LadderDeltaStep) * ForceMoveStepDuration;
 
         _fallingTween = transform.DOMoveY(0, duration)
                                  .SetLink(gameObject)
@@ -78,7 +87,7 @@ public class Hand : MonoBehaviour
         _targetStep = step;
         _fallingTween.Kill();
 
-        transform.DOMoveY(step.Height, MoveDownStepDuration)
+        transform.DOMoveY(step.Height, ForceMoveStepDuration)
              .SetLink(gameObject)
              .SetEase(Ease.Linear)
              .OnComplete(() => Take(step));
@@ -119,15 +128,6 @@ public class Hand : MonoBehaviour
         }
     }
 
-    private void Take(LadderStep step)
-    {
-        LastTakedStep = step;
-        IsFalling = false;
-        _isProcess = false;
-
-        Taked?.Invoke(step);
-    }
-
     private void PressFinishButton(LadderStep step)
     {
         _isProcess = true;
@@ -138,8 +138,16 @@ public class Hand : MonoBehaviour
              .SetEase(Ease.Linear)
              .OnComplete(() =>
              {
-                 Taked?.Invoke(step);
-                 _isProcess = false;
+                 Take(step);
              });
+    }
+
+    private void Take(LadderStep step)
+    {
+        LastTakedStep = step;
+        IsFalling = false;
+        _isProcess = false;
+
+        Taked?.Invoke(step);
     }
 }
