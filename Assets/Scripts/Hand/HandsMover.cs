@@ -51,8 +51,6 @@ public class HandsMover : MonoBehaviour
                 if (_canMove == false)
                     return;
 
-                Debug.Log($"Try move to step {GetUpperHand().LastTakedStep.Id}");
-
                 ValidateDownHand();
                 _downHand.TryMove(_ladder.NextFreeStep(GetUpperHand().LastTakedStep));
             });
@@ -129,7 +127,10 @@ public class HandsMover : MonoBehaviour
         Debug.Log($"Step {step.Id} taked");
 
         if (step is FinishButtonStep)
+        {
+            StopMovement();
             Completed?.Invoke();
+        }
     }
 
     private void OnFail(Hand hand)
@@ -147,6 +148,8 @@ public class HandsMover : MonoBehaviour
     private void OnLoose()
     {
         _isFalling = false;
+        StopMovement();
+
         Loosed?.Invoke();
     }
     private void ValidateDownHand() => _downHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;

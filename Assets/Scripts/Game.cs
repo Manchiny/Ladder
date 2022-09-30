@@ -10,6 +10,8 @@ public class Game : MonoBehaviour
     [SerializeField] private UserInput _userInput;
 
     private LevelConfiguration _currentLevel;
+    private UserData _user;
+    private Saver _saver;
 
     public static Game Instance { get; private set; }
     public static WindowsController Windows => Instance._windowsController;
@@ -50,26 +52,32 @@ public class Game : MonoBehaviour
 
     private void Init()
     {
+        _saver = new Saver();
+        _user = _saver.LoadUserData();
+
         Utils.SetMainContainer(this);
 
         _levels.Init();
-        Windows.Init(); 
+        Windows.Init();
 
-        _currentLevel = _levels.GetLevelConfiguration(0);
-
-        Camera.main.backgroundColor = _currentLevel.BackgroundColor;
-        _ladder.Init(_currentLevel);
-        Windows.HUD.Init(_currentLevel.Id + 1);
-
+        _currentLevel = _levels.GetLevelConfiguration(_user.CurrentLevelId);
+        StartLevel(_currentLevel);
+  
         _hands.Loosed += OnLoose;
         _hands.Failed += OnFail;
         _hands.Completed += OnLevelComplete;     
 
         _userInput.Touched += _hands.TryMove;
-        _userInput.Untouched += _hands.StopMovement;
-        
-        LevelStartWindow.Show(_userInput);
+        _userInput.Untouched += _hands.StopMovement; 
+    }
 
+    private void StartLevel(LevelConfiguration level)
+    {
+        Camera.main.backgroundColor = level.BackgroundColor;
+        _ladder.Init(level);
+        Windows.HUD.Init(level.Id + 1);
+
+        LevelStartWindow.Show(_userInput);
     }
 
     private void OnFail()
@@ -94,7 +102,13 @@ public class Game : MonoBehaviour
     private void OnLevelComplete()
     {
         _userInput.gameObject.SetActive(false);
-        LevelCompleteWindow.Show(RestartGame);
+
+        _currentLevel = _levels.GetNextLevelConfiguration(_currentLevel);
+
+        _user.SetCurrentLevelId(_currentLevel);
+        _saver.Save(_user);
+
+        LevelCompleteWindow.Show(() => StartLevel(_currentLevel));
     }
 
     private void RestartGame()

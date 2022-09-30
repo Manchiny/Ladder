@@ -15,9 +15,9 @@ public class LadderStepFabric : MonoBehaviour
 
     public void Init()
     {
-        _prefabs.Add(LadderStepType.Default, _defaultLadderStepPrefab);
-        _prefabs.Add(LadderStepType.HalfDefualt, _ladderStepHalfs);
-        _prefabs.Add(LadderStepType.HalfDynamic, _ladderStepDynamic);
+        _prefabs.TryAdd(LadderStepType.Default, _defaultLadderStepPrefab);
+        _prefabs.TryAdd(LadderStepType.HalfDefualt, _ladderStepHalfs);
+        _prefabs.TryAdd(LadderStepType.HalfDynamic, _ladderStepDynamic);
     }
 
     public LadderStep CreateStep(LadderStepType type, Vector3 position, LadderSide side = LadderSide.Default)

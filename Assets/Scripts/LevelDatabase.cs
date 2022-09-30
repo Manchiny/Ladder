@@ -14,4 +14,12 @@ public class LevelDatabase : ScriptableObject
 
     public LevelConfiguration GetLevelConfiguration(int id) => _levels.Count > id ? _levels[id] : null;
     public bool IsLevelLast(int id) => _levels.Count - 1 == id;
+    public LevelConfiguration GetNextLevelConfiguration(LevelConfiguration currentLevel)
+    {
+        if (currentLevel.Id + 1 < _levels.Count)
+            return _levels[currentLevel.Id + 1];
+        else
+            return _levels[0];
+    }
+
 }

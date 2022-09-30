@@ -13,6 +13,8 @@ public class Ladder : MonoBehaviour
     private LevelConfiguration _levelConfiguration;
     private List<LadderStep> _steps = new();
 
+    private bool _inited;
+
     public LadderStep NextFreeStep(LadderStep lastStep) => lastStep == null ? _steps[2] : _steps.Where(step => step.Id == lastStep.Id + 1).FirstOrDefault();
     public LadderStep NextFreeStep(int lastStepId) => _steps.Where(step => step.Id == lastStepId + 1).FirstOrDefault();
 
@@ -25,11 +27,23 @@ public class Ladder : MonoBehaviour
 
     public void Init(LevelConfiguration levelConfiguration)
     {
+        if(_levelConfiguration != null && _steps.Count > 0)
+        {
+            foreach (var step in _steps)
+                Destroy(step.gameObject);
+
+            _steps.Clear();
+        }
+
         _levelConfiguration = levelConfiguration;
-        _fabric.Init();
+
+        if(!_inited)
+            _fabric.Init();
 
         ConfigureLadder();
-        InitHands(false);
+        InitHands(_inited);
+
+        _inited = true;
     }
 
     public void Restart()
