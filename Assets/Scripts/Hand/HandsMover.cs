@@ -1,4 +1,5 @@
 using System;
+using UniRx;
 using UnityEngine;
 
 public class HandsMover : MonoBehaviour
@@ -11,21 +12,13 @@ public class HandsMover : MonoBehaviour
     private Hand _downHand;
     private bool _isFalling;
 
+    private IDisposable _moveDispose;
+
     public float GetAverageValue => (_leftHand.GetHeight + _rightHand.GetHeight) / 2f;
     private bool _canMove => _leftHand.CanMove && _rightHand.CanMove;
 
     public event Action Failed;
     public event Action Loosed;
-
-
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.W) == true)
-            TryMove();
-
-        if (Input.GetKey(KeyCode.Space) == true && _isFalling)
-            TryCatch();
-    }
 
     private void OnDisable()
     {
@@ -47,64 +40,33 @@ public class HandsMover : MonoBehaviour
         _downHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;
     }
 
-    private void AddSubscribes()
+    public void TryMove()
     {
-        _leftHand.Taked += OnStepTaked;
-        _rightHand.Taked += OnStepTaked;
+        if(_moveDispose == null)
+        {
+            _moveDispose = Observable.EveryUpdate().Subscribe(_ => 
+            {
+                if (_canMove == false)
+                    return;
 
-        _leftHand.Failed += OnFail;
-        _rightHand.Failed += OnFail;
+                Debug.Log($"Try move to step {GetUpperHand().LastTakedStep.Id}");
 
-        _leftHand.Loosed += OnLoose;
-        _rightHand.Loosed += OnLoose;
+                ValidateDownHand();
+                _downHand.TryMove(_ladder.NextFreeStep(GetUpperHand().LastTakedStep));
+            });
+        }
     }
 
-    private void RemoveSubscribes()
+    public void StopMovement()
     {
-        _leftHand.Taked -= OnStepTaked;
-        _rightHand.Taked -= OnStepTaked;
-
-        _leftHand.Failed -= OnFail;
-        _rightHand.Failed -= OnFail;
-
-        _leftHand.Loosed -= OnLoose;
-        _rightHand.Loosed -= OnLoose;
+        if(_moveDispose != null)
+        {
+            _moveDispose.Dispose();
+            _moveDispose = null;
+        }
     }
 
-    private void OnStepTaked(LadderStep step)
-    {
-        _isFalling = false;
-        Debug.Log($"Step {step.Id} taked");
-    }
-
-    private void OnFail(Hand hand)
-    {
-        _leftHand.FallDown();
-        _rightHand.FallDown();
-
-        _isFalling = true;
-
-        Failed?.Invoke();
-    }
-
-    private void OnLoose()
-    {
-        _isFalling = false;
-        Loosed?.Invoke();
-    }
-
-    private void TryMove()
-    {
-        if (_canMove == false)
-            return;
-
-        Debug.Log($"Try move to step {GetUpperHand().LastTakedStep.Id}");
-
-        ValidateDownHand();
-        _downHand.TryMove(_ladder.NextFreeStep(GetUpperHand().LastTakedStep));
-    }
-
-    private void TryCatch()
+    public void TryCatch()
     {
         if (_isFalling == false)
             return;
@@ -132,7 +94,55 @@ public class HandsMover : MonoBehaviour
             ValidateDownHand();
         }
     }
+    private void AddSubscribes()
+    {
+        _leftHand.Taked += OnStepTaked;
+        _rightHand.Taked += OnStepTaked;
 
+        _leftHand.Failed += OnFail;
+        _rightHand.Failed += OnFail;
+
+        _leftHand.Loosed += OnLoose;
+        _rightHand.Loosed += OnLoose;
+    }
+
+    private void RemoveSubscribes()
+    {
+        StopMovement();
+
+        _leftHand.Taked -= OnStepTaked;
+        _rightHand.Taked -= OnStepTaked;
+
+        _leftHand.Failed -= OnFail;
+        _rightHand.Failed -= OnFail;
+
+        _leftHand.Loosed -= OnLoose;
+        _rightHand.Loosed -= OnLoose;
+    }
+
+    private void OnStepTaked(LadderStep step)
+    {
+        _isFalling = false;
+        Debug.Log($"Step {step.Id} taked");
+    }
+
+    private void OnFail(Hand hand)
+    {
+        StopMovement();
+
+        _leftHand.FallDown();
+        _rightHand.FallDown();
+
+        _isFalling = true;
+
+        Failed?.Invoke();
+    }
+
+    private void OnLoose()
+    {
+        _isFalling = false;
+        Loosed?.Invoke();
+    }
     private void ValidateDownHand() => _downHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;
     private Hand GetUpperHand() => _downHand == _leftHand ? _rightHand : _leftHand;
 }

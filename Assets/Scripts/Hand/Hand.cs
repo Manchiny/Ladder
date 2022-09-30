@@ -71,9 +71,9 @@ public class Hand : MonoBehaviour
         if (_isProcess)
             return false;
 
-        _animations.PlayClasp();
-
         _isProcess = true;
+
+        _animations.PlayClasp();
 
         _targetStep = step;
         _fallingTween.Kill();
