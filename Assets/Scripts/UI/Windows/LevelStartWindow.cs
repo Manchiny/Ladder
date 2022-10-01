@@ -81,9 +81,9 @@ public class LevelStartWindow : AbstractWindow
                 fx.transform.localPosition = localPosition;
                 fx.Play();
             }
-           
 
-            Close();
+            Utils.WaitSeconds(0.05f)
+               .Then(() => Close());
         }
 
         Debug.Log("BuyBoost clicked");

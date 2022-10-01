@@ -40,11 +40,17 @@ public class Game : MonoBehaviour
         Destroy(this);
     }
 
+#if UNITY_EDITOR
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.F1) == true)
             LevelCompleteWindow.Show(null);
+
+        if (Input.GetKeyUp(KeyCode.F4) == true)
+            Saver.RemoveAllData();
+
     }
+#endif
 
     private void Start()
     {

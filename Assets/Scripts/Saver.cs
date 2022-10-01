@@ -71,6 +71,12 @@ public class Saver
         return data;
     }
 
+    public void RemoveAllData()
+    {
+        PlayerPrefs.DeleteAll();
+        Debug.Log("Player prefs removed!");
+    }
+
     private int GetBoostLevelBySavedKey(string key)
     {
         if (PlayerPrefs.HasKey(key) == false)
