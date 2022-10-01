@@ -8,6 +8,7 @@ public class LevelStartWindow : AbstractWindow
 {
     [SerializeField] private TextMeshProUGUI _infoText;
     [SerializeField] private Image _vignette;
+    [SerializeField] private Button _moneyBoostButton;
 
     private const float FadeDuration = 1f;
     public override string LockKey => "LevelStartWindow";
@@ -21,6 +22,8 @@ public class LevelStartWindow : AbstractWindow
     {
         _infoText.gameObject.SetActive(false);
         _infoText.text = "TAP TO START";
+
+        _moneyBoostButton.onClick.AddListener(OnMoneyButtonClick);
 
         _userInput = userInput;
         _userInput.Touched += OnStartTouch;
@@ -53,5 +56,17 @@ public class LevelStartWindow : AbstractWindow
     private void OnEndTouch()
     {
 
+    }
+
+    private void OnMoneyButtonClick()
+    {
+        Boost boost = Game.BoostsDatabase.GetBoost(Boost.BoostType.MoneyBoost);
+
+        if(Game.Player.TryBuyBoost(boost))
+        {
+            Close();
+        }
+
+        Debug.Log("MoneyButton clicked");
     }
 }

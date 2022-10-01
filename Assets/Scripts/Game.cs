@@ -1,3 +1,5 @@
+using System;
+using UniRx;
 using UnityEngine;
 
 public class Game : MonoBehaviour
@@ -10,13 +12,20 @@ public class Game : MonoBehaviour
     [SerializeField] private UserInput _userInput;
     [Space]
     [SerializeField] private GameEffects _effects;
+    [SerializeField] private BoostsDatabase _boostsDatabase;
 
-    private LevelConfiguration _currentLevel;
     private UserData _user;
     private Saver _saver;
+    private Player _player;
 
     public static Game Instance { get; private set; }
     public static WindowsController Windows => Instance._windowsController;
+    public static UserData User => Instance._user;
+    public static Player Player => Instance._player;
+    public static BoostsDatabase BoostsDatabase => Instance._boostsDatabase;
+    public static Saver Saver => Instance._saver;
+
+    public ReactiveProperty<LevelConfiguration> CurrenLevel { get; private set; } = new ReactiveProperty<LevelConfiguration>();
 
     private void Awake()
     {
@@ -44,32 +53,37 @@ public class Game : MonoBehaviour
 
     private void OnDisable()
     {
-        _hands.Loosed -= OnLoose;
         _hands.Failed -= OnFail;
-        _hands.Completed -= OnLevelComplete;
         _hands.Catched -= OnCatch;
+        _hands.Loosed -= OnLoose;
+        _hands.Completed -= OnLevelComplete;
+        _hands.Taked -= OnStepTaked;
 
         _userInput.Touched -= _hands.TryMove;
         _userInput.Untouched -= _hands.StopMovement;
+
+        CurrenLevel.Dispose();
     }
 
     private void Init()
     {
         _saver = new Saver();
         _user = _saver.LoadUserData();
+        _player = new Player(_user);
 
         Utils.SetMainContainer(this);
 
         _levels.Init();
         Windows.Init();
 
-        _currentLevel = _levels.GetLevelConfiguration(_user.CurrentLevelId);
-        StartLevel(_currentLevel);
+        CurrenLevel.Value = _levels.GetLevelConfiguration(_user.CurrentLevelId);
+        StartLevel(CurrenLevel.Value);
   
-        _hands.Loosed += OnLoose;
         _hands.Failed += OnFail;
-        _hands.Completed += OnLevelComplete;
         _hands.Catched += OnCatch;
+        _hands.Loosed += OnLoose;
+        _hands.Completed += OnLevelComplete;
+        _hands.Taked += OnStepTaked;
 
         _userInput.Touched += _hands.TryMove;
         _userInput.Untouched += _hands.StopMovement; 
@@ -79,7 +93,7 @@ public class Game : MonoBehaviour
     {
         Camera.main.backgroundColor = level.BackgroundColor;
         _ladder.Init(level);
-        Windows.HUD.Init(level.Id + 1);
+        Windows.HUD.Init();
 
         LevelStartWindow.Show(_userInput);
     }
@@ -92,13 +106,20 @@ public class Game : MonoBehaviour
 
         void OnEnoughTaps()
         {
-            _hands.TryCatch();
+            _hands.TryCatch();         
         }
+    }
+
+    private void OnStepTaked(LadderStep step, Hand hand)
+    {
+        if(step.Id > 1)
+            AddMoney(_player.CalculateMoneyForStepTaking(), hand);
     }
 
     private void OnCatch()
     {
         _effects.StopFallingEffect();
+        Saver.Save(_user);
     }
 
     private void OnLoose()
@@ -107,6 +128,7 @@ public class Game : MonoBehaviour
         _userInput.gameObject.SetActive(false);
 
         _effects.StopFallingEffect();
+        Saver.Save(_user);
 
         RestartGame();
     }
@@ -115,12 +137,12 @@ public class Game : MonoBehaviour
     {
         _userInput.gameObject.SetActive(false);
 
-        _currentLevel = _levels.GetNextLevelConfiguration(_currentLevel);
+        CurrenLevel.Value = _levels.GetNextLevelConfiguration(CurrenLevel.Value);
 
-        _user.SetCurrentLevelId(_currentLevel);
+        _user.SetCurrentLevelId(CurrenLevel.Value);
         _saver.Save(_user);
 
-        LevelCompleteWindow.Show(() => StartLevel(_currentLevel));
+        LevelCompleteWindow.Show(() => StartLevel(CurrenLevel.Value));
     }
 
     private void RestartGame()
@@ -129,4 +151,13 @@ public class Game : MonoBehaviour
         LevelStartWindow.Show(_userInput);
     }
 
+    private void AddMoney(int count, Hand hand = null)
+    {
+        _user.AddMoney(count);
+
+        if(hand != null)
+        {
+            // ύττεκς;
+        }
+    }
 }

@@ -6,4 +6,6 @@ public class GameConstants
 
     public static float NeedTapsToCatch => 3;
     public static float MaxSecondsBeetweenTaps = 0.8f;
+
+    public static int BaseMoneyBonusForStep => 1;
 }

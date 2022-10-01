@@ -21,6 +21,7 @@ public class HandsMover : MonoBehaviour
     public event Action Loosed;
     public event Action Completed;
     public event Action Catched;
+    public event Action<LadderStep, Hand> Taked;
 
     private void OnDisable()
     {
@@ -44,9 +45,9 @@ public class HandsMover : MonoBehaviour
 
     public void TryMove()
     {
-        if(_moveDispose == null)
+        if (_moveDispose == null)
         {
-            _moveDispose = Observable.EveryUpdate().Subscribe(_ => 
+            _moveDispose = Observable.EveryUpdate().Subscribe(_ =>
             {
                 if (_canMove == false)
                     return;
@@ -59,7 +60,7 @@ public class HandsMover : MonoBehaviour
 
     public void StopMovement()
     {
-        if(_moveDispose != null)
+        if (_moveDispose != null)
         {
             _moveDispose.Dispose();
             _moveDispose = null;
@@ -121,7 +122,7 @@ public class HandsMover : MonoBehaviour
         _rightHand.Loosed -= OnLoose;
     }
 
-    private void OnStepTaked(LadderStep step)
+    private void OnStepTaked(LadderStep step, Hand hand)
     {
         _isFalling = false;
         Debug.Log($"Step {step.Id} taked");
@@ -131,6 +132,8 @@ public class HandsMover : MonoBehaviour
             StopMovement();
             Completed?.Invoke();
         }
+        else
+            Taked?.Invoke(step, hand);
     }
 
     private void OnFail(Hand hand)
@@ -152,6 +155,7 @@ public class HandsMover : MonoBehaviour
 
         Loosed?.Invoke();
     }
+
     private void ValidateDownHand() => _downHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;
     private Hand GetUpperHand() => _downHand == _leftHand ? _rightHand : _leftHand;
 }

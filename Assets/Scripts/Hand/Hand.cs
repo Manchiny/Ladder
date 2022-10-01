@@ -24,7 +24,7 @@ public class Hand : MonoBehaviour
     public bool CanMove => _isProcess == false && IsFalling == false;
     public float GetHeight => transform.position.y;
 
-    public event Action<LadderStep> Taked;
+    public event Action<LadderStep, Hand> Taked;
     public event Action<Hand> Failed;
     public event Action Loosed;
 
@@ -148,6 +148,6 @@ public class Hand : MonoBehaviour
         IsFalling = false;
         _isProcess = false;
 
-        Taked?.Invoke(step);
+        Taked?.Invoke(step, this);
     }
 }
