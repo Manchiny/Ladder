@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdc079e8bef212f4aa9af669eb09ad9b, type: 3}
   m_Name: Level_00
   m_EditorClassIdentifier: 
-  _ladderStepsCount: 50
+  _ladderStepsCount: 10
   _notDefaultLadderSteps:
   - _stepType: 1
-    _chanse: 15
+    _chanse: 25
   _backgroundColor: {r: 0.5294118, g: 0.9607843, b: 0.8745098, a: 0}

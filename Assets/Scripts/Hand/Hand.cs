@@ -37,6 +37,11 @@ public class Hand : MonoBehaviour
 
     public void Init(LadderStep initStep, LadderSide side)
     {
+        if (side == LadderSide.Right)
+            _defaultPosition.x = GameConstants.HandDafaultXPosition;
+        else
+            _defaultPosition.x = -GameConstants.HandDafaultXPosition;
+
         transform.localPosition = _defaultPosition;
 
         Side = side;
