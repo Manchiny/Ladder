@@ -113,7 +113,11 @@ public class Game : MonoBehaviour
     private void OnStepTaked(LadderStep step, Hand hand)
     {
         if(step.Id > 1)
-            AddMoney(_player.CalculateMoneyForStepTaking(), hand);
+        {
+            int count = _player.CalculateMoneyForStepTaking();
+            AddMoney(count, hand);
+            Windows.HUD.ShowFloatingMoney(count, hand);
+        }
     }
 
     private void OnCatch()

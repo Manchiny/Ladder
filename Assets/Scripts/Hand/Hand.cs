@@ -6,6 +6,7 @@ using static Ladder;
 public class Hand : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
+    [SerializeField] private ParticleSystem _fogEffect;
 
     private const float MoveUpDuration = 0.5f;
     private const float ForceMoveStepDuration = 0.2f;
@@ -31,6 +32,7 @@ public class Hand : MonoBehaviour
     private void Start()
     {
         _defaultPosition = transform.localPosition;
+        _fogEffect.Stop();
     }
 
     public void Init(LadderStep initStep, LadderSide side)
@@ -148,6 +150,7 @@ public class Hand : MonoBehaviour
         IsFalling = false;
         _isProcess = false;
 
+        _fogEffect.Play();
         Taked?.Invoke(step, this);
     }
 }

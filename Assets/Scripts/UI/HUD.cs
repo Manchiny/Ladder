@@ -11,9 +11,11 @@ public class HUD : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _moneyText;
     [Space]
     [SerializeField] private RectTransform _moneyPanelContent;
+    [SerializeField] private FloatingMoneyText _floatingMoneyPrefab;
 
     private const float FadeDuration = 1f;
     private const float MoneyPanelAnimationDuration = 0.075f;
+    private const float FloatingMoneyDeltaYStartPosition = 1f;
 
     private CanvasGroup _canvas;
 
@@ -28,7 +30,7 @@ public class HUD : MonoBehaviour
     private void OnDestroy()
     {
         _levelChangeDispose?.Dispose();
-        Game.User.MoneyChanged -= SetMoneyAndAnimate;
+        Game.User.MoneyChanged -= OnMoneyChanged;
     }
 
     public void Init()
@@ -38,7 +40,7 @@ public class HUD : MonoBehaviour
 
         SetMoneyText(Game.User.Money);
 
-        Game.User.MoneyChanged += SetMoneyAndAnimate;
+        Game.User.MoneyChanged += OnMoneyChanged;
         Show();
     }
 
@@ -52,14 +54,25 @@ public class HUD : MonoBehaviour
         _canvas.DOFade(0f, FadeDuration);
     }
 
+    public void ShowFloatingMoney(int count, Hand hand)
+    {
+        FloatingMoneyText floatingMoney = Instantiate(_floatingMoneyPrefab, transform);
+
+        Vector3 position = hand.transform.position;
+        position.y += FloatingMoneyDeltaYStartPosition;
+
+        floatingMoney.transform.position = Camera.main.WorldToScreenPoint(position);
+        floatingMoney.Init(count);
+    }
+
     private void OnLevelChanged(LevelConfiguration level)
     {
         _levelText.text = $"LEVEL {level.Id + 1}";
     }
 
-    private void SetMoneyAndAnimate(int money)
+    private void OnMoneyChanged(int totalMoney)
     {
-        SetMoneyText(money);
+        SetMoneyText(totalMoney);
         PlayMoneyPanelAnimation();
     }
 

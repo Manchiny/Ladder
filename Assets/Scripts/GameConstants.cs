@@ -8,4 +8,5 @@ public class GameConstants
     public static float MaxSecondsBeetweenTaps = 0.8f;
 
     public static int BaseMoneyBonusForStep => 1;
+    public static float UIEffectZPosition => 2f;
 }

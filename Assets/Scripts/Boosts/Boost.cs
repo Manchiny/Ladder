@@ -7,10 +7,15 @@ public abstract class Boost : ScriptableObject
 {
     [SerializeField] private Sprite _icon;
     [SerializeField] private List<BoostConfig> _configs;
+    [SerializeField] private Color _viewColor;
+    [SerializeField] private ParticleSystem _buyEffect;
 
     public abstract BoostType Type { get; }
+    public abstract string Name { get; }
 
     public Sprite Icon => _icon;
+    public Color ViewColor => _viewColor;
+    public ParticleSystem BuyEffect => _buyEffect;
 
     public enum BoostType
     {

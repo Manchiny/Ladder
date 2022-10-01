@@ -8,7 +8,11 @@ public class LevelStartWindow : AbstractWindow
 {
     [SerializeField] private TextMeshProUGUI _infoText;
     [SerializeField] private Image _vignette;
-    [SerializeField] private Button _moneyBoostButton;
+    [Space]
+    [SerializeField] private BuyBoostView _moneyBoostView;
+    [SerializeField] private BuyBoostView _staminaBoostView;
+
+    private bool _boostBuyed;
 
     private const float FadeDuration = 1f;
     public override string LockKey => "LevelStartWindow";
@@ -23,11 +27,14 @@ public class LevelStartWindow : AbstractWindow
         _infoText.gameObject.SetActive(false);
         _infoText.text = "TAP TO START";
 
-        _moneyBoostButton.onClick.AddListener(OnMoneyButtonClick);
+        Boost moneyBoost = Game.BoostsDatabase.GetBoost(Boost.BoostType.MoneyBoost);
+        _moneyBoostView.Init(moneyBoost, () => OnBuyBoostButtonClick(moneyBoost, _moneyBoostView.transform as RectTransform));
+
+        Boost stamina = Game.BoostsDatabase.GetBoost(Boost.BoostType.StaminaBoost);
+        _staminaBoostView.Init(stamina, () => OnBuyBoostButtonClick(stamina, _staminaBoostView.transform as RectTransform));
 
         _userInput = userInput;
         _userInput.Touched += OnStartTouch;
-        //_userInput.Untouched += OnEndTouch;  
 
         FadeOut()
             .Then(() => ActivateInput());
@@ -53,20 +60,32 @@ public class LevelStartWindow : AbstractWindow
         Close();
     }
 
-    private void OnEndTouch()
+    private void OnBuyBoostButtonClick(Boost boost, RectTransform panelClicked)
     {
+        if (_boostBuyed)
+            return;
 
-    }
-
-    private void OnMoneyButtonClick()
-    {
-        Boost boost = Game.BoostsDatabase.GetBoost(Boost.BoostType.MoneyBoost);
-
-        if(Game.Player.TryBuyBoost(boost))
+        if (Game.Player.TryBuyBoost(boost))
         {
+            _boostBuyed = true;
+
+            if(boost.BuyEffect != null)
+            {
+                ParticleSystem fx = Instantiate(boost.BuyEffect, Camera.main.transform);
+                fx.transform.localRotation = Quaternion.Euler(Vector3.zero);
+
+                fx.transform.position = Camera.main.ScreenToWorldPoint(panelClicked.transform.position);
+
+                var localPosition = fx.transform.localPosition;
+                localPosition.z = GameConstants.UIEffectZPosition;
+                fx.transform.localPosition = localPosition;
+                fx.Play();
+            }
+           
+
             Close();
         }
 
-        Debug.Log("MoneyButton clicked");
+        Debug.Log("BuyBoost clicked");
     }
 }

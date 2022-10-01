@@ -12,3 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad10b654677773143b07e218fbaa1be3, type: 3}
   m_Name: StaminaBoost
   m_EditorClassIdentifier: 
+  _icon: {fileID: 21300000, guid: 726a5a623acc3e04d94a1a40b8cb2978, type: 3}
+  _configs:
+  - _cost: 8
+    _value: 0
+  - _cost: 80
+    _value: 0
+  - _cost: 500
+    _value: 0
+  - _cost: 0
+    _value: 0
+  - _cost: 5000
+    _value: 0
+  _viewColor: {r: 0.38431376, g: 0.29411766, b: 0.7843138, a: 1}
+  _buyEffect: {fileID: 0}
