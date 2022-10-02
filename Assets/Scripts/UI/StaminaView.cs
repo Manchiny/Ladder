@@ -11,7 +11,7 @@ public class StaminaView : MonoBehaviour
     private const float FadeDuration = 0.2f;
 
     private const float ShakeCameraDuration = 0.15f;
-    private const float MaxCameraShakeStright = 0.2f;
+    private const float MaxCameraShakeStright = 0.14f;
     private const int CameaShakeVibraion = 3;
 
     private Stamina _stamina;

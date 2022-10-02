@@ -1,4 +1,3 @@
-using System;
 using UniRx;
 using UnityEngine;
 
@@ -177,6 +176,7 @@ public class Game : MonoBehaviour
         _saver.Save(_user);
 
         LevelCompleteWindow.Show(() => StartLevel(CurrenLevel.Value));
+        _effects.PlayKonfettiEffect();
     }
 
     private void RestartGame()
@@ -188,10 +188,5 @@ public class Game : MonoBehaviour
     private void AddMoney(int count, Hand hand = null)
     {
         _user.AddMoney(count);
-
-        if (hand != null)
-        {
-            // ύττεκς;
-        }
     }
 }
