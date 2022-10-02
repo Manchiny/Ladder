@@ -4,7 +4,11 @@ using UnityEngine;
 public class Stamina : MonoBehaviour
 {
     public const float MaxEnergyValue = 20f;
+    public const float LowEnergyPercent = 30f;
+    public const float MaxFactorToFail = 0.99f;
+
     private const float RecoveryPerSecond = 3f;
+    private const float Base—onsumptionPerStep = 1f;
 
     private HandsMover _hands;
 
@@ -17,8 +21,6 @@ public class Stamina : MonoBehaviour
     {
         if (_inited == false || _touched)
             return;
-
-        Debug.Log(CurrentEnergy.Value);
 
         if (_hands.CanMove)
             RecoverEnergy(RecoveryPerSecond * Time.deltaTime);
@@ -51,6 +53,20 @@ public class Stamina : MonoBehaviour
         CurrentEnergy.Value = MaxEnergyValue;
     }
 
+    public bool IsLowEnergy(out float factor)
+    {
+        float valuePercent = CurrentEnergy.Value * 100f / MaxEnergyValue;
+        factor = 0;
+
+        if (valuePercent <= LowEnergyPercent)
+        {
+            factor = 1 - valuePercent / LowEnergyPercent;
+            return true;
+        }
+
+        return false;
+    }
+
     private void SetTouchedTrue() => _touched = true;
     private void SetTouchedFalse() => _touched = false;
 
@@ -67,7 +83,7 @@ public class Stamina : MonoBehaviour
 
     private void ForceExpendEnergy(LadderStep step, Hand hand)
     {
-        float energyCount = Game.Player.CalculateEndValueWithBoosts<StaminaBoost>(GameConstants.Base—onsumptionPerStep);
+        float energyCount = Game.Player.CalculateEndValueWithBoosts<StaminaBoost>(Base—onsumptionPerStep);
         ExpandEnergy(energyCount);
     }
 

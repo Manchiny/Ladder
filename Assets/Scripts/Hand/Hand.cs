@@ -11,6 +11,8 @@ public class Hand : MonoBehaviour
     private const float MoveUpDuration = 0.5f;
     private const float ForceMoveStepDuration = 0.2f;
 
+    private Stamina _stamina;
+
     private bool _isProcess;
     private Tween _fallingTween;
 
@@ -35,13 +37,14 @@ public class Hand : MonoBehaviour
         _fogEffect.Stop();
     }
 
-    public void Init(LadderStep initStep, LadderSide side)
+    public void Init(LadderStep initStep, LadderSide side, Stamina stamina)
     {
         if (side == LadderSide.Right)
             _defaultPosition.x = GameConstants.HandDafaultXPosition;
         else
             _defaultPosition.x = -GameConstants.HandDafaultXPosition;
 
+        _stamina = stamina;
         transform.localPosition = _defaultPosition;
 
         Side = side;
@@ -50,6 +53,7 @@ public class Hand : MonoBehaviour
         ForceTake(initStep);
 
         IsFalling = false;
+
     }
 
     public void FallDown()
@@ -123,16 +127,27 @@ public class Hand : MonoBehaviour
 
         if (step.CanBeTaked(Side))
         {
-            Take(step);
-            return true;
+            if (_stamina.IsLowEnergy(out float factor) == false || factor < Stamina.MaxFactorToFail)
+            {
+                Take(step);
+                return true;
+            }
+
+            FailTake();
+            return false;
+
         }
         else
         {
-            IsFalling = true;
-            Failed?.Invoke(this);
-
+            FailTake();
             return false;
         }
+    }
+
+    private void FailTake()
+    {
+        IsFalling = true;
+        Failed?.Invoke(this);
     }
 
     private void PressFinishButton(LadderStep step)

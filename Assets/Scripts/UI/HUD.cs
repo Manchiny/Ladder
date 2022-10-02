@@ -46,7 +46,7 @@ public class HUD : MonoBehaviour
         Game.User.MoneyChanged += OnMoneyChanged;
 
         _hands = hands;
-        _staminaView.Init(_hands.Stamina);
+        _staminaView.Init(_hands);
 
         Show();
     }

@@ -39,17 +39,17 @@ public class HandsMover : MonoBehaviour
 
         _isFalling = false;
 
-        _rightHand.Init(firstStep, Ladder.LadderSide.Right);
-        _leftHand.Init(secondStep, Ladder.LadderSide.Left);
+        if (Stamina == null)
+            Stamina = GetComponent<Stamina>();
+
+        Stamina.Init(this);
+
+        _rightHand.Init(firstStep, Ladder.LadderSide.Right, Stamina);
+        _leftHand.Init(secondStep, Ladder.LadderSide.Left, Stamina);
 
         AddSubscribes();
 
         _downHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;
-
-        if (Stamina == null)
-            Stamina = GetComponent<Stamina>();
-            
-        Stamina.Init(this);
     }
 
     public void TryMove()

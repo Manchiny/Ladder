@@ -4,7 +4,7 @@ public class CameraMover : MonoBehaviour
 {
     [SerializeField] private HandsMover _handsMover;
     [Space]
-    [SerializeField] private float _offsetY = 4f;
+    [SerializeField] private Vector3 _offset = new Vector3(0, 4, -5.5f);
     [SerializeField] private float _moveSpeed = 10f;
 
     private Vector3 _targetPosition;
@@ -17,8 +17,8 @@ public class CameraMover : MonoBehaviour
 
     private void UpdateCameraPosition()
     {
-        _targetPosition = transform.position;
-        _targetPosition.y = _handsMover.GetAverageValue - _offsetY;
+        _targetPosition = _offset;
+        _targetPosition.y = _handsMover.GetAverageValue - _offset.y;
 
         _smoothedPosition = Vector3.Lerp(transform.position, _targetPosition, _moveSpeed * Time.deltaTime);
         transform.position = _smoothedPosition;
