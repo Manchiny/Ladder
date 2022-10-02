@@ -9,6 +9,7 @@ public class WindowsHolder
         [typeof(LevelStartWindow)] = "Windows/LevelStartWindow",
         [typeof(TapToCatchWindow)] = "Windows/TapToCatchWindow",
         [typeof(LevelCompleteWindow)] = "Windows/LevelCompleteWindow",
+        [typeof(YouAreTiredWindow)] = "Windows/YouAreTiredWindow",
     };
 }
 

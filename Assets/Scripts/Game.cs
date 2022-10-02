@@ -14,6 +14,8 @@ public class Game : MonoBehaviour
     [SerializeField] private GameEffects _effects;
     [SerializeField] private BoostsDatabase _boostsDatabase;
 
+    private float StaminaLowEnergyFactorToShowTiredWindow = 0.5f;
+
     private UserData _user;
     private Saver _saver;
     private Player _player;
@@ -30,11 +32,11 @@ public class Game : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            
+
             return;
         }
 
@@ -65,6 +67,7 @@ public class Game : MonoBehaviour
         _hands.Loosed -= OnLoose;
         _hands.Completed -= OnLevelComplete;
         _hands.Taked -= OnStepTaked;
+        _hands.Taked -= ShowTiredWindowIfNeed;
 
         _userInput.Touched -= _hands.TryMove;
         _userInput.Untouched -= _hands.StopMovement;
@@ -85,7 +88,7 @@ public class Game : MonoBehaviour
 
         CurrenLevel.Value = _levels.GetLevelConfiguration(_user.CurrentLevelId);
         StartLevel(CurrenLevel.Value);
-  
+
         _hands.Failed += OnFail;
         _hands.Catched += OnCatch;
         _hands.Loosed += OnLoose;
@@ -93,7 +96,7 @@ public class Game : MonoBehaviour
         _hands.Taked += OnStepTaked;
 
         _userInput.Touched += _hands.TryMove;
-        _userInput.Untouched += _hands.StopMovement; 
+        _userInput.Untouched += _hands.StopMovement;
     }
 
     private void StartLevel(LevelConfiguration level)
@@ -102,7 +105,27 @@ public class Game : MonoBehaviour
         _ladder.Init(level);
         Windows.HUD.Init(_hands);
 
-        LevelStartWindow.Show(_userInput);
+        if (level.Id == 0)
+            InitTutor(LevelStartWindow.Show(_userInput));
+        else
+            LevelStartWindow.Show(_userInput);
+    }
+
+    private void InitTutor(LevelStartWindow window)
+    {
+        window.ClosePromise
+            .Then(() => HoldAndReleaseWindow.Show());
+
+        _hands.Taked += ShowTiredWindowIfNeed;
+    }
+
+    private void ShowTiredWindowIfNeed(LadderStep step, Hand hand)
+    {
+        if (_hands.Stamina.IsLowEnergy(out float factor) && factor >= StaminaLowEnergyFactorToShowTiredWindow)
+        {
+            _hands.Taked -= ShowTiredWindowIfNeed;
+            YouAreTiredWindow.Show(_hands.Stamina);
+        }
     }
 
     private void OnFail()
@@ -113,13 +136,13 @@ public class Game : MonoBehaviour
 
         void OnEnoughTaps()
         {
-            _hands.TryCatch();         
+            _hands.TryCatch();
         }
     }
 
     private void OnStepTaked(LadderStep step, Hand hand)
     {
-        if(step.Id > 1)
+        if (step.Id > 1)
         {
             int count = (int)_player.CalculateEndValueWithBoosts<MoneyBoost>(GameConstants.BaseMoneyBonusForStep);
             AddMoney(count, hand);
@@ -166,7 +189,7 @@ public class Game : MonoBehaviour
     {
         _user.AddMoney(count);
 
-        if(hand != null)
+        if (hand != null)
         {
             // ύττεκς;
         }

@@ -97,31 +97,6 @@ public abstract class AbstractWindow : MonoBehaviour
         return promise;
     }
 
-    //protected void CloseAnimated()
-    //{
-    //    if (_isClosing)
-    //        return;
-
-    //    RectTransform _rectTransform = (RectTransform)_content.transform;
-
-    //    _sequence?.Complete();
-
-    //    _sequence = DOTween.Sequence()
-    //        .SetLink(gameObject)
-    //        .Append(_rectTransform.DOMoveY(_rectTransform.position.y - 100f, 0.1f))
-    //        .Append(_rectTransform.DOMoveY(_rectTransform.position.y + 800f, 0.3f));
-
-    //    _sequence.SetEase(Ease.Linear);
-
-    //    _sequence.Play()
-    //        .OnComplete(() =>
-    //        {
-    //            OnClose();
-    //            Destroy(gameObject);
-    //            ClosePromise.Resolve();
-    //        });
-    //}
-
     protected virtual void OnAwake() { }
     protected virtual void OnStart() { }
     protected virtual void OnClose() { }

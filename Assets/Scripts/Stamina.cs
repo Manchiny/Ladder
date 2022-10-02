@@ -8,7 +8,7 @@ public class Stamina : MonoBehaviour
     public const float MaxFactorToFail = 0.99f;
 
     private const float RecoveryPerSecond = 3f;
-    private const float BaseÑonsumptionPerStep = 1f;
+    private const float BaseEnergyÑonsumptionPerStep = 1f;
 
     private HandsMover _hands;
 
@@ -53,6 +53,11 @@ public class Stamina : MonoBehaviour
         CurrentEnergy.Value = MaxEnergyValue;
     }
 
+    /// <summary>
+    /// Â äèàïîçîíå îò 0 äî 1 âîçâğàùàåò ñòåïåíü óñòàëîñòè. Ãäå 0 - òîëüêî íà÷àëè óñòàâàòü, 1 - ìàêñèìàëüíàÿ óñòàëîñòü.
+    /// </summary>
+    /// <param name="factor"></param>
+    /// <returns></returns>
     public bool IsLowEnergy(out float factor)
     {
         float valuePercent = CurrentEnergy.Value * 100f / MaxEnergyValue;
@@ -83,7 +88,7 @@ public class Stamina : MonoBehaviour
 
     private void ForceExpendEnergy(LadderStep step, Hand hand)
     {
-        float energyCount = Game.Player.CalculateEndValueWithBoosts<StaminaBoost>(BaseÑonsumptionPerStep);
+        float energyCount = Game.Player.CalculateEndValueWithBoosts<StaminaBoost>(BaseEnergyÑonsumptionPerStep);
         ExpandEnergy(energyCount);
     }
 
