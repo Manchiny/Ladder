@@ -10,4 +10,5 @@ public class GameConstants
     public static int BaseMoneyBonusForStep => 1;
     public static float UIEffectZPosition => 2f;
     public static float HandDafaultXPosition => 0.6f;
+    public static float BaseÑonsumptionPerStep => 1f;
 }

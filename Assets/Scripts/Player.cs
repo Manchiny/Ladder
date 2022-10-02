@@ -21,25 +21,25 @@ public class Player
         }
     }
 
-    public int CalculateMoneyForStepTaking()
+    public float CalculateEndValueWithBoosts<T>(float baseValue) where T : Boost
     {
         List<Boost> boosts = new();
 
         foreach (var boost in _boosts)
         {
-            if (boost is MoneyBoost && boost)
+            if (boost is T)
                 boosts.Add(boost);
         }
 
         if (boosts.Count == 0)
-            return GameConstants.BaseMoneyBonusForStep;
+            return baseValue;
 
         float summ = 0;
 
         foreach (var boost in boosts)
-            summ += boost.CalculateEndValue(GameConstants.BaseMoneyBonusForStep);
+            summ += boost.CalculateEndValue(baseValue);
 
-        return (int)summ;
+        return summ;
     }
 
     public bool TryBuyBoost<T>(T boost) where T: Boost

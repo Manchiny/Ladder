@@ -2,6 +2,7 @@ using System;
 using UniRx;
 using UnityEngine;
 
+[RequireComponent(typeof(Stamina))]
 public class HandsMover : MonoBehaviour
 {
     [SerializeField] private Hand _leftHand;
@@ -14,14 +15,17 @@ public class HandsMover : MonoBehaviour
 
     private IDisposable _moveDispose;
 
+    public Stamina Stamina { get; private set; }
+
     public float GetAverageValue => (_leftHand.GetHeight + _rightHand.GetHeight) / 2f;
-    private bool _canMove => _leftHand.CanMove && _rightHand.CanMove;
+    public bool CanMove => _leftHand.CanMove && _rightHand.CanMove;
 
     public event Action Failed;
     public event Action Loosed;
     public event Action Completed;
     public event Action Catched;
     public event Action<LadderStep, Hand> Taked;
+    public event Action Stopped;
 
     private void OnDisable()
     {
@@ -41,6 +45,11 @@ public class HandsMover : MonoBehaviour
         AddSubscribes();
 
         _downHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;
+
+        if (Stamina == null)
+            Stamina = GetComponent<Stamina>();
+            
+        Stamina.Init(this);
     }
 
     public void TryMove()
@@ -49,7 +58,7 @@ public class HandsMover : MonoBehaviour
         {
             _moveDispose = Observable.EveryUpdate().Subscribe(_ =>
             {
-                if (_canMove == false)
+                if (CanMove == false)
                     return;
 
                 ValidateDownHand();
@@ -65,6 +74,8 @@ public class HandsMover : MonoBehaviour
             _moveDispose.Dispose();
             _moveDispose = null;
         }
+
+        Stopped?.Invoke();
     }
 
     public void TryCatch()
@@ -96,6 +107,7 @@ public class HandsMover : MonoBehaviour
             ValidateDownHand();
         }
     }
+
     private void AddSubscribes()
     {
         _leftHand.Taked += OnStepTaked;

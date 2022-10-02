@@ -8,6 +8,12 @@ public class StaminaBoost : Boost
 
     protected override float Calculate(float baseValue, float value)
     {
-        return baseValue * value;
+        if (value <= 0)
+        {
+            Debug.LogError($"Stamina boost value must be > 0! Stamina boost level = {GetBoostLevel(Game.User)}");
+            return baseValue;
+        }
+
+        return baseValue / value;
     }
 }

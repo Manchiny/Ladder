@@ -24,6 +24,7 @@ public class Game : MonoBehaviour
     public static Player Player => Instance._player;
     public static BoostsDatabase BoostsDatabase => Instance._boostsDatabase;
     public static Saver Saver => Instance._saver;
+    public static UserInput UserInput => Instance._userInput;
 
     public ReactiveProperty<LevelConfiguration> CurrenLevel { get; private set; } = new ReactiveProperty<LevelConfiguration>();
 
@@ -99,7 +100,7 @@ public class Game : MonoBehaviour
     {
         Camera.main.backgroundColor = level.BackgroundColor;
         _ladder.Init(level);
-        Windows.HUD.Init();
+        Windows.HUD.Init(_hands);
 
         LevelStartWindow.Show(_userInput);
     }
@@ -120,7 +121,7 @@ public class Game : MonoBehaviour
     {
         if(step.Id > 1)
         {
-            int count = _player.CalculateMoneyForStepTaking();
+            int count = (int)_player.CalculateEndValueWithBoosts<MoneyBoost>(GameConstants.BaseMoneyBonusForStep);
             AddMoney(count, hand);
             Windows.HUD.ShowFloatingMoney(count, hand);
         }

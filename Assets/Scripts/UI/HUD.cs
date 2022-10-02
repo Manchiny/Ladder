@@ -12,12 +12,15 @@ public class HUD : MonoBehaviour
     [Space]
     [SerializeField] private RectTransform _moneyPanelContent;
     [SerializeField] private FloatingMoneyText _floatingMoneyPrefab;
+    [Space]
+    [SerializeField] private StaminaView _staminaView;
 
     private const float FadeDuration = 1f;
     private const float MoneyPanelAnimationDuration = 0.075f;
     private const float FloatingMoneyDeltaYStartPosition = 1f;
 
     private CanvasGroup _canvas;
+    private HandsMover _hands;
 
     private Tween MoneyAnimationTween;
     private IDisposable _levelChangeDispose;
@@ -33,7 +36,7 @@ public class HUD : MonoBehaviour
         Game.User.MoneyChanged -= OnMoneyChanged;
     }
 
-    public void Init()
+    public void Init(HandsMover hands)
     {
         _canvas.alpha = 0;
         _levelChangeDispose = Game.Instance.CurrenLevel.ObserveEveryValueChanged(x => x.Value).Subscribe(OnLevelChanged).AddTo(this);
@@ -41,6 +44,10 @@ public class HUD : MonoBehaviour
         SetMoneyText(Game.User.Money);
 
         Game.User.MoneyChanged += OnMoneyChanged;
+
+        _hands = hands;
+        _staminaView.Init(_hands.Stamina);
+
         Show();
     }
 
