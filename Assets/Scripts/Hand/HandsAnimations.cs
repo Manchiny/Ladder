@@ -7,6 +7,7 @@ public class HandsAnimations
     private const string IdleKey = "Idle";
     private const string ClaspKey = "Clasp";
     private const string ReleaseKey = "Release";
+    private const string PushKey = "Push";
 
     private const float CrossFadeDuration = 0.1f;
 
@@ -23,6 +24,7 @@ public class HandsAnimations
     public void PlayIdle() => PlayAnimation(IdleKey);
     public void PlayClasp() => PlayAnimation(ClaspKey);
     public void PlayRelease() => PlayAnimation(ReleaseKey);
+    public void PlayPush() => PlayAnimation(PushKey);
 
     public IPromise PlayFail(Transform hand) => ReturnHand(hand);
 

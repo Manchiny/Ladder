@@ -17,14 +17,13 @@ public class Hand : MonoBehaviour
     private bool _isProcess;
     private Tween _fallingTween;
 
-    private LadderStep _targetStep;
     private HandsAnimations _animations;
-
     private Vector3 _defaultPosition;
 
     public LadderSide Side { get; private set; }
     public bool IsFalling { get; private set; }
     public LadderStep LastTakedStep { get; private set; }
+
     public bool CanMove => _isProcess == false && IsFalling == false;
     public float GetHeight => transform.position.y;
 
@@ -74,8 +73,6 @@ public class Hand : MonoBehaviour
         if (CanMove == false || step == null)
             return false;
 
-        _targetStep = step;
-
         if (step is FinishButtonStep)
             PressFinishButton(step);
         else
@@ -92,8 +89,6 @@ public class Hand : MonoBehaviour
         _isProcess = true;
 
         _animations.PlayClasp();
-
-        _targetStep = step;
 
         if (_fallingTween != null)
             _fallingTween.Kill();
@@ -150,20 +145,24 @@ public class Hand : MonoBehaviour
         Failed?.Invoke(this);
     }
 
-
-
     private void PressFinishButton(LadderStep step)
     {
         _isProcess = true;
         _animations.PlayRelease();
 
-        transform.DOMove(step.transform.position, MoveUpDuration)
-             .SetLink(gameObject)
-             .SetEase(Ease.Linear)
-             .OnComplete(() =>
-             {
-                 Take(step);
-             });
+        Vector3 position = step.transform.position;
+        position.z = -0.05f;
+
+        Utils.WaitSeconds(0.2f)
+            .Then(() =>
+            {
+                _animations.PlayPush();
+
+                transform.DOMove(position, MoveUpDuration)
+                         .SetLink(gameObject)
+                         .SetEase(Ease.Linear)
+                         .OnComplete(() => Take(step));
+            });
     }
 
     private void Take(LadderStep step)
