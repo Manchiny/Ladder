@@ -12,6 +12,7 @@ public class LevelConfiguration : ScriptableObject
     [SerializeField] private List<LadderStepsChanse> _notDefaultLadderSteps;
     [Space]
     [SerializeField] Color _backgroundColor;
+    [SerializeField] private LevelBackgroundObject _levelBackgroundObject;
 
     private const int MaxSummaryNonDefualtStepsChance = 100;
 
@@ -22,6 +23,7 @@ public class LevelConfiguration : ScriptableObject
 
     public int StepsCount => _ladderStepsCount;
     public Color BackgroundColor => _backgroundColor;
+    public LevelBackgroundObject BackgroundObject => _levelBackgroundObject;
 
     private void Awake()
     {

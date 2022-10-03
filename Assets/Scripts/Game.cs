@@ -12,6 +12,8 @@ public class Game : MonoBehaviour
     [Space]
     [SerializeField] private GameEffects _effects;
     [SerializeField] private BoostsDatabase _boostsDatabase;
+    [Space]
+    [SerializeField] private Transform _backgroundObjectHolder;
 
     private float StaminaLowEnergyFactorToShowTiredWindow = 0.5f;
 
@@ -85,8 +87,11 @@ public class Game : MonoBehaviour
         _levels.Init();
         Windows.Init();
 
-        CurrenLevel.Value = _levels.GetLevelConfiguration(_user.CurrentLevelId);
-        StartLevel(CurrenLevel.Value);
+        var nextLevel = _levels.GetLevelConfiguration(_user.CurrentLevelId);
+        bool reinit = CurrenLevel.Value != null && CurrenLevel.Value.Id == nextLevel.Id;
+
+        CurrenLevel.Value = nextLevel;
+        StartLevel(CurrenLevel.Value, reinit);
 
         _hands.Failed += OnFail;
         _hands.Catched += OnCatch;
@@ -98,9 +103,19 @@ public class Game : MonoBehaviour
         _userInput.Untouched += _hands.StopMovement;
     }
 
-    private void StartLevel(LevelConfiguration level)
+    private void StartLevel(LevelConfiguration level, bool isReinit)
     {
-        Camera.main.backgroundColor = level.BackgroundColor;
+        if (isReinit == false)
+        {
+            foreach (var item in _backgroundObjectHolder.GetComponentsInChildren<LevelBackgroundObject>())
+                Destroy(item.gameObject);
+
+            if (level.BackgroundObject != null)
+                Instantiate(level.BackgroundObject, _backgroundObjectHolder);
+
+            Camera.main.backgroundColor = level.BackgroundColor;
+        }
+
         _ladder.Init(level);
         Windows.HUD.Init(_hands);
 
@@ -175,7 +190,7 @@ public class Game : MonoBehaviour
         _user.SetCurrentLevelId(CurrenLevel.Value);
         _saver.Save(_user);
 
-        LevelCompleteWindow.Show(() => StartLevel(CurrenLevel.Value));
+        LevelCompleteWindow.Show(() => StartLevel(CurrenLevel.Value, false));
         _effects.PlayKonfettiEffect();
     }
 
