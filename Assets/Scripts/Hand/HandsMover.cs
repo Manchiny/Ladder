@@ -14,10 +14,10 @@ public class HandsMover : MonoBehaviour
     private const float FallingPerStepDuration = 0.2f;
 
     private Hand _downHand;
-    private bool _isFalling;
 
     private IDisposable _moveDispose;
     public Stamina Stamina { get; private set; }
+    public bool IsFalling { get; private set; }
 
     public float GetAverageValue => (_leftHand.GetHeight + _rightHand.GetHeight) / 2f;
     public bool CanMove => _leftHand.CanMove && _rightHand.CanMove;
@@ -39,7 +39,7 @@ public class HandsMover : MonoBehaviour
         if (isReinit)
             RemoveSubscribes();
 
-        _isFalling = false;
+        IsFalling = false;
 
         if (Stamina == null)
             Stamina = GetComponent<Stamina>();
@@ -82,7 +82,7 @@ public class HandsMover : MonoBehaviour
 
     public void TryCatch()
     {
-        if (_isFalling == false)
+        if (IsFalling == false)
             return;
 
         ValidateDownHand();
@@ -138,7 +138,7 @@ public class HandsMover : MonoBehaviour
 
     private void OnStepTaked(LadderStep step, Hand hand)
     {
-        _isFalling = false;
+        IsFalling = false;
         Debug.Log($"Step {step.Id} taked");
 
         if (step is FinishButtonStep)
@@ -172,12 +172,12 @@ public class HandsMover : MonoBehaviour
                 Failed?.Invoke();
             });
 
-        _isFalling = true;
+        IsFalling = true;
     }
 
     private void OnLoose()
     {
-        _isFalling = false;
+        IsFalling = false;
         StopMovement();
 
         Loosed?.Invoke();

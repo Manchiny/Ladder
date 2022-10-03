@@ -22,7 +22,7 @@ public class Stamina : MonoBehaviour
         if (_inited == false || _touched)
             return;
 
-        if (_hands.CanMove)
+        if (_hands.CanMove || _hands.IsFalling)
             RecoverEnergy(RecoveryPerSecond * Time.deltaTime);
     }
 
