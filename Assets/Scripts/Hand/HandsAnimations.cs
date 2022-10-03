@@ -1,4 +1,5 @@
-using System.Collections;
+using DG.Tweening;
+using RSG;
 using UnityEngine;
 
 public class HandsAnimations
@@ -8,46 +9,40 @@ public class HandsAnimations
     private const string ReleaseKey = "Release";
 
     private const float CrossFadeDuration = 0.1f;
-    private const float FailReleaseDelay = 0.2f;
+
+    private const float ReturnHandOnFailDuration = 0.18f;
+    private const float DeltaHandsHeighOnFail = 0.15f;
 
     private Animator _animator;
-    private MonoBehaviour _monoBehaviour;
-
-    private Coroutine _animationCoroutine;
-
-    public HandsAnimations(Animator animator, MonoBehaviour monoBehaviour)
+   
+    public HandsAnimations(Animator animator)
     {
         _animator = animator;
-        _monoBehaviour = monoBehaviour;
     }
 
     public void PlayIdle() => PlayAnimation(IdleKey);
     public void PlayClasp() => PlayAnimation(ClaspKey);
     public void PlayRelease() => PlayAnimation(ReleaseKey);
 
-    public void PlayFail()
-    {
-        StopCoroutine();
-        _animationCoroutine = _monoBehaviour.StartCoroutine(PlayFailAnimation());
-    }
+    public IPromise PlayFail(Transform hand) => ReturnHand(hand);
 
     private void PlayAnimation(string key)
     {
         _animator.StopPlayback();
-        StopCoroutine();
-        
         _animator.CrossFade(key, CrossFadeDuration);
     }
 
-    private IEnumerator PlayFailAnimation()
+    private Promise ReturnHand(Transform hand)
     {
-        yield return new WaitForSeconds(FailReleaseDelay);
-        PlayRelease();
-    }
+        Promise promise = new Promise();
 
-    private void StopCoroutine()
-    {
-        if (_animationCoroutine != null)
-            _monoBehaviour.StopCoroutine(_animationCoroutine);
+        float positionY = hand.position.y - GameConstants.LadderDeltaStep + DeltaHandsHeighOnFail;
+
+        hand.DOMoveY(positionY, ReturnHandOnFailDuration)
+            .SetEase(Ease.InQuad)
+            .SetLink(hand.gameObject)
+            .OnComplete(() => promise.Resolve());
+
+        return promise;
     }
 }

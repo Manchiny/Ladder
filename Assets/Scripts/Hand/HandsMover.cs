@@ -1,3 +1,4 @@
+using RSG;
 using System;
 using UniRx;
 using UnityEngine;
@@ -10,11 +11,12 @@ public class HandsMover : MonoBehaviour
     [Space]
     [SerializeField] private Ladder _ladder;
 
+    private const float FallingPerStepDuration = 0.2f;
+
     private Hand _downHand;
     private bool _isFalling;
 
     private IDisposable _moveDispose;
-
     public Stamina Stamina { get; private set; }
 
     public float GetAverageValue => (_leftHand.GetHeight + _rightHand.GetHeight) / 2f;
@@ -152,12 +154,25 @@ public class HandsMover : MonoBehaviour
     {
         StopMovement();
 
-        _leftHand.FallDown();
-        _rightHand.FallDown();
+        IPromise failAnimation = new Promise();
+
+        if (hand.Side == Ladder.LadderSide.Left)
+            failAnimation = _leftHand.PlayFailAnimation();
+        else
+            failAnimation = _rightHand.PlayFailAnimation();
+
+        float duration = (GetAverageValue / GameConstants.LadderDeltaStep) * FallingPerStepDuration;
+
+        failAnimation
+            .Then(() => 
+            {
+                _leftHand.FallDown(duration);
+                _rightHand.FallDown(duration);
+
+                Failed?.Invoke();
+            });
 
         _isFalling = true;
-
-        Failed?.Invoke();
     }
 
     private void OnLoose()

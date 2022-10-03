@@ -1,4 +1,5 @@
 using DG.Tweening;
+using RSG;
 using System;
 using UnityEngine;
 using static Ladder;
@@ -49,26 +50,23 @@ public class Hand : MonoBehaviour
 
         Side = side;
 
-        _animations = new HandsAnimations(_animator, this);
+        _animations = new HandsAnimations(_animator);
         ForceTake(initStep);
 
         IsFalling = false;
 
     }
 
-    public void FallDown()
-    {
-        if (IsFalling)
-            _animations.PlayFail();
-        else
-            _animations.PlayRelease();
+    public IPromise PlayFailAnimation() => _animations.PlayFail(transform);
 
-        float duration = (_targetStep.Height / GameConstants.LadderDeltaStep) * ForceMoveStepDuration;
+    public void FallDown(float duration)
+    {
+        _animations.PlayRelease();
 
         _fallingTween = transform.DOMoveY(0, duration)
-                                 .SetLink(gameObject)
-                                 .SetEase(Ease.Linear)
-                                 .OnComplete(() => Loosed?.Invoke());
+                         .SetLink(gameObject)
+                         .SetEase(Ease.Linear)
+                         .OnComplete(() => Loosed?.Invoke());
     }
 
     public bool TryMove(LadderStep step)
@@ -96,7 +94,9 @@ public class Hand : MonoBehaviour
         _animations.PlayClasp();
 
         _targetStep = step;
-        _fallingTween.Kill();
+
+        if (_fallingTween != null)
+            _fallingTween.Kill();
 
         transform.DOMoveY(step.Height, ForceMoveStepDuration)
              .SetLink(gameObject)
@@ -149,6 +149,8 @@ public class Hand : MonoBehaviour
         IsFalling = true;
         Failed?.Invoke(this);
     }
+
+
 
     private void PressFinishButton(LadderStep step)
     {

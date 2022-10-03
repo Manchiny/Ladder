@@ -146,7 +146,9 @@ public class Game : MonoBehaviour
     {
         _effects.PlayFallingEffect();
 
-        TapToCatchWindow.Show(_userInput, _hands, OnEnoughTaps);
+        //Utils.WaitSeconds(0.5f)
+        //    .Then(() =>
+        TapToCatchWindow.Show(_userInput, _hands, OnEnoughTaps);     
 
         void OnEnoughTaps()
         {
