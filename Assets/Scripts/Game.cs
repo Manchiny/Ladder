@@ -1,6 +1,6 @@
 using Assets.Scripts.Boosts;
 using Assets.Scripts.Hands;
-using Assets.Scripts.LevelLadder;
+using Assets.Scripts.Ladder;
 using Assets.Scripts.Levels;
 using Assets.Scripts.UI;
 using UniRx;
@@ -10,7 +10,7 @@ namespace Assets.Scripts
 {
     public class Game : MonoBehaviour
     {
-        [SerializeField] private Ladder _ladder;
+        [SerializeField] private Ladder.Ladder _ladder;
         [SerializeField] private HandsMover _hands;
         [Space]
         [SerializeField] private LevelDatabase _levels;

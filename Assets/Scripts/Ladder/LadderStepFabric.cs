@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Assets.Scripts.LevelLadder.Ladder;
+using static Assets.Scripts.Ladder.Ladder;
 using static Assets.Scripts.Levels.LevelConfiguration;
 
-namespace Assets.Scripts.LevelLadder
+namespace Assets.Scripts.Ladder
 {
     public class LadderStepFabric : MonoBehaviour
     {

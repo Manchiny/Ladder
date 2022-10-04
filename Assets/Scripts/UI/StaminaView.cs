@@ -1,5 +1,5 @@
 using Assets.Scripts.Hands;
-using Assets.Scripts.LevelLadder;
+using Assets.Scripts.Ladder;
 using DG.Tweening;
 using System;
 using UniRx;

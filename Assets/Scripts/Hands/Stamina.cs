@@ -1,5 +1,5 @@
 using Assets.Scripts.Boosts;
-using Assets.Scripts.LevelLadder;
+using Assets.Scripts.Ladder;
 using UniRx;
 using UnityEngine;
 

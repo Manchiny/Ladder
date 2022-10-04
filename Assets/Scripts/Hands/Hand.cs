@@ -1,9 +1,9 @@
-using Assets.Scripts.LevelLadder;
+using Assets.Scripts.Ladder;
 using DG.Tweening;
 using RSG;
 using System;
 using UnityEngine;
-using static Assets.Scripts.LevelLadder.Ladder;
+using static Assets.Scripts.Ladder.Ladder;
 
 namespace Assets.Scripts.Hands
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using static Assets.Scripts.Levels.LevelConfiguration;
 
-namespace Assets.Scripts.LevelLadder
+namespace Assets.Scripts.Ladder
 {
     public class Ladder : MonoBehaviour
     {

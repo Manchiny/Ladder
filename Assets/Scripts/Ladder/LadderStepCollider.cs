@@ -1,7 +1,7 @@
 using Assets.Scripts.Hands;
 using UnityEngine;
 
-namespace Assets.Scripts.LevelLadder
+namespace Assets.Scripts.Ladder
 {
     [RequireComponent(typeof(Collider))]
     public class LadderStepCollider : MonoBehaviour

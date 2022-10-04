@@ -1,9 +1,9 @@
-using Assets.Scripts.LevelLadder;
+using Assets.Scripts.Ladder;
 using RSG;
 using System;
 using UniRx;
 using UnityEngine;
-using static Assets.Scripts.LevelLadder.Ladder;
+using static Assets.Scripts.Ladder.Ladder;
 
 namespace Assets.Scripts.Hands
 {
@@ -13,7 +13,7 @@ namespace Assets.Scripts.Hands
         [SerializeField] private Hand _leftHand;
         [SerializeField] private Hand _rightHand;
         [Space]
-        [SerializeField] private Ladder _ladder;
+        [SerializeField] private Ladder.Ladder _ladder;
 
         private const float FallingPerStepDuration = 0.2f;
 
