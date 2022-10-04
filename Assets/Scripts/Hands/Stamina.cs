@@ -12,7 +12,7 @@ namespace Assets.Scripts.Hands
         public const float MaxFactorToFail = 0.99f;
 
         private const float RecoveryPerSecond = 3f;
-        private const float BaseEnergy—onsumptionPerStep = 1f;
+        private const float BaseEnergy—onsumptionPerStep = 1.5f;
 
         private HandsMover _hands;
 
