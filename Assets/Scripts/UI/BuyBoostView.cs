@@ -23,11 +23,10 @@ namespace Assets.Scripts.UI
         private const float AnimationScaleValue = 0.8f;
 
         private RectTransform _rect;
-        private Tween _clickAnimation;
 
         private bool _locked;
-
         private event Action _onClick;
+
 
         private void Awake()
         {

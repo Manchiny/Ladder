@@ -78,17 +78,7 @@ namespace Assets.Scripts.UI
                 _boostBuyed = true;
 
                 if (boost.BuyEffect != null)
-                {
-                    ParticleSystem fx = Instantiate(boost.BuyEffect, Camera.main.transform);
-                    fx.transform.localRotation = Quaternion.Euler(Vector3.zero);
-
-                    fx.transform.position = Camera.main.ScreenToWorldPoint(panelClicked.transform.position);
-
-                    var localPosition = fx.transform.localPosition;
-                    localPosition.z = GameConstants.UIEffectZPosition;
-                    fx.transform.localPosition = localPosition;
-                    fx.Play();
-                }
+                    Instantiate(boost.BuyEffect, panelClicked.transform.position, Quaternion.identity, Game.Windows.HUD.transform);
 
                 Utils.WaitSeconds(0.05f)
                    .Then(() => Close());
