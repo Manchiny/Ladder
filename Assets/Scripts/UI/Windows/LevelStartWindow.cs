@@ -40,6 +40,11 @@ public class LevelStartWindow : AbstractWindow
             .Then(() => ActivateInput());
     }
 
+    protected override void OnClose()
+    {
+        ActivateInput();
+    }
+
     private IPromise FadeOut()
     {
         Promise promise = new Promise();
@@ -69,7 +74,7 @@ public class LevelStartWindow : AbstractWindow
         {
             _boostBuyed = true;
 
-            if(boost.BuyEffect != null)
+            if (boost.BuyEffect != null)
             {
                 ParticleSystem fx = Instantiate(boost.BuyEffect, Camera.main.transform);
                 fx.transform.localRotation = Quaternion.Euler(Vector3.zero);

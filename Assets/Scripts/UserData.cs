@@ -30,21 +30,22 @@ public class UserData
 
     public bool BuyBoost(Boost boost)
     {
-        int cost = boost.GetNextLevelCost(this);
-
-        if (Money >= cost)
+        if (boost.TryGetNextLevelCost(out int cost))
         {
-            Money -= cost;
-            MoneyChanged?.Invoke(Money);
+            if (Money >= cost)
+            {
+                Money -= cost;
+                MoneyChanged?.Invoke(Money);
 
-            if (_boostsLevels.ContainsKey(boost.Type) == false)
-                _boostsLevels.Add(boost.Type, 0);
+                if (_boostsLevels.ContainsKey(boost.Type) == false)
+                    _boostsLevels.Add(boost.Type, 0);
 
-            _boostsLevels[boost.Type]++;
+                _boostsLevels[boost.Type]++;
 
-            Game.Saver.Save(this);
+                Game.Saver.Save(this);
 
-            return true;
+                return true;
+            }
         }
 
         return false;

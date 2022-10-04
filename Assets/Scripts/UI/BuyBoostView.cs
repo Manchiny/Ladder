@@ -32,22 +32,28 @@ public class BuyBoostView : MonoBehaviour
     public void Init(Boost boost, Action onClick)
     {
         _titleText.text = boost.Name;
-        _priceText.text = $"${boost.GetNextLevelCost(Game.User)}";
 
-        if (boost.Icon != null)
-            _icon.sprite = boost.Icon;
+        if (boost.NeedShow && boost.TryGetNextLevelCost(out int cost))
+        {
+            _priceText.text = $"${cost}";
+
+            if (boost.Icon != null)
+                _icon.sprite = boost.Icon;
+            else
+                _icon.gameObject.SetActive(false);
+
+            foreach (var image in _coloredElements)
+                image.color = boost.ViewColor;
+
+            _onClick = onClick;
+            _button.onClick.AddListener(OnClick);
+        }
         else
-            _icon.gameObject.SetActive(false);
-
-        foreach (var image in _coloredElements)
-            image.color = boost.ViewColor;
-
-        _onClick = onClick;
-        _button.onClick.AddListener(OnClick);
+            gameObject.SetActive(false);
     }
 
     private void OnClick()
-    {  
+    {
         PlayAnimation()
             .Then(() => _onClick?.Invoke());
     }

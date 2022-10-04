@@ -28,6 +28,7 @@ public class Game : MonoBehaviour
     public static BoostsDatabase BoostsDatabase => Instance._boostsDatabase;
     public static Saver Saver => Instance._saver;
     public static UserInput UserInput => Instance._userInput;
+    public static int CurrentLevelId => Instance.CurrenLevel.Value.Id;
 
     public ReactiveProperty<LevelConfiguration> CurrenLevel { get; private set; } = new ReactiveProperty<LevelConfiguration>();
 

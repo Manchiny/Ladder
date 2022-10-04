@@ -16,6 +16,7 @@ public abstract class Boost : ScriptableObject
     public Sprite Icon => _icon;
     public Color ViewColor => _viewColor;
     public ParticleSystem BuyEffect => _buyEffect;
+    public bool NeedShow => HasBoostLevel(GetBoostLevel(Game.User)) && Game.CurrentLevelId >= GameConstants.MinLevelToShowBoostsShop;
 
     public enum BoostType
     {
@@ -23,14 +24,20 @@ public abstract class Boost : ScriptableObject
         StaminaBoost
     }
 
-    public int GetNextLevelCost(UserData user)
-    {
-        int currentLevel = GetBoostLevel(user);
+    public bool HasBoostLevel(int levelId) => _configs.Count > levelId;
 
-        if (_configs.Count > currentLevel+1)
-            return _configs[currentLevel+1].Cost;
+    public bool TryGetNextLevelCost(out int cost)
+    {
+        int currentLevel = GetBoostLevel(Game.User);
+        cost = 0;
+
+        if (HasBoostLevel(currentLevel + 1))
+        {
+            cost = _configs[currentLevel + 1].Cost;
+            return true;
+        }
         else
-            return _configs.Last().Cost;
+            return false;
     }
 
     public float CalculateEndValue(float baseValue)
