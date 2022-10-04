@@ -25,6 +25,8 @@ namespace Assets.Scripts.UI
         private RectTransform _rect;
         private Tween _clickAnimation;
 
+        private bool _locked;
+
         private event Action _onClick;
 
         private void Awake()
@@ -34,6 +36,8 @@ namespace Assets.Scripts.UI
 
         public void Init(Boost boost, Action onClick)
         {
+            _locked = false;
+
             _titleText.text = boost.Name;
 
             if (boost.NeedShow && boost.TryGetNextLevelCost(out int cost))
@@ -55,8 +59,18 @@ namespace Assets.Scripts.UI
                 gameObject.SetActive(false);
         }
 
+        public void SetLocked(bool needLock)
+        {
+            _locked = needLock;
+        }
+
         private void OnClick()
         {
+            if (_locked)
+                return;
+
+            SetLocked(true);
+
             PlayAnimation()
                 .Then(() => _onClick?.Invoke());
         }
