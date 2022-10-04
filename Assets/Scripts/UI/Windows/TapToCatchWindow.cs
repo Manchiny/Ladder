@@ -11,9 +11,12 @@ namespace Assets.Scripts.UI
 
         public override string LockKey => "TapToCatchWindow";
 
+        private static TapToCatchWindow _window;
+
         private UserInput _userInput;
-        private int _tapCounter;
         private HandsMover _hands;
+
+        private int _tapCounter;
 
         private float _lastClickTime;
 
@@ -24,6 +27,11 @@ namespace Assets.Scripts.UI
 
         protected void Init(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived)
         {
+            if (_window != null)
+                _window.Close();
+
+            _window = this;
+
             Debug.Log("Tap to catch window init...");
             _infoText.text = "TAP TAP TAP";
             _enoughTapsRecived = onEnoughTapsRecived;
@@ -33,7 +41,6 @@ namespace Assets.Scripts.UI
 
             _userInput = userInput;
             _userInput.Touched += OnStartTouch;
-            _userInput.Untouched += OnEndTouch;
 
             ScalePongAnimation textAnimation = new ScalePongAnimation(_infoText.transform as RectTransform);
         }
@@ -43,9 +50,7 @@ namespace Assets.Scripts.UI
             if (_lastClickTime > 0)
             {
                 if ((Time.realtimeSinceStartup - _lastClickTime) < GameConstants.MaxSecondsBeetweenTaps)
-                {
                     _tapCounter++;
-                }
                 else
                     _tapCounter = 0;
             }
@@ -58,16 +63,11 @@ namespace Assets.Scripts.UI
                 _enoughTapsRecived?.Invoke();
         }
 
-        private void OnEndTouch()
-        {
-
-        }
-
         protected override void OnClose()
         {
-            _userInput.Touched -= OnStartTouch;
-            _userInput.Untouched -= OnEndTouch;
+            _window = null;
 
+            _userInput.Touched -= OnStartTouch;
             _hands.Catched -= Close;
         }
     }

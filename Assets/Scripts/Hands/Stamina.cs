@@ -8,11 +8,11 @@ namespace Assets.Scripts.Hands
     public class Stamina : MonoBehaviour
     {
         public const float MaxEnergyValue = 20f;
-        public const float LowEnergyPercent = 30f;
+        public const float LowEnergyPercent = 40f;
         public const float MaxFactorToFail = 0.99f;
 
         private const float RecoveryPerSecond = 3f;
-        private const float BaseEnergy—onsumptionPerStep = 1.5f;
+        private const float BaseEnergy—onsumptionPerStep = 2f;
 
         private HandsMover _hands;
 
