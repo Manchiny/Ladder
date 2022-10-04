@@ -6,91 +6,94 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelCompleteWindow : AbstractWindow
+namespace Assets.Scripts.UI
 {
-    [SerializeField] private TextMeshProUGUI _completeText;
-    [SerializeField] private RectTransform _panelWithStars;
-    [SerializeField] private List<RectTransform> _stars;
-    [Space]
-    [SerializeField] private Button _continueButton;
-    [SerializeField] private TextMeshProUGUI _continueButtonText;
-
-    public override string LockKey => "LevelCompleteWindow";
-
-    private event Action _onContinueClick;
-
-    public static LevelCompleteWindow Show(Action onContinueClicked) =>
-               Game.Windows.ScreenChange<LevelCompleteWindow>(true, w => w.Init(onContinueClicked));
-
-    protected void Init(Action onContinueClicked)
+    public class LevelCompleteWindow : AbstractWindow
     {
-        _completeText.text = "REACHED TO SKY!";
-        _continueButtonText.text = "TAP TO CONTINUE";
+        [SerializeField] private TextMeshProUGUI _completeText;
+        [SerializeField] private RectTransform _panelWithStars;
+        [SerializeField] private List<RectTransform> _stars;
+        [Space]
+        [SerializeField] private Button _continueButton;
+        [SerializeField] private TextMeshProUGUI _continueButtonText;
 
-        _onContinueClick = onContinueClicked;
-        _continueButton.onClick.AddListener(OnContinueButtonClick);
+        public override string LockKey => "LevelCompleteWindow";
 
-        _panelWithStars.localScale = Vector3.zero;
-        _stars.ForEach(star => star.localScale = Vector3.zero);
+        private event Action _onContinueClick;
 
-        PlaySequencesScaleAnimation(_panelWithStars)
-            .Then(PlayStarsAnimation);
-    }
+        public static LevelCompleteWindow Show(Action onContinueClicked) =>
+                   Game.Windows.ScreenChange<LevelCompleteWindow>(true, w => w.Init(onContinueClicked));
 
-    private IPromise PlayStarsAnimation()
-    {
-        Promise promise = new Promise();
+        protected void Init(Action onContinueClicked)
+        {
+            _completeText.text = "REACHED TO SKY!";
+            _continueButtonText.text = "TAP TO CONTINUE";
 
-        List<Func<IPromise>> animations = new();
-        _stars.ForEach(star => animations.Add(() => PlaySequencesScaleAnimation(star)));
+            _onContinueClick = onContinueClicked;
+            _continueButton.onClick.AddListener(OnContinueButtonClick);
 
-        var sequence = Promise.Sequence(animations);
+            _panelWithStars.localScale = Vector3.zero;
+            _stars.ForEach(star => star.localScale = Vector3.zero);
 
-        sequence
-            .Then(() => promise.Resolve());
+            PlaySequencesScaleAnimation(_panelWithStars)
+                .Then(PlayStarsAnimation);
+        }
 
-        return promise;
-    }
+        private IPromise PlayStarsAnimation()
+        {
+            Promise promise = new Promise();
 
-    private IPromise PlaySequencesScaleAnimation(RectTransform transform)
-    {
-        Promise promise = new Promise();
+            List<Func<IPromise>> animations = new();
+            _stars.ForEach(star => animations.Add(() => PlaySequencesScaleAnimation(star)));
 
-        List<Func<IPromise>> animations = new();
+            var sequence = Promise.Sequence(animations);
 
-        animations.Add(() => PlayScaleAnimation(transform, 1.3f, 0.12f));
-        animations.Add(() => PlayScaleAnimation(transform, 0.8f, 0.05f));
-        animations.Add(() => PlayScaleAnimation(transform, 1.15f, 0.04f));
-        animations.Add(() => PlayScaleAnimation(transform, 0.9f, 0.03f));
-        animations.Add(() => PlayScaleAnimation(transform, 1f, 0.02f));
+            sequence
+                .Then(() => promise.Resolve());
 
-        var sequence = Promise.Sequence(animations);
+            return promise;
+        }
 
-        sequence
-           .Then(() => promise.Resolve());
+        private IPromise PlaySequencesScaleAnimation(RectTransform transform)
+        {
+            Promise promise = new Promise();
 
-        return promise;
-    }
+            List<Func<IPromise>> animations = new();
 
-    private IPromise PlayScaleAnimation(RectTransform transform, float endValue, float duration)
-    {
-        Promise promise = new Promise();
+            animations.Add(() => PlayScaleAnimation(transform, 1.3f, 0.12f));
+            animations.Add(() => PlayScaleAnimation(transform, 0.8f, 0.05f));
+            animations.Add(() => PlayScaleAnimation(transform, 1.15f, 0.04f));
+            animations.Add(() => PlayScaleAnimation(transform, 0.9f, 0.03f));
+            animations.Add(() => PlayScaleAnimation(transform, 1f, 0.02f));
 
-        transform.DOScale(endValue, duration)
-            .SetEase(Ease.Linear)
-            .SetLink(transform.gameObject)
-            .OnComplete(() => promise.Resolve());
+            var sequence = Promise.Sequence(animations);
 
-        return promise;
-    }
+            sequence
+               .Then(() => promise.Resolve());
 
-    private void OnContinueButtonClick()
-    {
-        if (_onContinueClick != null)
-            _onContinueClick?.Invoke();
+            return promise;
+        }
 
-        _continueButton.onClick.RemoveAllListeners();
+        private IPromise PlayScaleAnimation(RectTransform transform, float endValue, float duration)
+        {
+            Promise promise = new Promise();
 
-        Close();
+            transform.DOScale(endValue, duration)
+                .SetEase(Ease.Linear)
+                .SetLink(transform.gameObject)
+                .OnComplete(() => promise.Resolve());
+
+            return promise;
+        }
+
+        private void OnContinueButtonClick()
+        {
+            if (_onContinueClick != null)
+                _onContinueClick?.Invoke();
+
+            _continueButton.onClick.RemoveAllListeners();
+
+            Close();
+        }
     }
 }

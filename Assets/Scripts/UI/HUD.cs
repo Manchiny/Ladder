@@ -1,105 +1,110 @@
+using Assets.Scripts.Hands;
+using Assets.Scripts.Levels;
 using DG.Tweening;
 using System;
 using TMPro;
 using UniRx;
 using UnityEngine;
 
-[RequireComponent(typeof(CanvasGroup))]
-public class HUD : MonoBehaviour
+namespace Assets.Scripts.UI
 {
-    [SerializeField] private TextMeshProUGUI _levelText;
-    [SerializeField] private TextMeshProUGUI _moneyText;
-    [Space]
-    [SerializeField] private RectTransform _moneyPanelContent;
-    [SerializeField] private FloatingMoneyText _floatingMoneyPrefab;
-    [Space]
-    [SerializeField] private StaminaView _staminaView;
-
-    private const float FadeDuration = 1f;
-    private const float MoneyPanelAnimationDuration = 0.075f;
-    private const float FloatingMoneyDeltaYStartPosition = 1f;
-
-    private CanvasGroup _canvas;
-    private HandsMover _hands;
-
-    private Tween MoneyAnimationTween;
-    private IDisposable _levelChangeDispose;
-
-    private void Awake()
+    [RequireComponent(typeof(CanvasGroup))]
+    public class HUD : MonoBehaviour
     {
-        _canvas = GetComponent<CanvasGroup>();
-    }
+        [SerializeField] private TextMeshProUGUI _levelText;
+        [SerializeField] private TextMeshProUGUI _moneyText;
+        [Space]
+        [SerializeField] private RectTransform _moneyPanelContent;
+        [SerializeField] private FloatingMoneyText _floatingMoneyPrefab;
+        [Space]
+        [SerializeField] private StaminaView _staminaView;
 
-    private void OnDestroy()
-    {
-        _levelChangeDispose?.Dispose();
-        Game.User.MoneyChanged -= OnMoneyChanged;
-    }
+        private const float FadeDuration = 1f;
+        private const float MoneyPanelAnimationDuration = 0.075f;
+        private const float FloatingMoneyDeltaYStartPosition = 1f;
 
-    public void Init(HandsMover hands)
-    {
-        _canvas.alpha = 0;
-        _levelChangeDispose = Game.Instance.CurrenLevel.ObserveEveryValueChanged(x => x.Value).Subscribe(OnLevelChanged).AddTo(this);
+        private CanvasGroup _canvas;
+        private HandsMover _hands;
 
-        SetMoneyText(Game.User.Money);
+        private Tween MoneyAnimationTween;
+        private IDisposable _levelChangeDispose;
 
-        Game.User.MoneyChanged += OnMoneyChanged;
+        private void Awake()
+        {
+            _canvas = GetComponent<CanvasGroup>();
+        }
 
-        _hands = hands;
-        _staminaView.Init(_hands);
+        private void OnDestroy()
+        {
+            _levelChangeDispose?.Dispose();
+            Game.User.MoneyChanged -= OnMoneyChanged;
+        }
 
-        Show();
-    }
+        public void Init(HandsMover hands)
+        {
+            _canvas.alpha = 0;
+            _levelChangeDispose = Game.Instance.CurrenLevel.ObserveEveryValueChanged(x => x.Value).Subscribe(OnLevelChanged).AddTo(this);
 
-    public void Show()
-    {
-        _canvas.DOFade(1f, FadeDuration);
-    }
+            SetMoneyText(Game.User.Money);
 
-    public void Hide()
-    {
-        _canvas.DOFade(0f, FadeDuration);
-    }
+            Game.User.MoneyChanged += OnMoneyChanged;
 
-    public void ShowFloatingMoney(int count, Hand hand)
-    {
-        FloatingMoneyText floatingMoney = Instantiate(_floatingMoneyPrefab, transform);
+            _hands = hands;
+            _staminaView.Init(_hands);
 
-        Vector3 position = hand.transform.position;
-        position.y += FloatingMoneyDeltaYStartPosition;
+            Show();
+        }
 
-        floatingMoney.transform.position = Camera.main.WorldToScreenPoint(position);
-        floatingMoney.Init(count);
-    }
+        public void Show()
+        {
+            _canvas.DOFade(1f, FadeDuration);
+        }
 
-    private void OnLevelChanged(LevelConfiguration level)
-    {
-        _levelText.text = $"LEVEL {level.Id + 1}";
-    }
+        public void Hide()
+        {
+            _canvas.DOFade(0f, FadeDuration);
+        }
 
-    private void OnMoneyChanged(int totalMoney)
-    {
-        SetMoneyText(totalMoney);
-        PlayMoneyPanelAnimation();
-    }
+        public void ShowFloatingMoney(int count, Hand hand)
+        {
+            FloatingMoneyText floatingMoney = Instantiate(_floatingMoneyPrefab, transform);
 
-    private void SetMoneyText(int money)
-    {
-        _moneyText.text = $"${money}";
-    }
+            Vector3 position = hand.transform.position;
+            position.y += FloatingMoneyDeltaYStartPosition;
 
-    private void PlayMoneyPanelAnimation()
-    {
-        if (MoneyAnimationTween != null)
-            MoneyAnimationTween.Kill();
+            floatingMoney.transform.position = Camera.main.WorldToScreenPoint(position);
+            floatingMoney.Init(count);
+        }
 
-        var sequence = DOTween.Sequence().SetEase(Ease.Linear).SetLink(gameObject);
+        private void OnLevelChanged(LevelConfiguration level)
+        {
+            _levelText.text = $"LEVEL {level.Id + 1}";
+        }
 
-        sequence.Append(_moneyPanelContent.DOScale(1.5f, MoneyPanelAnimationDuration));
-        sequence.Append(_moneyPanelContent.DOScale(1f, MoneyPanelAnimationDuration));
+        private void OnMoneyChanged(int totalMoney)
+        {
+            SetMoneyText(totalMoney);
+            PlayMoneyPanelAnimation();
+        }
 
-        MoneyAnimationTween = sequence;
+        private void SetMoneyText(int money)
+        {
+            _moneyText.text = $"${money}";
+        }
 
-        MoneyAnimationTween.Play();
+        private void PlayMoneyPanelAnimation()
+        {
+            if (MoneyAnimationTween != null)
+                MoneyAnimationTween.Kill();
+
+            var sequence = DOTween.Sequence().SetEase(Ease.Linear).SetLink(gameObject);
+
+            sequence.Append(_moneyPanelContent.DOScale(1.5f, MoneyPanelAnimationDuration));
+            sequence.Append(_moneyPanelContent.DOScale(1f, MoneyPanelAnimationDuration));
+
+            MoneyAnimationTween = sequence;
+
+            MoneyAnimationTween.Play();
+        }
     }
 }

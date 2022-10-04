@@ -1,5 +1,8 @@
 
-public class FinishButtonStep : LadderStep
+namespace Assets.Scripts.LevelLadder
 {
-    
+    public class FinishButtonStep : LadderStep
+    {
+
+    }
 }

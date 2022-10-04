@@ -1,15 +1,17 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MoneyBoost", menuName = "Boosts/MoneyBoost")]
-public class MoneyBoost : Boost
+namespace Assets.Scripts.Boosts
 {
-    public override BoostType Type => BoostType.MoneyBoost;
-    public override string Name => "INCOME";
-
-    protected override float Calculate(float baseValue, float value)
+    [CreateAssetMenu(fileName = "MoneyBoost", menuName = "Boosts/MoneyBoost")]
+    public class MoneyBoost : Boost
     {
-        Debug.Log("Money boost value: " + value);
-        return baseValue * value;
-    }
+        public override BoostType Type => BoostType.MoneyBoost;
+        public override string Name => "INCOME";
 
+        protected override float Calculate(float baseValue, float value)
+        {
+            Debug.Log("Money boost value: " + value);
+            return baseValue * value;
+        }
+    }
 }

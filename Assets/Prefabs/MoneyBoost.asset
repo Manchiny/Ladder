@@ -16,11 +16,11 @@ MonoBehaviour:
   _configs:
   - _cost: 8
     _value: 2
-  - _cost: 80
+  - _cost: 20
     _value: 3
-  - _cost: 800
+  - _cost: 30
     _value: 4
-  - _cost: 8000
+  - _cost: 40
     _value: 5
   _viewColor: {r: 0.1137255, g: 0.48627454, b: 0.36078432, a: 1}
   _buyEffect: {fileID: 3459372826420676559, guid: e820a8bb5d702e845a1700976ad87d35, type: 3}

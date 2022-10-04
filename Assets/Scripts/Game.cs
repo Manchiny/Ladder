@@ -1,210 +1,216 @@
+using Assets.Scripts.Boosts;
+using Assets.Scripts.Hands;
+using Assets.Scripts.LevelLadder;
+using Assets.Scripts.Levels;
+using Assets.Scripts.UI;
 using UniRx;
 using UnityEngine;
 
-public class Game : MonoBehaviour
+namespace Assets.Scripts
 {
-    [SerializeField] private Ladder _ladder;
-    [SerializeField] private HandsMover _hands;
-    [Space]
-    [SerializeField] private LevelDatabase _levels;
-    [SerializeField] private WindowsController _windowsController;
-    [SerializeField] private UserInput _userInput;
-    [Space]
-    [SerializeField] private GameEffects _effects;
-    [SerializeField] private BoostsDatabase _boostsDatabase;
-    [Space]
-    [SerializeField] private Transform _backgroundObjectHolder;
-
-    private float StaminaLowEnergyFactorToShowTiredWindow = 0.5f;
-
-    private UserData _user;
-    private Saver _saver;
-    private Player _player;
-
-    public static Game Instance { get; private set; }
-    public static WindowsController Windows => Instance._windowsController;
-    public static UserData User => Instance._user;
-    public static Player Player => Instance._player;
-    public static BoostsDatabase BoostsDatabase => Instance._boostsDatabase;
-    public static Saver Saver => Instance._saver;
-    public static UserInput UserInput => Instance._userInput;
-    public static int CurrentLevelId => Instance.CurrenLevel.Value.Id;
-
-    public ReactiveProperty<LevelConfiguration> CurrenLevel { get; private set; } = new ReactiveProperty<LevelConfiguration>();
-
-    private void Awake()
+    public class Game : MonoBehaviour
     {
-        if (Instance == null)
+        [SerializeField] private Ladder _ladder;
+        [SerializeField] private HandsMover _hands;
+        [Space]
+        [SerializeField] private LevelDatabase _levels;
+        [SerializeField] private WindowsController _windowsController;
+        [SerializeField] private UserInput _userInput;
+        [Space]
+        [SerializeField] private GameEffects _effects;
+        [SerializeField] private BoostsDatabase _boostsDatabase;
+        [Space]
+        [SerializeField] private Transform _backgroundObjectHolder;
+
+        private float StaminaLowEnergyFactorToShowTiredWindow = 0.5f;
+
+        private UserData _user;
+        private Saver _saver;
+        private Player _player;
+
+        public static Game Instance { get; private set; }
+
+        public static WindowsController Windows => Instance._windowsController;
+        public static UserData User => Instance._user;
+        public static Player Player => Instance._player;
+        public static BoostsDatabase BoostsDatabase => Instance._boostsDatabase;
+        public static Saver Saver => Instance._saver;
+        public static UserInput UserInput => Instance._userInput;
+        public static int CurrentLevelId => Instance.CurrenLevel.Value.Id;
+
+        public ReactiveProperty<LevelConfiguration> CurrenLevel { get; private set; } = new ReactiveProperty<LevelConfiguration>();
+
+        private void Awake()
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
 
-            return;
+                return;
+            }
+
+            Destroy(this);
         }
-
-        Destroy(this);
-    }
 
 #if UNITY_EDITOR
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.F1) == true)
-            LevelCompleteWindow.Show(null);
+        private void Update()
+        {
+            if (Input.GetKeyUp(KeyCode.F1) == true)
+                LevelCompleteWindow.Show(null);
 
-        if (Input.GetKeyUp(KeyCode.F4) == true)
-            Saver.RemoveAllData();
+            if (Input.GetKeyUp(KeyCode.F4) == true)
+                Saver.RemoveAllData();
 
-    }
+        }
 #endif
 
-    private void Start()
-    {
-        Init();
-    }
-
-    private void OnDisable()
-    {
-        _hands.Failed -= OnFail;
-        _hands.Catched -= OnCatch;
-        _hands.Loosed -= OnLoose;
-        _hands.Completed -= OnLevelComplete;
-        _hands.Taked -= OnStepTaked;
-        _hands.Taked -= ShowTiredWindowIfNeed;
-
-        _userInput.Touched -= _hands.TryMove;
-        _userInput.Untouched -= _hands.StopMovement;
-
-        CurrenLevel.Dispose();
-    }
-
-    private void Init()
-    {
-        _saver = new Saver();
-        _user = _saver.LoadUserData();
-        _player = new Player(_user);
-
-        Utils.SetMainContainer(this);
-
-        _levels.Init();
-        Windows.Init();
-
-        var nextLevel = _levels.GetLevelConfiguration(_user.CurrentLevelId);
-        bool reinit = CurrenLevel.Value != null && CurrenLevel.Value.Id == nextLevel.Id;
-
-        CurrenLevel.Value = nextLevel;
-        StartLevel(CurrenLevel.Value, reinit);
-
-        _hands.Failed += OnFail;
-        _hands.Catched += OnCatch;
-        _hands.Loosed += OnLoose;
-        _hands.Completed += OnLevelComplete;
-        _hands.Taked += OnStepTaked;
-
-        _userInput.Touched += _hands.TryMove;
-        _userInput.Untouched += _hands.StopMovement;
-    }
-
-    private void StartLevel(LevelConfiguration level, bool isReinit)
-    {
-        if (isReinit == false)
+        private void Start()
         {
-            foreach (var item in _backgroundObjectHolder.GetComponentsInChildren<LevelBackgroundObject>())
-                Destroy(item.gameObject);
-
-            if (level.BackgroundObject != null)
-                Instantiate(level.BackgroundObject, _backgroundObjectHolder);
-
-            Camera.main.backgroundColor = level.BackgroundColor;
+            Init();
         }
 
-        _ladder.Init(level);
-        Windows.HUD.Init(_hands);
-
-        if (level.Id == 0)
-            InitTutor(LevelStartWindow.Show(_userInput));
-        else
-            LevelStartWindow.Show(_userInput);
-    }
-
-    private void InitTutor(LevelStartWindow window)
-    {
-        window.ClosePromise
-            .Then(() => HoldAndReleaseWindow.Show());
-
-        _hands.Taked += ShowTiredWindowIfNeed;
-    }
-
-    private void ShowTiredWindowIfNeed(LadderStep step, Hand hand)
-    {
-        if (_hands.Stamina.IsLowEnergy(out float factor) && factor >= StaminaLowEnergyFactorToShowTiredWindow)
+        private void OnDisable()
         {
+            _hands.Failed -= OnFail;
+            _hands.Catched -= OnCatch;
+            _hands.Loosed -= OnLoose;
+            _hands.Completed -= OnLevelComplete;
+            _hands.Taked -= OnStepTaked;
             _hands.Taked -= ShowTiredWindowIfNeed;
-            YouAreTiredWindow.Show(_hands.Stamina);
+
+            _userInput.Touched -= _hands.TryMove;
+            _userInput.Untouched -= _hands.StopMovement;
+
+            CurrenLevel.Dispose();
         }
-    }
 
-    private void OnFail()
-    {
-        _effects.PlayFallingEffect();
-
-        //Utils.WaitSeconds(0.5f)
-        //    .Then(() =>
-        TapToCatchWindow.Show(_userInput, _hands, OnEnoughTaps);     
-
-        void OnEnoughTaps()
+        private void Init()
         {
-            _hands.TryCatch();
-        }
-    }
+            _saver = new Saver();
+            _user = _saver.LoadUserData();
+            _player = new Player(_user);
 
-    private void OnStepTaked(LadderStep step, Hand hand)
-    {
-        if (step.Id > 1)
+            Utils.SetMainContainer(this);
+
+            _levels.Init();
+
+            var nextLevel = _levels.GetLevelConfiguration(_user.CurrentLevelId);
+            bool reinit = CurrenLevel.Value != null && CurrenLevel.Value.Id == nextLevel.Id;
+
+            CurrenLevel.Value = nextLevel;
+            StartLevel(CurrenLevel.Value, reinit);
+
+            _hands.Failed += OnFail;
+            _hands.Catched += OnCatch;
+            _hands.Loosed += OnLoose;
+            _hands.Completed += OnLevelComplete;
+            _hands.Taked += OnStepTaked;
+
+            _userInput.Touched += _hands.TryMove;
+            _userInput.Untouched += _hands.StopMovement;
+        }
+
+        private void StartLevel(LevelConfiguration level, bool isReinit)
         {
-            int count = (int)_player.CalculateEndValueWithBoosts<MoneyBoost>(GameConstants.BaseMoneyBonusForStep);
-            AddMoney(count, hand);
-            Windows.HUD.ShowFloatingMoney(count, hand);
+            if (isReinit == false)
+            {
+                foreach (var item in _backgroundObjectHolder.GetComponentsInChildren<LevelBackgroundObject>())
+                    Destroy(item.gameObject);
+
+                if (level.BackgroundObject != null)
+                    Instantiate(level.BackgroundObject, _backgroundObjectHolder);
+
+                Camera.main.backgroundColor = level.BackgroundColor;
+            }
+
+            _ladder.Init(level);
+            Windows.HUD.Init(_hands);
+
+            if (level.Id == 0)
+                InitTutor(LevelStartWindow.Show(_userInput));
+            else
+                LevelStartWindow.Show(_userInput);
         }
-    }
 
-    private void OnCatch()
-    {
-        _effects.StopFallingEffect();
-        Saver.Save(_user);
-    }
+        private void InitTutor(LevelStartWindow window)
+        {
+            window.ClosePromise
+                .Then(() => HoldAndReleaseWindow.Show());
 
-    private void OnLoose()
-    {
-        Debug.Log("Game Loosed");
-        _userInput.gameObject.SetActive(false);
+            _hands.Taked += ShowTiredWindowIfNeed;
+        }
 
-        _effects.StopFallingEffect();
-        Saver.Save(_user);
+        private void ShowTiredWindowIfNeed(LadderStep step, Hand hand)
+        {
+            if (_hands.Stamina.IsLowEnergy(out float factor) && factor >= StaminaLowEnergyFactorToShowTiredWindow)
+            {
+                _hands.Taked -= ShowTiredWindowIfNeed;
+                YouAreTiredWindow.Show(_hands.Stamina);
+            }
+        }
 
-        RestartGame();
-    }
+        private void OnFail()
+        {
+            _effects.PlayFallingEffect();
 
-    private void OnLevelComplete()
-    {
-        _userInput.gameObject.SetActive(false);
+            TapToCatchWindow.Show(_userInput, _hands, OnEnoughTaps);
 
-        CurrenLevel.Value = _levels.GetNextLevelConfiguration(CurrenLevel.Value);
+            void OnEnoughTaps()
+            {
+                _hands.TryCatch();
+            }
+        }
 
-        _user.SetCurrentLevelId(CurrenLevel.Value);
-        _saver.Save(_user);
+        private void OnStepTaked(LadderStep step, Hand hand)
+        {
+            if (step.Id > 1)
+            {
+                int count = (int)_player.CalculateEndValueWithBoosts<MoneyBoost>(GameConstants.BaseMoneyBonusForStep);
+                AddMoney(count, hand);
+                Windows.HUD.ShowFloatingMoney(count, hand);
+            }
+        }
 
-        LevelCompleteWindow.Show(() => StartLevel(CurrenLevel.Value, false));
-        _effects.PlayKonfettiEffect();
-    }
+        private void OnCatch()
+        {
+            _effects.StopFallingEffect();
+            Saver.Save(_user);
+        }
 
-    private void RestartGame()
-    {
-        _ladder.Restart();
-        LevelStartWindow.Show(_userInput);
-    }
+        private void OnLoose()
+        {
+            Debug.Log("Game Loosed");
+            _userInput.gameObject.SetActive(false);
 
-    private void AddMoney(int count, Hand hand = null)
-    {
-        _user.AddMoney(count);
+            _effects.StopFallingEffect();
+            Saver.Save(_user);
+
+            RestartGame();
+        }
+
+        private void OnLevelComplete()
+        {
+            _userInput.gameObject.SetActive(false);
+
+            CurrenLevel.Value = _levels.GetNextLevelConfiguration(CurrenLevel.Value);
+
+            _user.SetCurrentLevelId(CurrenLevel.Value);
+            _saver.Save(_user);
+
+            LevelCompleteWindow.Show(() => StartLevel(CurrenLevel.Value, false));
+            _effects.PlayKonfettiEffect();
+        }
+
+        private void RestartGame()
+        {
+            _ladder.Restart();
+            LevelStartWindow.Show(_userInput);
+        }
+
+        private void AddMoney(int count, Hand hand = null)
+        {
+            _user.AddMoney(count);
+        }
     }
 }

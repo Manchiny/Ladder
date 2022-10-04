@@ -1,18 +1,21 @@
 using TMPro;
 using UnityEngine;
 
-public class HoldAndReleaseWindow : AbstractWindow
+namespace Assets.Scripts.UI
 {
-    [SerializeField] private TextMeshProUGUI _infoText;
-
-    public override string LockKey => "HoldOndReleaseWindow";
-
-    public static HoldAndReleaseWindow Show() =>
-                    Game.Windows.ScreenChange<HoldAndReleaseWindow>(true, w => w.Init());
-
-    protected void Init()
+    public class HoldAndReleaseWindow : AbstractWindow
     {
-        _infoText.text = "HOLD & RELEASE";
-        new ScalePongAnimation(_infoText.transform as RectTransform);
+        [SerializeField] private TextMeshProUGUI _infoText;
+
+        public override string LockKey => "HoldOndReleaseWindow";
+
+        public static HoldAndReleaseWindow Show() =>
+                        Game.Windows.ScreenChange<HoldAndReleaseWindow>(true, w => w.Init());
+
+        protected void Init()
+        {
+            _infoText.text = "HOLD & RELEASE";
+            new ScalePongAnimation(_infoText.transform as RectTransform);
+        }
     }
 }

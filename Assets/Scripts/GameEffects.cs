@@ -1,16 +1,20 @@
 using UnityEngine;
 
-public class GameEffects : MonoBehaviour
+
+namespace Assets.Scripts
 {
-    [SerializeField] private ParticleSystem _falling;
-    [SerializeField] private ParticleSystem _konfetti;
-
-    private void Start()
+    public class GameEffects : MonoBehaviour
     {
-        StopFallingEffect();
-    }
+        [SerializeField] private ParticleSystem _falling;
+        [SerializeField] private ParticleSystem _konfetti;
 
-    public void PlayFallingEffect() => _falling.Play();
-    public void StopFallingEffect() => _falling.Stop();
-    public void PlayKonfettiEffect() => _konfetti.Play();
+        private void Start()
+        {
+            StopFallingEffect();
+        }
+
+        public void PlayFallingEffect() => _falling.Play();
+        public void StopFallingEffect() => _falling.Stop();
+        public void PlayKonfettiEffect() => _konfetti.Play();
+    }
 }

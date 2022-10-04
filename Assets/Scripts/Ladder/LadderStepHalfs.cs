@@ -1,16 +1,19 @@
 using UnityEngine;
-using static Ladder;
+using static Assets.Scripts.LevelLadder.Ladder;
 
-public class LadderStepHalfs : LadderStep
+namespace Assets.Scripts.LevelLadder
 {
-    [SerializeField] private LadderStep _leftPrefab;
-    [SerializeField] private LadderStep _rightPrefab;
-
-    public override LadderStep GetPrefab(LadderSide side)
+    public class LadderStepHalfs : LadderStep
     {
-        if (side == LadderSide.Left)
-            return _leftPrefab;
-        else
-            return _rightPrefab;
+        [SerializeField] private LadderStep _leftPrefab;
+        [SerializeField] private LadderStep _rightPrefab;
+
+        public override LadderStep GetPrefab(LadderSide side)
+        {
+            if (side == LadderSide.Left)
+                return _leftPrefab;
+            else
+                return _rightPrefab;
+        }
     }
 }

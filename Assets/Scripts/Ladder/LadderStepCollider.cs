@@ -1,24 +1,28 @@
+using Assets.Scripts.Hands;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
-public class LadderStepCollider : MonoBehaviour
+namespace Assets.Scripts.LevelLadder
 {
-    private LadderStep _ladderStep;
-
-    private void Awake()
+    [RequireComponent(typeof(Collider))]
+    public class LadderStepCollider : MonoBehaviour
     {
-        _ladderStep = GetComponentInParent<LadderStep>();
-    }
+        private LadderStep _ladderStep;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.TryGetComponent(out HandChecker checker))
-           _ladderStep.OnHandCollided(checker);
-    }
+        private void Awake()
+        {
+            _ladderStep = GetComponentInParent<LadderStep>();
+        }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.TryGetComponent(out HandChecker checker))
-            _ladderStep.OnHandExit(checker);
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.TryGetComponent(out HandChecker checker))
+                _ladderStep.OnHandCollided(checker);
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject.TryGetComponent(out HandChecker checker))
+                _ladderStep.OnHandExit(checker);
+        }
     }
 }

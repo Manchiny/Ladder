@@ -1,5 +1,8 @@
 
-public class LadderStepDynamicHalfs : LadderStepHalfs
+namespace Assets.Scripts.LevelLadder
 {
+    public class LadderStepDynamicHalfs : LadderStepHalfs
+    {
 
+    }
 }

@@ -2,29 +2,33 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UserInput : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
+namespace Assets.Scripts
 {
-    public event Action Touched;
-    public event Action Untouched;
-
-    private void Awake()
+    public class UserInput : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
     {
-        gameObject.SetActive(false);
-    }
-    public void Activate()
-    {
-        gameObject.SetActive(true);
-    }
+        public event Action Touched;
+        public event Action Untouched;
 
-    public void OnPointerClick(PointerEventData eventData) { }
+        private void Awake()
+        {
+            gameObject.SetActive(false);
+        }
+        public void Activate()
+        {
+            gameObject.SetActive(true);
+        }
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        Touched?.Invoke();
-    }
+        public void OnPointerClick(PointerEventData eventData) { }
 
-    void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
-    {
-        Untouched?.Invoke();
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            Touched?.Invoke();
+        }
+
+        void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
+        {
+            Untouched?.Invoke();
+        }
     }
 }
+

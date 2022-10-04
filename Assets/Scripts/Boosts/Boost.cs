@@ -3,75 +3,78 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class Boost : ScriptableObject
+namespace Assets.Scripts.Boosts
 {
-    [SerializeField] private Sprite _icon;
-    [SerializeField] private List<BoostConfig> _configs;
-    [SerializeField] private Color _viewColor;
-    [SerializeField] private ParticleSystem _buyEffect;
-
-    public abstract BoostType Type { get; }
-    public abstract string Name { get; }
-
-    public Sprite Icon => _icon;
-    public Color ViewColor => _viewColor;
-    public ParticleSystem BuyEffect => _buyEffect;
-    public bool NeedShow => HasBoostLevel(GetBoostLevel(Game.User)) && Game.CurrentLevelId >= GameConstants.MinLevelToShowBoostsShop;
-
-    public enum BoostType
+    public abstract class Boost : ScriptableObject
     {
-        MoneyBoost,
-        StaminaBoost
-    }
+        [SerializeField] private Sprite _icon;
+        [SerializeField] private List<BoostConfig> _configs;
+        [SerializeField] private Color _viewColor;
+        [SerializeField] private ParticleSystem _buyEffect;
 
-    public bool HasBoostLevel(int levelId) => _configs.Count > levelId;
+        public abstract BoostType Type { get; }
+        public abstract string Name { get; }
 
-    public bool TryGetNextLevelCost(out int cost)
-    {
-        int currentLevel = GetBoostLevel(Game.User);
-        cost = 0;
+        public Sprite Icon => _icon;
+        public Color ViewColor => _viewColor;
+        public ParticleSystem BuyEffect => _buyEffect;
+        public bool NeedShow => HasBoostLevel(GetBoostLevel(Game.User)) && Game.CurrentLevelId >= GameConstants.MinLevelToShowBoostsShop;
 
-        if (HasBoostLevel(currentLevel + 1))
+        public enum BoostType
         {
-            cost = _configs[currentLevel + 1].Cost;
-            return true;
-        }
-        else
-            return false;
-    }
-
-    public float CalculateEndValue(float baseValue)
-    {
-        if (GetBoostLevel(Game.User) < 0)
-        {
-            Debug.Log("Boost lvl = " + GetBoostLevel(Game.User));
-            return baseValue;
+            MoneyBoost,
+            StaminaBoost
         }
 
-        BoostConfig config;
+        public bool HasBoostLevel(int levelId) => _configs.Count > levelId;
 
-        if (_configs.Count > GetBoostLevel(Game.User))
-            config = _configs[GetBoostLevel(Game.User)];
-        else
-            config = _configs.Last();
+        public bool TryGetNextLevelCost(out int cost)
+        {
+            int currentLevel = GetBoostLevel(Game.User);
+            cost = 0;
 
-        float value = config.Value;
+            if (HasBoostLevel(currentLevel + 1))
+            {
+                cost = _configs[currentLevel + 1].Cost;
+                return true;
+            }
+            else
+                return false;
+        }
 
-        return Calculate(baseValue, value);
+        public float CalculateEndValue(float baseValue)
+        {
+            if (GetBoostLevel(Game.User) < 0)
+            {
+                Debug.Log("Boost lvl = " + GetBoostLevel(Game.User));
+                return baseValue;
+            }
+
+            BoostConfig config;
+
+            if (_configs.Count > GetBoostLevel(Game.User))
+                config = _configs[GetBoostLevel(Game.User)];
+            else
+                config = _configs.Last();
+
+            float value = config.Value;
+
+            return Calculate(baseValue, value);
+        }
+
+        public int GetBoostLevel(UserData user) => user.GetBoostLevel(Type);
+        public void Save(Saver saver) => saver.SaveBoostLevel(Type, GetBoostLevel(Game.User));
+        protected abstract float Calculate(float baseValue, float value);
+
     }
 
-    public int GetBoostLevel(UserData user) => user.GetBoostLevel(Type);
-    public void Save(Saver saver) => saver.SaveBoostLevel(Type, GetBoostLevel(Game.User));
-    protected abstract float Calculate(float baseValue, float value);
+    [Serializable]
+    public class BoostConfig
+    {
+        [SerializeField] private int _cost;
+        [SerializeField] private float _value;
 
-}
-
-[Serializable]
-public class BoostConfig
-{
-    [SerializeField] private int _cost;
-    [SerializeField] private float _value;
-
-    public int Cost => _cost;
-    public float Value => _value;
+        public int Cost => _cost;
+        public float Value => _value;
+    }
 }

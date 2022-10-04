@@ -1,71 +1,74 @@
-using RSG;
+using Assets.Scripts.Hands;
 using System;
 using TMPro;
 using UnityEngine;
 
-public class TapToCatchWindow : AbstractWindow
+namespace Assets.Scripts.UI
 {
-    [SerializeField] private TextMeshProUGUI _infoText;
-
-    public override string LockKey => "TapToCatchWindow";
-
-    private UserInput _userInput;
-    private int _tapCounter;
-    private HandsMover _hands;
-
-    private float _lastClickTime;
-
-    private event Action _enoughTapsRecived;
-
-    public static TapToCatchWindow Show(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived) =>
-                Game.Windows.ScreenChange<TapToCatchWindow>(true, w => w.Init(userInput, hands, onEnoughTapsRecived));
-
-    protected void Init(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived)
+    public class TapToCatchWindow : AbstractWindow
     {
-        Debug.Log("Tap to catch window init...");
-        _infoText.text = "TAP TAP TAP";
-        _enoughTapsRecived = onEnoughTapsRecived;
+        [SerializeField] private TextMeshProUGUI _infoText;
 
-        _hands = hands;
-        _hands.Catched += Close;
+        public override string LockKey => "TapToCatchWindow";
 
-        _userInput = userInput;
-        _userInput.Touched += OnStartTouch;
-        _userInput.Untouched += OnEndTouch;
+        private UserInput _userInput;
+        private int _tapCounter;
+        private HandsMover _hands;
 
-        ScalePongAnimation textAnimation = new ScalePongAnimation(_infoText.transform as RectTransform);
-    }
+        private float _lastClickTime;
 
-    private void OnStartTouch()
-    {
-        if (_lastClickTime > 0)
+        private event Action _enoughTapsRecived;
+
+        public static TapToCatchWindow Show(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived) =>
+                    Game.Windows.ScreenChange<TapToCatchWindow>(true, w => w.Init(userInput, hands, onEnoughTapsRecived));
+
+        protected void Init(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived)
         {
-            if ((Time.realtimeSinceStartup - _lastClickTime) < GameConstants.MaxSecondsBeetweenTaps)
+            Debug.Log("Tap to catch window init...");
+            _infoText.text = "TAP TAP TAP";
+            _enoughTapsRecived = onEnoughTapsRecived;
+
+            _hands = hands;
+            _hands.Catched += Close;
+
+            _userInput = userInput;
+            _userInput.Touched += OnStartTouch;
+            _userInput.Untouched += OnEndTouch;
+
+            ScalePongAnimation textAnimation = new ScalePongAnimation(_infoText.transform as RectTransform);
+        }
+
+        private void OnStartTouch()
+        {
+            if (_lastClickTime > 0)
             {
-                _tapCounter++;
+                if ((Time.realtimeSinceStartup - _lastClickTime) < GameConstants.MaxSecondsBeetweenTaps)
+                {
+                    _tapCounter++;
+                }
+                else
+                    _tapCounter = 0;
             }
             else
-                _tapCounter = 0;
+                _tapCounter++;
+
+            _lastClickTime = Time.realtimeSinceStartup;
+
+            if (_tapCounter >= GameConstants.NeedTapsToCatch)
+                _enoughTapsRecived?.Invoke();
         }
-        else
-            _tapCounter++;
 
-        _lastClickTime = Time.realtimeSinceStartup;
-        
-        if(_tapCounter >= GameConstants.NeedTapsToCatch)
-            _enoughTapsRecived?.Invoke();
-    }
+        private void OnEndTouch()
+        {
 
-    private void OnEndTouch()
-    {
+        }
 
-    }
+        protected override void OnClose()
+        {
+            _userInput.Touched -= OnStartTouch;
+            _userInput.Untouched -= OnEndTouch;
 
-    protected override void OnClose()
-    {
-        _userInput.Touched -= OnStartTouch;
-        _userInput.Untouched -= OnEndTouch;
-
-        _hands.Catched -= Close;
+            _hands.Catched -= Close;
+        }
     }
 }

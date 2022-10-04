@@ -1,30 +1,33 @@
 using UnityEngine;
-using static Ladder;
+using static Assets.Scripts.LevelLadder.Ladder;
 
-public class LadderStepHalfDynamic : LadderStep
+namespace Assets.Scripts.LevelLadder
 {
-    [SerializeField] private Animator _animator;
-
-    private const string IncriasingAnimationName = "Increasing";
-
-    public override bool CanBeTaked(LadderSide side) => base.CanBeTaked(side) && (CheckersCount > 1 || (CheckersCount > 0 && GetPhase() == Phase.Increasing));
-
-    private enum Phase
+    public class LadderStepHalfDynamic : LadderStep
     {
-        Decreasing,
-        Increasing
-    }
+        [SerializeField] private Animator _animator;
 
-    protected override void UpdateState(LadderSide side)
-    {
-        _animator.speed = CanBeTaked(side) ? 0 : 1;
-    }
+        private const string IncriasingAnimationName = "Increasing";
 
-    private Phase GetPhase()
-    {
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName(IncriasingAnimationName))
-            return Phase.Increasing;
+        public override bool CanBeTaked(LadderSide side) => base.CanBeTaked(side) && (CheckersCount > 1 || (CheckersCount > 0 && GetPhase() == Phase.Increasing));
 
-        return Phase.Decreasing;
+        private enum Phase
+        {
+            Decreasing,
+            Increasing
+        }
+
+        protected override void UpdateState(LadderSide side)
+        {
+            _animator.speed = CanBeTaked(side) ? 0 : 1;
+        }
+
+        private Phase GetPhase()
+        {
+            if (_animator.GetCurrentAnimatorStateInfo(0).IsName(IncriasingAnimationName))
+                return Phase.Increasing;
+
+            return Phase.Decreasing;
+        }
     }
 }

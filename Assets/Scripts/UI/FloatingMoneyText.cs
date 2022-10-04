@@ -2,31 +2,34 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-[RequireComponent(typeof(RectTransform))]
-public class FloatingMoneyText : MonoBehaviour
+namespace Assets.Scripts.UI
 {
-    [SerializeField] private TextMeshProUGUI _moneyText;
-
-    private const float AnimationDuration = 1f;
-    private const float AnimationDeltaY = 200f;
-
-    private RectTransform _rect;
-
-    private void Awake()
+    [RequireComponent(typeof(RectTransform))]
+    public class FloatingMoneyText : MonoBehaviour
     {
-        _rect = GetComponent<RectTransform>();
-    }
+        [SerializeField] private TextMeshProUGUI _moneyText;
 
-    public void Init(int moneyCount)
-    {
-        _moneyText.text = $"${moneyCount}";
-        PlayAnimation();
-    }
+        private const float AnimationDuration = 1f;
+        private const float AnimationDeltaY = 200f;
 
-    private void PlayAnimation()
-    {
-        float currentY = _rect.transform.position.y;
-        _rect.DOMoveY(currentY + AnimationDeltaY, AnimationDuration).SetEase(Ease.Linear).SetLink(gameObject);
-        _moneyText.DOFade(0, AnimationDuration).SetEase(Ease.Linear).SetLink(gameObject).OnComplete(() => Destroy(gameObject));
+        private RectTransform _rect;
+
+        private void Awake()
+        {
+            _rect = GetComponent<RectTransform>();
+        }
+
+        public void Init(int moneyCount)
+        {
+            _moneyText.text = $"${moneyCount}";
+            PlayAnimation();
+        }
+
+        private void PlayAnimation()
+        {
+            float currentY = _rect.transform.position.y;
+            _rect.DOMoveY(currentY + AnimationDeltaY, AnimationDuration).SetEase(Ease.Linear).SetLink(gameObject);
+            _moneyText.DOFade(0, AnimationDuration).SetEase(Ease.Linear).SetLink(gameObject).OnComplete(() => Destroy(gameObject));
+        }
     }
 }
