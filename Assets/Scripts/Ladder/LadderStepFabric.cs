@@ -5,7 +5,8 @@ using static Assets.Scripts.Levels.LevelConfiguration;
 
 namespace Assets.Scripts.Ladder
 {
-    public class LadderStepFabric : MonoBehaviour
+    [CreateAssetMenu]
+    public class LadderStepFabric : ScriptableObject
     {
         [SerializeField] private LadderStep _defaultLadderStepPrefab;
         [SerializeField] private LadderStepDynamicHalfs _ladderStepDynamic;
@@ -16,10 +17,13 @@ namespace Assets.Scripts.Ladder
         [SerializeField] private LadderStep _finishLadderStepPrefab;
         [SerializeField] private FinishButtonStep _finishButtonPrefab;
 
+        private Transform _container;
         private Dictionary<LadderStepType, LadderStep> _prefabs = new();
 
-        public void Init()
+        public void Init(Transform stepsContainer)
         {
+            _container = stepsContainer;
+
             _prefabs.TryAdd(LadderStepType.Default, _defaultLadderStepPrefab);
             _prefabs.TryAdd(LadderStepType.HalfDefualt, _ladderStepHalfs);
             _prefabs.TryAdd(LadderStepType.HalfDynamic, _ladderStepDynamic);
@@ -43,6 +47,6 @@ namespace Assets.Scripts.Ladder
         public LadderStep CreateFinishStep(Vector3 position) => CreateStep(_finishLadderStepPrefab, position);
         public LadderStep CreateFinishButton(Vector3 position) => CreateStep(_finishButtonPrefab, position);
 
-        private LadderStep CreateStep(LadderStep stepPrefab, Vector3 position) => Instantiate(stepPrefab, position, Quaternion.identity, transform);
+        private LadderStep CreateStep(LadderStep stepPrefab, Vector3 position) => Instantiate(stepPrefab, position, Quaternion.identity, _container);
     }
 }

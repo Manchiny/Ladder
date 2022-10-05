@@ -42,7 +42,7 @@ namespace Assets.Scripts.Ladder
             _levelConfiguration = levelConfiguration;
 
             if (!_inited)
-                _fabric.Init();
+                _fabric.Init(transform);
 
             ConfigureLadder();
             InitHands(_inited);

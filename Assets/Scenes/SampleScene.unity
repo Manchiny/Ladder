@@ -1318,7 +1318,7 @@ Transform:
   m_Children:
   - {fileID: 1513021558}
   m_Father: {fileID: 1254583415}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1254583414
 GameObject:
@@ -1349,7 +1349,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1631594832}
   - {fileID: 1218250326}
   - {fileID: 1326557536}
   m_Father: {fileID: 0}
@@ -1367,7 +1366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7c662d5ae84faa49851e3590f6fac17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fabric: {fileID: 1631594831}
+  _fabric: {fileID: 11400000, guid: a9ff42f0ed8b5c64299eadb247a7a771, type: 2}
   _borders:
   - {fileID: 1513021558}
   - {fileID: 115094340}
@@ -1402,7 +1401,7 @@ Transform:
   m_Children:
   - {fileID: 115094340}
   m_Father: {fileID: 1254583415}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1475293938
 GameObject:
@@ -1734,57 +1733,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1631594830
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1631594832}
-  - component: {fileID: 1631594831}
-  m_Layer: 0
-  m_Name: StepFabric
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1631594831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1631594830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc327ba0178e6314ba53714a95295358, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _defaultLadderStepPrefab: {fileID: 4674057483830744167, guid: c4b44d11857b90e40b6e57f4ec7eb460, type: 3}
-  _ladderStepDynamic: {fileID: 7911351511768689797, guid: 88f973c06cb553b4287ca90a78e2f62d, type: 3}
-  _ladderStepHalfs: {fileID: 1804982447398104044, guid: 0657f84fddc5b8d4e9edf0ef9a42b030, type: 3}
-  _ladderStepHot: {fileID: 1769683181194327896, guid: 7335eb1f533f078428aee89933b13598, type: 3}
-  _spikyLadderStep: {fileID: 5904056578753138338, guid: 7560fb7d3fbe5b244a5fa021a8524184, type: 3}
-  _finishLadderStepPrefab: {fileID: 4674057483830744167, guid: f278be3f8d9899d46b4979fcec1a3ae3, type: 3}
-  _finishButtonPrefab: {fileID: 3490332527678233838, guid: a1993cc924ebc6e408ca19b2e3f9cea2, type: 3}
---- !u!4 &1631594832
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1631594830}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.39909002, y: 3.1968684, z: -1.4577925}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1254583415}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1681440800
 GameObject:
   m_ObjectHideFlags: 0
