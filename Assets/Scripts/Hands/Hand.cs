@@ -63,6 +63,8 @@ namespace Assets.Scripts.Hands
 
         public void FallDown(float duration)
         {
+            IsFalling = true;
+
             _animations.PlayRelease();
 
             _fallingTween = transform.DOMoveY(0, duration)
@@ -89,6 +91,9 @@ namespace Assets.Scripts.Hands
             if (_isProcess)
                 return false;
 
+            if (LastTakedStep != null)
+                LastTakedStep.Hand = null;
+
             _isProcess = true;
 
             _animations.PlayClasp();
@@ -108,6 +113,9 @@ namespace Assets.Scripts.Hands
         {
             _isProcess = true;
             _animations.PlayRelease();
+
+            if (LastTakedStep != null)
+                LastTakedStep.Hand = null;
 
             transform.DOMoveY(step.Height, MoveUpDuration)
                  .SetLink(gameObject)
@@ -151,6 +159,10 @@ namespace Assets.Scripts.Hands
         private void PressFinishButton(LadderStep step)
         {
             _isProcess = true;
+
+            if (LastTakedStep != null)
+                LastTakedStep.Hand = null;
+
             _animations.PlayRelease();
 
             Vector3 position = step.transform.position;
@@ -171,6 +183,8 @@ namespace Assets.Scripts.Hands
         private void Take(LadderStep step)
         {
             LastTakedStep = step;
+            step.Hand = this;
+
             IsFalling = false;
             _isProcess = false;
 

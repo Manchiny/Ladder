@@ -17,7 +17,7 @@ namespace Assets.Scripts.Ladder
             Increasing
         }
 
-        protected override void UpdateState(LadderSide side)
+        protected override void UpdateState(LadderSide side, bool handEnter)
         {
             _animator.speed = CanBeTaked(side) ? 0 : 1;
         }

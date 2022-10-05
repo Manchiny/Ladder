@@ -1,5 +1,6 @@
 using Assets.Scripts.Boosts;
 using Assets.Scripts.Ladder;
+using System;
 using UniRx;
 using UnityEngine;
 
@@ -11,13 +12,15 @@ namespace Assets.Scripts.Hands
         public const float LowEnergyPercent = 40f;
         public const float MaxFactorToFail = 0.99f;
 
-        private const float RecoveryPerSecond = 3f;
-        private const float BaseEnergy—onsumptionPerStep = 2f;
+        public const float RecoveryPerSecond = 3.5f;
+        public const float BaseEnergy—onsumptionPerStep = 2f;
 
         private HandsMover _hands;
 
         private bool _inited;
         private bool _touched;
+
+        public event Action EnergyOvered;
 
         public ReactiveProperty<float> CurrentEnergy { get; private set; }
 
@@ -76,6 +79,12 @@ namespace Assets.Scripts.Hands
             return false;
         }
 
+        public void ForceExpendEnergy(float value)
+        {
+            float energyCount = Game.Player.CalculateEndValueWithBoosts<StaminaBoost>(value);
+            ExpandEnergy(energyCount);
+        }
+
         private void SetTouchedTrue() => _touched = true;
         private void SetTouchedFalse() => _touched = false;
 
@@ -98,13 +107,16 @@ namespace Assets.Scripts.Hands
 
         private void ExpandEnergy(float energyCount)
         {
-            if (energyCount == 0)
+            if (energyCount <= 0)
                 return;
 
             if (CurrentEnergy.Value - energyCount >= 0)
                 CurrentEnergy.Value -= energyCount;
             else
+            {
                 CurrentEnergy.Value = 0;
+                EnergyOvered?.Invoke();
+            }
         }
     }
 }

@@ -114,6 +114,19 @@ namespace Assets.Scripts.Hands
             }
         }
 
+        public void ForceFail()
+        {
+            StopMovement();
+            IsFalling = true;
+
+            float duration = FallingDuration();
+
+            _leftHand.FallDown(duration);
+            _rightHand.FallDown(duration);
+
+            Failed?.Invoke();
+        }
+
         private void AddSubscribes()
         {
             _leftHand.Taked += OnStepTaked;
@@ -124,6 +137,8 @@ namespace Assets.Scripts.Hands
 
             _leftHand.Loosed += OnLoose;
             _rightHand.Loosed += OnLoose;
+
+            Stamina.EnergyOvered += OnEnergyOver;
         }
 
         private void RemoveSubscribes()
@@ -138,6 +153,8 @@ namespace Assets.Scripts.Hands
 
             _leftHand.Loosed -= OnLoose;
             _rightHand.Loosed -= OnLoose;
+
+            Stamina.EnergyOvered -= OnEnergyOver;
         }
 
         private void OnStepTaked(LadderStep step, Hand hand)
@@ -154,6 +171,8 @@ namespace Assets.Scripts.Hands
                 Taked?.Invoke(step, hand);
         }
 
+        private float FallingDuration() => (GetAverageValue / GameConstants.LadderDeltaStep) * FallingPerStepDuration;
+
         private void OnFail(Hand hand)
         {
             StopMovement();
@@ -165,7 +184,7 @@ namespace Assets.Scripts.Hands
             else
                 failAnimation = _rightHand.PlayFailAnimation();
 
-            float duration = (GetAverageValue / GameConstants.LadderDeltaStep) * FallingPerStepDuration;
+            float duration = FallingDuration();
 
             failAnimation
                 .Then(() =>
@@ -177,6 +196,12 @@ namespace Assets.Scripts.Hands
                 });
 
             IsFalling = true;
+        }
+
+        private void OnEnergyOver()
+        {
+            if (IsFalling == false && CanMove)
+                ForceFail();
         }
 
         private void OnLoose()

@@ -38,9 +38,10 @@ namespace Assets.Scripts.Levels
         {
             Default,
             HalfDefualt,
-            HalfDynamic
+            HalfDynamic,
+            Hot,
+            Spiky
         }
-
 
         public void Init(int id)
         {

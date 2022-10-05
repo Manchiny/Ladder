@@ -10,6 +10,9 @@ namespace Assets.Scripts.Ladder
         [SerializeField] private LadderStep _defaultLadderStepPrefab;
         [SerializeField] private LadderStepDynamicHalfs _ladderStepDynamic;
         [SerializeField] private LadderStepHalfs _ladderStepHalfs;
+        [SerializeField] private LadderStepHot _ladderStepHot;
+        [SerializeField] private SpikyLadderStep _spikyLadderStep;
+        [Space]
         [SerializeField] private LadderStep _finishLadderStepPrefab;
         [SerializeField] private FinishButtonStep _finishButtonPrefab;
 
@@ -20,6 +23,8 @@ namespace Assets.Scripts.Ladder
             _prefabs.TryAdd(LadderStepType.Default, _defaultLadderStepPrefab);
             _prefabs.TryAdd(LadderStepType.HalfDefualt, _ladderStepHalfs);
             _prefabs.TryAdd(LadderStepType.HalfDynamic, _ladderStepDynamic);
+            _prefabs.TryAdd(LadderStepType.Hot, _ladderStepHot);
+            _prefabs.TryAdd(LadderStepType.Spiky, _spikyLadderStep);
         }
 
         public LadderStep CreateStep(LadderStepType type, Vector3 position, LadderSide side = LadderSide.Default)
