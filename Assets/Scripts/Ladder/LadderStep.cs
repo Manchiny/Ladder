@@ -14,17 +14,19 @@ namespace Assets.Scripts.Ladder
 
         public int Id { get; private set; }
 
-        public Hand Hand 
+        public Hand Hand
         {
             get => _hand;
-            set 
-            { 
-                if(value != _hand)
+            set
+            {
+                if (value != _hand)
                 {
                     _hand = value;
-                    OnHandSeted(value);
+
+                    if (value != null)
+                        OnHandSeted(value);
                 }
-            } 
+            }
         }
 
         public virtual bool CanBeTaked(LadderSide side) => _side == LadderSide.Default || _side == side;
@@ -50,7 +52,7 @@ namespace Assets.Scripts.Ladder
         }
 
         public virtual LadderStep GetPrefab(LadderSide side) => this;
-        
+
         protected virtual void UpdateState(LadderSide side, bool handEnter) { }
         protected virtual void OnHandSeted(Hand hand) { }
 

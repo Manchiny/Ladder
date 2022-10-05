@@ -37,8 +37,6 @@ namespace Assets.Scripts.Hands
         {
             Game.UserInput.Touched -= SetTouchedTrue;
             Game.UserInput.Untouched -= SetTouchedFalse;
-
-            _hands.Taked -= ForceExpendEnergy;
         }
 
         public void Init(HandsMover hands)
@@ -51,8 +49,6 @@ namespace Assets.Scripts.Hands
 
                 Game.UserInput.Touched += SetTouchedTrue;
                 Game.UserInput.Untouched += SetTouchedFalse;
-
-                _hands.Taked += ForceExpendEnergy;
 
                 _inited = true;
             }
@@ -85,6 +81,12 @@ namespace Assets.Scripts.Hands
             ExpandEnergy(energyCount);
         }
 
+        public void ForceExpendEnergyForMove()
+        {
+            float energyCount = Game.Player.CalculateEndValueWithBoosts<StaminaBoost>(BaseEnergy—onsumptionPerStep);
+            ExpandEnergy(energyCount);
+        }
+
         private void SetTouchedTrue() => _touched = true;
         private void SetTouchedFalse() => _touched = false;
 
@@ -97,12 +99,6 @@ namespace Assets.Scripts.Hands
                 CurrentEnergy.Value += energyCount;
             else
                 CurrentEnergy.Value = MaxEnergyValue;
-        }
-
-        private void ForceExpendEnergy(LadderStep step, Hand hand)
-        {
-            float energyCount = Game.Player.CalculateEndValueWithBoosts<StaminaBoost>(BaseEnergy—onsumptionPerStep);
-            ExpandEnergy(energyCount);
         }
 
         private void ExpandEnergy(float energyCount)

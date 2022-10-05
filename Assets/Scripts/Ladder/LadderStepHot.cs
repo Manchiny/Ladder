@@ -15,7 +15,7 @@ namespace Assets.Scripts.Ladder
         {
             if (handEnter)
                 StartExtraExpendEnergy();
-            else
+            else if(Hand == null)
                 StopExtraExpendEnergy();
         }
 

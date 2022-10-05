@@ -23,7 +23,7 @@ namespace Assets.Scripts.UI
         private Camera _camera;
 
         private IDisposable _setFadeDispose;
-        private Tween _fadeAnimationSequence;
+        private Tween _fadeAnimation;
 
         private float _lastValue;
         private float _isLowEnergyValue;
@@ -46,20 +46,19 @@ namespace Assets.Scripts.UI
                 _hands = hands;
                 _stamina = _hands.Stamina;
 
-                _setFadeDispose = _stamina.CurrentEnergy.ObserveEveryValueChanged(value => value.Value).Subscribe(OnStaminaValueChanged).AddTo(this);
                 _hands.Taked += ShakeCameraOnTake;
+                _setFadeDispose = _stamina.CurrentEnergy.ObserveEveryValueChanged(value => value.Value).Subscribe(OnStaminaValueChanged).AddTo(this);
             }
 
-            _isLowEnergyValue = 0;
-            _lastValue = 0;
-            _vignette.DOFade(0, 0);
+            _fadeAnimation?.Kill();
+            OnStaminaValueChanged(Stamina.MaxEnergyValue);
         }
 
         private void OnStaminaValueChanged(float value)
         {
             _lastValue = value;
 
-            if (_fadeAnimationSequence != null && _fadeAnimationSequence.IsActive())
+            if (_fadeAnimation != null && _fadeAnimation.IsActive())
                 return;
 
             PlayFade(value);
@@ -72,8 +71,8 @@ namespace Assets.Scripts.UI
             else
                 _isLowEnergyValue = 0;
 
-            _fadeAnimationSequence = _vignette.DOFade(alpha, FadeDuration).SetEase(Ease.Linear).SetLink(gameObject);
-            _fadeAnimationSequence.Play();
+            _fadeAnimation = _vignette.DOFade(alpha, FadeDuration).SetEase(Ease.Linear).SetLink(gameObject);
+            _fadeAnimation.Play();
 
             if (_lastValue != value)
                 PlayFade(_lastValue);

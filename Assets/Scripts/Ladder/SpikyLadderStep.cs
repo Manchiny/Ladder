@@ -23,7 +23,9 @@ namespace Assets.Scripts.Ladder
         protected override void OnHandSeted(Hand hand) 
         {
             if (hand != null && _isSpikeActive)
-                Game.Hands.ForceFail();
+            {
+                Game.Hands.ForceFail(this);
+            }
         }
 
         private void StartAnimation()
@@ -32,14 +34,14 @@ namespace Assets.Scripts.Ladder
                 return;
 
             if (Hand != null)
-                Game.Hands.ForceFail();
+                Game.Hands.ForceFail(this);
 
             PlayShow()
                 .Then(() => Utils.WaitSeconds(AfteraAnimationPause))
                 .Then(() =>
                 {
                     if (Hand != null)
-                        Game.Hands.ForceFail();
+                        Game.Hands.ForceFail(this);
 
                     PlayHide();
                 })

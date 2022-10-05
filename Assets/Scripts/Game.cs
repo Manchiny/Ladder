@@ -206,6 +206,8 @@ namespace Assets.Scripts
         private void RestartGame()
         {
             _ladder.Restart();
+            Windows.HUD.Init(Hands);
+
             LevelStartWindow.Show(_userInput);
         }
 

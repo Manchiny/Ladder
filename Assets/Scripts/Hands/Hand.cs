@@ -56,7 +56,6 @@ namespace Assets.Scripts.Hands
             ForceTake(initStep);
 
             IsFalling = false;
-
         }
 
         public IPromise PlayFailAnimation() => _animations.PlayFail(transform);
@@ -64,6 +63,10 @@ namespace Assets.Scripts.Hands
         public void FallDown(float duration)
         {
             IsFalling = true;
+            _isProcess = false;
+
+            if (LastTakedStep != null)
+                LastTakedStep.Hand = null;
 
             _animations.PlayRelease();
 
@@ -90,9 +93,6 @@ namespace Assets.Scripts.Hands
         {
             if (_isProcess)
                 return false;
-
-            if (LastTakedStep != null)
-                LastTakedStep.Hand = null;
 
             _isProcess = true;
 
@@ -135,6 +135,9 @@ namespace Assets.Scripts.Hands
             {
                 if (_stamina.IsLowEnergy(out float factor) == false || factor < Stamina.MaxFactorToFail)
                 {
+                    if (IsFalling == false)
+                        _stamina.ForceExpendEnergyForMove();
+
                     Take(step);
                     return true;
                 }
@@ -182,13 +185,16 @@ namespace Assets.Scripts.Hands
 
         private void Take(LadderStep step)
         {
+            if (LastTakedStep != null)
+                LastTakedStep.Hand = null;
+
             LastTakedStep = step;
-            step.Hand = this;
 
             IsFalling = false;
             _isProcess = false;
 
             _fogEffect.Play();
+
             Taked?.Invoke(step, this);
         }
     }
