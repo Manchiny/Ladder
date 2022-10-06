@@ -30,8 +30,8 @@ namespace Assets.Scripts.Hands
         public event Action Stopped;
 
         public Stamina Stamina { get; private set; }
-        public bool IsFalling => _leftHand.IsFalling || _rightHand.IsFalling;
 
+        public bool IsFalling => _leftHand.IsFalling || _rightHand.IsFalling;
         public float GetAverageValue => (_leftHand.GetHeight + _rightHand.GetHeight) / 2f;
         public bool CanMove => _leftHand.CanMove && _rightHand.CanMove;
 

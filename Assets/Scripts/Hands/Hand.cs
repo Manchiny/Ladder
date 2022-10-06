@@ -73,7 +73,7 @@ namespace Assets.Scripts.Hands
             _fallingTween = transform.DOMoveY(0, duration)
                              .SetLink(gameObject)
                              .SetEase(Ease.Linear)
-                             .OnComplete(() => Loosed?.Invoke());
+                             .OnComplete(() => Loose());
         }
 
         public bool TryMove(LadderStep step)
@@ -95,6 +95,7 @@ namespace Assets.Scripts.Hands
                 return false;
 
             _isProcess = true;
+            IsFalling = false;
 
             _animations.PlayClasp();
 
@@ -107,6 +108,14 @@ namespace Assets.Scripts.Hands
                  .OnComplete(() => Take(step));
 
             return true;
+        }
+
+        private void Loose()
+        {
+            IsFalling = false;
+            LastTakedStep.Hand = null;
+
+            Loosed?.Invoke();
         }
 
         private void MoveUpStep(LadderStep step)

@@ -15,7 +15,13 @@ namespace Assets.Scripts.Ladder
         {
             if (handEnter)
                 StartExtraExpendEnergy();
-            else if(Hand == null)
+            else if (Hand == null)
+                StopExtraExpendEnergy();
+        }
+
+        protected override void OnHandSeted(Hand hand)
+        {
+            if (hand == null && _extraEnergExpendSubscribtion != null)
                 StopExtraExpendEnergy();
         }
 

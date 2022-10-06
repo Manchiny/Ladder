@@ -38,12 +38,19 @@ namespace Assets.Scripts.UI
             _enoughTapsRecived = onEnoughTapsRecived;
 
             _hands = hands;
+
             _hands.Catched += OnCatch;
+            _hands.Loosed += OnLoose;
 
             _userInput = userInput;
             _userInput.Touched += OnStartTouch;
 
             ScalePongAnimation textAnimation = new ScalePongAnimation(_infoText.transform as RectTransform);
+        }
+
+        private void OnLoose()
+        {
+            Close();
         }
 
         private void OnCatch()
@@ -75,12 +82,14 @@ namespace Assets.Scripts.UI
                 _enoughTapsRecived?.Invoke();
         }
 
-        protected override void OnClose()
+        private void OnDestroy()
         {
             _window = null;
+            _tapCounter = 0;
 
             _userInput.Touched -= OnStartTouch;
             _hands.Catched -= Close;
+            _hands.Loosed -= OnLoose;
         }
     }
 }
