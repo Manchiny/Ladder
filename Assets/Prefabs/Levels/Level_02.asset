@@ -17,6 +17,6 @@ MonoBehaviour:
   - _stepType: 1
     _chanse: 20
   - _stepType: 2
-    _chanse: 15
+    _chanse: 25
   _backgroundColor: {r: 0.91764706, g: 0.90588236, b: 0.60784316, a: 1}
-  _levelBackgroundObject: {fileID: 8278281639134527899, guid: c43a8c25af5f75f4b8a8e9c5320fc628, type: 3}
+  _levelBackgroundObject: {fileID: 0}

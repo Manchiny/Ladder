@@ -120,11 +120,7 @@ namespace Assets.Scripts.Hands
             transform.DOMoveY(step.Height, MoveUpDuration)
                  .SetLink(gameObject)
                  .SetEase(Ease.Linear)
-                 .OnComplete(() =>
-                 {
-                     TryTake(step);
-                     _isProcess = false;
-                 });
+                 .OnComplete(() => TryTake(step));
         }
 
         private bool TryTake(LadderStep step)
@@ -155,6 +151,7 @@ namespace Assets.Scripts.Hands
 
         private void FailTake()
         {
+            _isProcess = false;
             IsFalling = true;
             Failed?.Invoke(this);
         }

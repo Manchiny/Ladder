@@ -29,6 +29,7 @@ namespace Assets.Scripts
         private Player _player;
 
         public static Game Instance { get; private set; }
+        public ReactiveProperty<LevelConfiguration> CurrenLevel { get; private set; } = new ReactiveProperty<LevelConfiguration>();
 
         public static WindowsController Windows => Instance._windowsController;
         public static UserData User => Instance._user;
@@ -38,8 +39,6 @@ namespace Assets.Scripts
         public static UserInput UserInput => Instance._userInput;
         public static HandsMover Hands => Instance._hands;
         public static int CurrentLevelId => Instance.CurrenLevel.Value.Id;
-
-        public ReactiveProperty<LevelConfiguration> CurrenLevel { get; private set; } = new ReactiveProperty<LevelConfiguration>();
 
         private void Awake()
         {

@@ -19,6 +19,7 @@ namespace Assets.Scripts.UI
         private int _tapCounter;
 
         private float _lastClickTime;
+        private bool _cathced;
 
         private event Action _enoughTapsRecived;
 
@@ -37,7 +38,7 @@ namespace Assets.Scripts.UI
             _enoughTapsRecived = onEnoughTapsRecived;
 
             _hands = hands;
-            _hands.Catched += Close;
+            _hands.Catched += OnCatch;
 
             _userInput = userInput;
             _userInput.Touched += OnStartTouch;
@@ -45,8 +46,19 @@ namespace Assets.Scripts.UI
             ScalePongAnimation textAnimation = new ScalePongAnimation(_infoText.transform as RectTransform);
         }
 
+        private void OnCatch()
+        {
+            _cathced = true;
+
+            _tapCounter = 0;
+            Close();
+        }
+
         private void OnStartTouch()
         {
+            if (_cathced)
+                return;
+
             if (_lastClickTime > 0)
             {
                 if ((Time.realtimeSinceStartup - _lastClickTime) < GameConstants.MaxSecondsBeetweenTaps)

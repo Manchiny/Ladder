@@ -18,10 +18,9 @@ namespace Assets.Scripts.Hands
         private const float FallingPerStepDuration = 0.2f;
 
         private Hand _downHand;
-        private LadderStep _lastFailStep;
 
         private IDisposable _moveDispose;
-
+        private bool _isProcess;
 
         public event Action Failed;
         public event Action Loosed;
@@ -31,7 +30,7 @@ namespace Assets.Scripts.Hands
         public event Action Stopped;
 
         public Stamina Stamina { get; private set; }
-        public bool IsFalling { get; private set; }
+        public bool IsFalling => _leftHand.IsFalling || _rightHand.IsFalling;
 
         public float GetAverageValue => (_leftHand.GetHeight + _rightHand.GetHeight) / 2f;
         public bool CanMove => _leftHand.CanMove && _rightHand.CanMove;
@@ -46,9 +45,6 @@ namespace Assets.Scripts.Hands
         {
             if (isReinit)
                 RemoveSubscribes();
-
-            IsFalling = false;
-            _lastFailStep = null;
 
             if (Stamina == null)
                 Stamina = GetComponent<Stamina>();
@@ -91,48 +87,43 @@ namespace Assets.Scripts.Hands
 
         public void TryCatch()
         {
-            if (IsFalling == false)
+            if (IsFalling == false || _isProcess)
                 return;
 
-            ValidateDownHand();
-            LadderStep downStep = _ladder.GetNearestStep(_downHand.GetHeight, _downHand.LastTakedStep.Id);
+            _isProcess = true;
 
+            ValidateDownHand();
             Hand upperHand = GetUpperHand();
+
+            LadderStep downStep = _ladder.GetNearestStep(_downHand.GetHeight, _downHand.LastTakedStep.Id);
 
             if (downStep != null)
             {
                 LadderStep upperStep = _ladder.GetStepById(downStep.Id + 1);
 
+                if (upperStep == null)
+                {
+                    _isProcess = false;
+                    return;
+                }
+
                 if (downStep.CanBeTaked(_downHand.Side) && upperStep.CanBeTaked(upperHand.Side))
-                {
-                    _lastFailStep = null;
-                    _downHand.ForceTake(downStep);
-                    upperHand.ForceTake(upperStep);
-                    Catched?.Invoke();
-                }
+                    Catch(upperHand, downStep, upperStep);
                 else if (downStep.CanBeTaked(upperHand.Side) && upperStep.CanBeTaked(_downHand.Side))
-                {
-                    _lastFailStep = null;
-                    upperHand.ForceTake(downStep);
-                    _downHand.ForceTake(upperStep);
-                }
+                    Catch(upperHand, upperStep, downStep);
 
                 ValidateDownHand();
             }
+
+            _isProcess = false;
         }
 
         public void ForceFail(LadderStep step)
         {
-            //if (step !=null && _lastFailStep != null && _lastFailStep == step)
-            //    return;
-
             if (IsFalling)
                 return;
 
-            _lastFailStep = step;
-
             StopMovement();
-            IsFalling = true;
 
             float duration = FallingDuration();
 
@@ -140,6 +131,14 @@ namespace Assets.Scripts.Hands
             _rightHand.FallDown(duration);
 
             Failed?.Invoke();
+        }
+
+        private void Catch(Hand upperHand, LadderStep downHandStep, LadderStep upperHandStep)
+        {
+            _downHand.ForceTake(downHandStep);
+            upperHand.ForceTake(upperHandStep);
+
+            Catched?.Invoke();
         }
 
         private void AddSubscribes()
@@ -174,10 +173,6 @@ namespace Assets.Scripts.Hands
 
         private void OnStepTaked(LadderStep step, Hand hand)
         {
-            IsFalling = false;
-            Debug.Log($"Step {step.Id} taked");
-            _lastFailStep = null;
-
             if (step is FinishButtonStep)
             {
                 StopMovement();
@@ -187,6 +182,7 @@ namespace Assets.Scripts.Hands
                 Taked?.Invoke(step, hand);
 
             step.Hand = hand;
+            Debug.Log($"Step {step.Id} taked");
         }
 
         private float FallingDuration() => (GetAverageValue / GameConstants.LadderDeltaStep) * FallingPerStepDuration;
@@ -212,8 +208,6 @@ namespace Assets.Scripts.Hands
 
                     Failed?.Invoke();
                 });
-
-            IsFalling = true;
         }
 
         private void OnEnergyOver()
@@ -224,9 +218,7 @@ namespace Assets.Scripts.Hands
 
         private void OnLoose()
         {
-            IsFalling = false;
             StopMovement();
-
             Loosed?.Invoke();
         }
 
