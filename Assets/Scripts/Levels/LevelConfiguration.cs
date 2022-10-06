@@ -10,6 +10,8 @@ namespace Assets.Scripts.Levels
     {
         [Header("Ladder configuration")]
         [SerializeField] private int _ladderStepsCount = 50;
+        [SerializeField] private int _stepsIntevalsBeetweenDefault = 5;
+        [SerializeField] private int _minDefaultStepsCountInRowInInterval = 2;
         [Space]
         [SerializeField] private List<LadderStepsChanse> _notDefaultLadderSteps;
         [Space]
@@ -21,7 +23,7 @@ namespace Assets.Scripts.Levels
         private Dictionary<LadderStepType, int> _notDefualtStepsChanses = new();
         private System.Random _random = new System.Random();
 
-        public int Id { get; private set; }
+       // public int Id { get; private set; }
 
         public int StepsCount => _ladderStepsCount;
         public Color BackgroundColor => _backgroundColor;
@@ -43,14 +45,14 @@ namespace Assets.Scripts.Levels
             Spiky
         }
 
-        public void Init(int id)
+        public void Init()
         {
-            Id = id;
+         //   Id = id;
 
             foreach (var step in _notDefaultLadderSteps)
             {
                 if (_notDefualtStepsChanses.ContainsKey(step.StepType))
-                    Debug.LogError($"Incorrect level configuration! NotDefaultLadderSteps contains doubled type <{step.StepType}>! Level id - {Id}, Name: {name}");
+                    Debug.LogError($"Incorrect level configuration! NotDefaultLadderSteps contains doubled type <{step.StepType}>! Name: {name}");
                 else
                     _notDefualtStepsChanses.Add(step.StepType, step.Chanse);
             }
@@ -58,22 +60,35 @@ namespace Assets.Scripts.Levels
 
         public LadderStepType GetRandomType(int stepNumber)
         {
-            int randomValue = _random.Next(0, MaxSummaryNonDefualtStepsChance);
-
             LadderStepType type = LadderStepType.Default;
 
             if (stepNumber >= GameConstants.MinNonDefaultStepId)
             {
-                int lastSummValue = 0;
-                int chanseSumm = 0;
+                int randomValue = _random.Next(0, MaxSummaryNonDefualtStepsChance);
 
-                foreach (var step in _notDefualtStepsChanses)
+                int maxInclusiveNonDefaultId = GameConstants.MinNonDefaultStepId + (stepNumber / _stepsIntevalsBeetweenDefault) * _stepsIntevalsBeetweenDefault - _minDefaultStepsCountInRowInInterval;
+                int minInclusiveNonDefaultId = maxInclusiveNonDefaultId - _minDefaultStepsCountInRowInInterval;
+
+                if (stepNumber >= minInclusiveNonDefaultId && stepNumber <= maxInclusiveNonDefaultId)
                 {
-                    lastSummValue = chanseSumm;
-                    chanseSumm += step.Value;
+                    int lastSummValue = 0;
+                    int chanseSumm = 0;
 
-                    if (randomValue > lastSummValue && randomValue <= chanseSumm)
-                        return step.Key;
+                    foreach (var step in _notDefualtStepsChanses)
+                    {
+                        lastSummValue = chanseSumm;
+                        chanseSumm += step.Value;
+
+                        if (randomValue > lastSummValue && randomValue <= chanseSumm)
+                            return step.Key;
+                    }
+                }
+                else if (_notDefualtStepsChanses.ContainsKey(LadderStepType.HalfDefualt))
+                {
+                    int chanse = _notDefualtStepsChanses[LadderStepType.HalfDefualt];
+
+                    if (randomValue <= chanse)
+                        return LadderStepType.HalfDefualt;
                 }
             }
 
@@ -88,11 +103,8 @@ namespace Assets.Scripts.Levels
                 summaryNonDefualtStepsChannce += step.Value;
 
             if (summaryNonDefualtStepsChannce > MaxSummaryNonDefualtStepsChance)
-            {
-                Debug.LogError($"Incorrect level configuration - summaryNonDefualtStepsChannce >  MaxSummaryNonDefualtStepsChanceLevel! id - {Id}, Name: {name}");
-            }
+                Debug.LogError($"Incorrect level configuration - summaryNonDefualtStepsChannce >  MaxSummaryNonDefualtStepsChanceLevel! Name: {name}");
         }
-
     }
 
     [Serializable]

@@ -11,17 +11,16 @@ namespace Assets.Scripts.Levels
         public void Init()
         {
             for (int i = 0; i < _levels.Count; i++)
-                _levels[i].Init(i);
+                _levels[i].Init();
         }
 
-        public LevelConfiguration GetLevelConfiguration(int id) => _levels.Count > id ? _levels[id] : null;
-        public bool IsLevelLast(int id) => _levels.Count - 1 == id;
-        public LevelConfiguration GetNextLevelConfiguration(LevelConfiguration currentLevel)
+        public LevelConfiguration GetLevelConfiguration(int id)
         {
-            if (currentLevel.Id + 1 < _levels.Count)
-                return _levels[currentLevel.Id + 1];
-            else
-                return _levels[0];
+            if (_levels.Count > id)
+                return _levels[id];
+
+            int random = Random.Range(GameConstants.MinRandomLevelId, _levels.Count - 1);
+            return _levels[random];
         }
     }
 }

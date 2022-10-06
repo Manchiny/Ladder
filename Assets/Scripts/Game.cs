@@ -29,7 +29,8 @@ namespace Assets.Scripts
         private Player _player;
 
         public static Game Instance { get; private set; }
-        public ReactiveProperty<LevelConfiguration> CurrenLevel { get; private set; } = new ReactiveProperty<LevelConfiguration>();
+        public LevelConfiguration CurrentLevel { get; private set; }
+        public ReactiveProperty<int> CurrentLevelId { get; private set; } = new ReactiveProperty<int>();
 
         public static WindowsController Windows => Instance._windowsController;
         public static UserData User => Instance._user;
@@ -38,7 +39,6 @@ namespace Assets.Scripts
         public static Saver Saver => Instance._saver;
         public static UserInput UserInput => Instance._userInput;
         public static HandsMover Hands => Instance._hands;
-        public static int CurrentLevelId => Instance.CurrenLevel.Value.Id;
 
         private void Awake()
         {
@@ -82,7 +82,7 @@ namespace Assets.Scripts
             _userInput.Touched -= _hands.TryMove;
             _userInput.Untouched -= _hands.StopMovement;
 
-            CurrenLevel.Dispose();
+            CurrentLevelId.Dispose();
         }
 
         private void Init()
@@ -96,10 +96,9 @@ namespace Assets.Scripts
             _levels.Init();
 
             var nextLevel = _levels.GetLevelConfiguration(_user.CurrentLevelId);
-            bool reinit = CurrenLevel.Value != null && CurrenLevel.Value.Id == nextLevel.Id;
 
-            CurrenLevel.Value = nextLevel;
-            StartLevel(CurrenLevel.Value, reinit);
+            CurrentLevel = nextLevel;
+            StartLevel(CurrentLevel, false);
 
             _hands.Failed += OnFail;
             _hands.Catched += OnCatch;
@@ -113,6 +112,8 @@ namespace Assets.Scripts
 
         private void StartLevel(LevelConfiguration level, bool isReinit)
         {
+            CurrentLevelId.Value = User.CurrentLevelId;
+
             if (isReinit == false)
             {
                 foreach (var item in _backgroundObjectHolder.GetComponentsInChildren<LevelBackgroundObject>())
@@ -127,7 +128,7 @@ namespace Assets.Scripts
             _ladder.Init(level);
             Windows.HUD.Init(_hands);
 
-            if (level.Id == 0)
+            if (CurrentLevelId.Value == 0)
                 InitTutor(LevelStartWindow.Show(_userInput));
             else
                 LevelStartWindow.Show(_userInput);
@@ -193,12 +194,14 @@ namespace Assets.Scripts
         {
             _userInput.gameObject.SetActive(false);
 
-            CurrenLevel.Value = _levels.GetNextLevelConfiguration(CurrenLevel.Value);
+            int nextLevel = CurrentLevelId.Value + 1;
 
-            _user.SetCurrentLevelId(CurrenLevel.Value);
+            CurrentLevel =_levels.GetLevelConfiguration(nextLevel);
+
+            _user.SetCurrentLevelId(nextLevel);
             _saver.Save(_user);
 
-            LevelCompleteWindow.Show(() => StartLevel(CurrenLevel.Value, false));
+            LevelCompleteWindow.Show(() => StartLevel(CurrentLevel, false));
             _effects.PlayKonfettiEffect();
         }
 

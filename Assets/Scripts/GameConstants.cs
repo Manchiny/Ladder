@@ -4,7 +4,9 @@ namespace Assets.Scripts
     {
         public const int MinLevelToShowBoostsShop = 1;
         public const float LadderDeltaStep = 1.5f;
-        public const float MinNonDefaultStepId = 4;
+        public const int MinNonDefaultStepId = 4;
+
+        public const int MinRandomLevelId = 5;
 
         public const float NeedTapsToCatch = 3;
         public const float MaxSecondsBeetweenTaps = 0.8f;

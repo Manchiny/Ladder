@@ -55,9 +55,9 @@ namespace Assets.Scripts
             return false;
         }
 
-        public void SetCurrentLevelId(LevelConfiguration level)
+        public void SetCurrentLevelId(int id)
         {
-            CurrentLevelId = level.Id;
+            CurrentLevelId = id;
         }
 
         public void WriteBoostsData(Dictionary<BoostType, int> boostsLevels)

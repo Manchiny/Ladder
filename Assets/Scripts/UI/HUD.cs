@@ -43,7 +43,7 @@ namespace Assets.Scripts.UI
         public void Init(HandsMover hands)
         {
             _canvas.alpha = 0;
-            _levelChangeDispose = Game.Instance.CurrenLevel.ObserveEveryValueChanged(x => x.Value).Subscribe(OnLevelChanged).AddTo(this);
+            _levelChangeDispose = Game.Instance.CurrentLevelId.ObserveEveryValueChanged(x => x.Value).Subscribe(OnLevelChanged).AddTo(this);
 
             SetMoneyText(Game.User.Money);
 
@@ -76,9 +76,9 @@ namespace Assets.Scripts.UI
             floatingMoney.Init(count);
         }
 
-        private void OnLevelChanged(LevelConfiguration level)
+        private void OnLevelChanged(int level)
         {
-            _levelText.text = $"LEVEL {level.Id + 1}";
+            _levelText.text = $"LEVEL {level + 1}";
         }
 
         private void OnMoneyChanged(int totalMoney)
