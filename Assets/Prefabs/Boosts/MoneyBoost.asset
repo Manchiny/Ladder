@@ -16,21 +16,25 @@ MonoBehaviour:
   _configs:
   - _cost: 8
     _value: 2
-  - _cost: 800
+  - _cost: 200
     _value: 3
-  - _cost: 1500
+  - _cost: 500
     _value: 4
-  - _cost: 2000
+  - _cost: 1000
     _value: 5
-  - _cost: 5000
+  - _cost: 1500
     _value: 6
-  - _cost: 10000
-    _value: 7
-  - _cost: 17500
+  - _cost: 2250
     _value: 8
-  - _cost: 30000
-    _value: 9
-  - _cost: 800000000
+  - _cost: 5000
     _value: 10
+  - _cost: 10000
+    _value: 12
+  - _cost: 15000
+    _value: 15
+  - _cost: 25000
+    _value: 20
+  - _cost: 35000
+    _value: 25
   _viewColor: {r: 0.1137255, g: 0.48627454, b: 0.36078432, a: 1}
   _buyEffect: {fileID: 3459372826420676559, guid: e820a8bb5d702e845a1700976ad87d35, type: 3}

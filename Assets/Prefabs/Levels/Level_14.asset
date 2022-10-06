@@ -10,16 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdc079e8bef212f4aa9af669eb09ad9b, type: 3}
-  m_Name: Level_01
+  m_Name: Level_14
   m_EditorClassIdentifier: 
-  _ladderStepsCount: 30
+  _ladderStepsCount: 50
   _stepsIntevalsBeetweenDefault: 5
   _minDefaultStepsCountInRowInInterval: 2
-  _defaultStepChanseOnNotDefaultPosition: 30
+  _defaultStepChanseOnNotDefaultPosition: 15
   _notDefaultLadderSteps:
   - _stepType: 1
     _chanse: 15
   - _stepType: 2
+    _chanse: 10
+  - _stepType: 4
+    _chanse: 25
+  - _stepType: 3
     _chanse: 20
   _backgroundColor: {r: 0.8235294, g: 0.8666667, b: 0.5686275, a: 1}
-  _levelBackgroundObject: {fileID: 8278281639134527899, guid: c43a8c25af5f75f4b8a8e9c5320fc628, type: 3}
+  _levelBackgroundObject: {fileID: 0}

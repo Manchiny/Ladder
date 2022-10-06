@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdc079e8bef212f4aa9af669eb09ad9b, type: 3}
   m_Name: Level_06
   m_EditorClassIdentifier: 
-  _ladderStepsCount: 40
+  _ladderStepsCount: 30
+  _stepsIntevalsBeetweenDefault: 5
+  _minDefaultStepsCountInRowInInterval: 2
+  _defaultStepChanseOnNotDefaultPosition: 25
   _notDefaultLadderSteps:
   - _stepType: 1
     _chanse: 15

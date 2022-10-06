@@ -98,8 +98,6 @@ namespace Assets.Scripts.Ladder
         {
             float totalHeight = GameConstants.LadderDeltaStep * (_levelConfiguration.StepsCount + 2);
 
-            Debug.Log($"Ladder total height = {totalHeight}");
-
             foreach (var border in _borders)
             {
                 Vector3 borderScale = border.transform.localScale;

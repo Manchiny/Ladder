@@ -10,7 +10,8 @@ namespace Assets.Scripts.Ladder
         [SerializeField] private Spike _spike;
 
         private const float SpikeShowHideDuration = 0.2f;
-        private const float AfteraAnimationPause = 2f;
+        private const float ActiveStatePause = 1f;
+        private const float InactiveStatePause = 2.5f;
 
         private bool _isSpikeActive;
 
@@ -37,7 +38,7 @@ namespace Assets.Scripts.Ladder
                 Game.Hands.ForceFail(this);
 
             PlayShow()
-                .Then(() => Utils.WaitSeconds(AfteraAnimationPause))
+                .Then(() => Utils.WaitSeconds(ActiveStatePause))
                 .Then(() =>
                 {
                     if (Hand != null)
@@ -45,7 +46,7 @@ namespace Assets.Scripts.Ladder
 
                     PlayHide();
                 })
-                .Then(() => Utils.WaitSeconds(AfteraAnimationPause))
+                .Then(() => Utils.WaitSeconds(InactiveStatePause))
                 .Then(() => StartAnimation());
         }
 
