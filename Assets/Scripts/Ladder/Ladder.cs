@@ -14,6 +14,8 @@ namespace Assets.Scripts.Ladder
         [Space]
         [SerializeField] private HandsMover _hands;
 
+        private const float BorderExtraStepsCount = 3f;
+
         private LevelConfiguration _levelConfiguration;
         private List<LadderStep> _steps = new();
 
@@ -96,14 +98,17 @@ namespace Assets.Scripts.Ladder
 
         private void ResizeBorders()
         {
-            float totalHeight = GameConstants.LadderDeltaStep * (_levelConfiguration.StepsCount + 2);
+            float totalHeight = GameConstants.LadderDeltaStep * (_levelConfiguration.StepsCount + BorderExtraStepsCount);
 
             foreach (var border in _borders)
             {
                 Vector3 borderScale = border.transform.localScale;
+                Vector3 position = border.transform.position;
+                position.y -= GameConstants.LadderDeltaStep;
 
                 borderScale.y = totalHeight;
                 border.transform.localScale = borderScale;
+                border.transform.position = position;
             }
         }
 
