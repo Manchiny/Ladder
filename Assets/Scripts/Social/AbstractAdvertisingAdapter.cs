@@ -30,18 +30,27 @@ namespace Assets.Scripts.Social.Adverts
 
         public Promise TryShowInterstitial(AbstractSocialAdapter social)
         {
+            Debug.Log($"[{Tag}] Try show Interstitial... ");
+
             if (social.IsInited == false || NeedShowInterstitial == false)
             {
                 Promise promise = new Promise();
                 promise.Resolve();
 
+                Debug.Log($"[{Tag}] Interstitial rejected: social adapetr inite = {social.IsInited}, need show interstitial = {NeedShowInterstitial}, show interstitial counter = {_showInterstitialAfterLevelCounter}");
+
                 return promise;
             }
 
             if (_interstitialPromise != null && _interstitialPromise.CurState == PromiseState.Pending)
+            {
+                Debug.Log($"[{Tag}] Interstitia must been already opend");
                 return _interstitialPromise;
+            }
             else
             {
+                Debug.Log($"[{Tag}] start show Interstitial... ");
+
                 _interstitialPromise = new Promise();
                 ShowInterstitial(OnInterstitialOpen, OnInterstitilaClose, OnInterstitiaError, OnIntersitialOffline);
                 return _interstitialPromise;

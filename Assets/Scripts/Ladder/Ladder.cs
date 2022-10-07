@@ -104,11 +104,11 @@ namespace Assets.Scripts.Ladder
             {
                 Vector3 borderScale = border.transform.localScale;
                 Vector3 position = border.transform.position;
-                position.y -= GameConstants.LadderDeltaStep;
+               // position.y = - GameConstants.LadderDeltaStep;
 
                 borderScale.y = totalHeight;
                 border.transform.localScale = borderScale;
-                border.transform.position = position;
+              //  border.transform.position = position;
             }
         }
 

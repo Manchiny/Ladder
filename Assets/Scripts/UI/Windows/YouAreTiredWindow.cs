@@ -21,7 +21,7 @@ namespace Assets.Scripts.UI
 
         protected void Init(Stamina stamina)
         {
-            _releaseHandText.text = "RELEASE TOUR HAND";
+            _releaseHandText.text = "RELEASE YOUR HAND";
             _youAreTiredText.text = "YOU ARE TIRED";
 
             new ScalePongAnimation(_releaseHandText.transform as RectTransform);

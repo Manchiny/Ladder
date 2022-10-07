@@ -97,6 +97,7 @@ namespace Assets.Scripts
             _adverts = new YandexAdvertisingAdapter();
 
             _socialAdapter.Init();
+            _adverts.Init();
 #endif
 
             _saver = new Saver();
