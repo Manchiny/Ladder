@@ -79,19 +79,15 @@ namespace Assets.Scripts
             Init();
         }
 
+        private void OnApplicationFocus(bool focus)
+        {
+            if (focus == false)
+                _saver.Save(_user);
+        }
+
         private void OnDisable()
         {
-            _hands.Failed -= OnFail;
-            _hands.Catched -= OnCatch;
-            _hands.Loosed -= OnLoose;
-            _hands.Completed -= OnLevelComplete;
-            _hands.Taked -= OnStepTaked;
-            _hands.Taked -= ShowTiredWindowIfNeed;
-
-            _userInput.Touched -= _hands.TryMove;
-            _userInput.Untouched -= _hands.StopMovement;
-
-            CurrentLevelId.Dispose();
+            RemoveSubscribes();
         }
 
         private void Init()
@@ -124,6 +120,21 @@ namespace Assets.Scripts
 
             _userInput.Touched += _hands.TryMove;
             _userInput.Untouched += _hands.StopMovement;
+        }
+
+        private void RemoveSubscribes()
+        {
+            _hands.Failed -= OnFail;
+            _hands.Catched -= OnCatch;
+            _hands.Loosed -= OnLoose;
+            _hands.Completed -= OnLevelComplete;
+            _hands.Taked -= OnStepTaked;
+            _hands.Taked -= ShowTiredWindowIfNeed;
+
+            _userInput.Touched -= _hands.TryMove;
+            _userInput.Untouched -= _hands.StopMovement;
+
+            CurrentLevelId.Dispose();
         }
 
         private void StartLevel(LevelConfiguration level, bool isReinit)
