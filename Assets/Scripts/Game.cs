@@ -2,7 +2,10 @@ using Assets.Scripts.Boosts;
 using Assets.Scripts.Hands;
 using Assets.Scripts.Ladder;
 using Assets.Scripts.Levels;
+using Assets.Scripts.Social;
+using Assets.Scripts.Social.Adverts;
 using Assets.Scripts.UI;
+using System;
 using UniRx;
 using UnityEngine;
 
@@ -28,7 +31,13 @@ namespace Assets.Scripts
         private Saver _saver;
         private Player _player;
 
+        private AbstractSocialAdapter _socialAdapter;
+        private AbstractAdvertisingAdapter _adverts;
+
+        public event Action LevelCompleted;
+
         public static Game Instance { get; private set; }
+
         public LevelConfiguration CurrentLevel { get; private set; }
         public ReactiveProperty<int> CurrentLevelId { get; private set; } = new ReactiveProperty<int>();
 
@@ -87,6 +96,13 @@ namespace Assets.Scripts
 
         private void Init()
         {
+#if UNITY_WEBGL || UNITY_EDITOR
+            _socialAdapter = new YandexSocialAdapter();
+            _adverts = new YandexAdvertisingAdapter();
+
+            _socialAdapter.Init();
+#endif
+
             _saver = new Saver();
             _user = _saver.LoadUserData();
             _player = new Player(_user);
@@ -201,8 +217,16 @@ namespace Assets.Scripts
             _user.SetCurrentLevelId(nextLevel);
             _saver.Save(_user);
 
-            LevelCompleteWindow.Show(() => StartLevel(CurrentLevel, false));
+            LevelCompleteWindow.Show(OnContinueButtonClick);
             _effects.PlayKonfettiEffect();
+
+            LevelCompleted?.Invoke();
+
+            void OnContinueButtonClick()
+            {
+                _adverts.TryShowInterstitial(_socialAdapter)
+                    .Then(() => StartLevel(CurrentLevel, false));
+            }
         }
 
         private void RestartGame()

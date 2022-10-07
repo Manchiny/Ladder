@@ -29,7 +29,7 @@ namespace Assets.Scripts.Social
             return _initPromise;
         }
 
-        public abstract void InitSdk(Action onSuccessCallback);
+        protected abstract void InitSdk(Action onSuccessCallback);
 
         private void OnSdkInited()
         {

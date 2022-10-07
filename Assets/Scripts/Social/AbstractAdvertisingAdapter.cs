@@ -7,19 +7,33 @@ namespace Assets.Scripts.Social.Adverts
     public abstract class AbstractAdvertisingAdapter
     {
         private Promise _interstitialPromise;
+        private int _showInterstitialAfterLevelCounter;
 
         private event Action Rewarded;
         private event Action RevardedAdsOpened;
         private event Action RewardedAdsClosed;
         private event Action RewardAdsError;
-        public abstract string Tag { get; }
 
-        public Promise ShowInterstitial(AbstractSocialAdapter social)
+        public abstract string Tag { get; }
+        public bool NeedShowInterstitial => _showInterstitialAfterLevelCounter <= 0;
+
+        ~AbstractAdvertisingAdapter()
         {
-            if (social.IsInited == false)
+            Game.Instance.LevelCompleted -= OnLevelComplete;
+        }
+
+        public void Init()
+        {
+            _showInterstitialAfterLevelCounter = GameConstants.LevelsCountBetweenInterstitialShow;
+            Game.Instance.LevelCompleted += OnLevelComplete;
+        }
+
+        public Promise TryShowInterstitial(AbstractSocialAdapter social)
+        {
+            if (social.IsInited == false || NeedShowInterstitial == false)
             {
                 Promise promise = new Promise();
-                promise.Reject(null);
+                promise.Resolve();
 
                 return promise;
             }
@@ -30,12 +44,11 @@ namespace Assets.Scripts.Social.Adverts
             {
                 _interstitialPromise = new Promise();
                 ShowInterstitial(OnInterstitialOpen, OnInterstitilaClose, OnInterstitiaError, OnIntersitialOffline);
-
                 return _interstitialPromise;
             }
         }
 
-        public void ShowRewardedVideo(AbstractSocialAdapter social, Action onOpen, Action onRewarded, Action onClose, Action onError)
+        public void TryShowRewardedVideo(AbstractSocialAdapter social, Action onOpen, Action onRewarded, Action onClose, Action onError)
         {
             if (social.IsInited == false)
                 return;
@@ -68,12 +81,13 @@ namespace Assets.Scripts.Social.Adverts
 
         private void OnInterstitialOpen()
         {
+            _showInterstitialAfterLevelCounter = GameConstants.LevelsCountBetweenInterstitialShow;
             Debug.LogError($"[{Tag}]: opened interstitial video");
         }
 
         private void OnIntersitialOffline()
         {
-
+            Debug.LogError($"[{Tag}]: offline");
         }
 
         protected void OnRewardedOpen()
@@ -118,5 +132,9 @@ namespace Assets.Scripts.Social.Adverts
             }
         }
 
+        private void OnLevelComplete()
+        {
+            _showInterstitialAfterLevelCounter--;
+        }
     }
 }

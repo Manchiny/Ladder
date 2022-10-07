@@ -7,18 +7,18 @@ namespace Assets.Scripts.Social
 {
     public class YandexSocialAdapter : AbstractSocialAdapter
     {
-        [SerializeField]
-        private Text _authorizationStatusText;
+        //[SerializeField]
+        //private Text _authorizationStatusText;
 
-        [SerializeField]
-        private Text _personalProfileDataPermissionStatusText;
+        //[SerializeField]
+        //private Text _personalProfileDataPermissionStatusText;
 
-        [SerializeField]
-        private InputField _playerDataTextField;
+        //[SerializeField]
+        //private InputField _playerDataTextField;
 
         public override string Tag => "YandexSDK";
 
-        public override void InitSdk(Action onSuccessCallback)
+        protected override void InitSdk(Action onSuccessCallback)
         {
 #if !UNITY_WEBGL || UNITY_EDITOR
             return;
@@ -77,15 +77,15 @@ namespace Assets.Scripts.Social
             });
         }
 
-        public void OnSetPlayerDataButtonClick()
-        {
-            PlayerAccount.SetPlayerData(_playerDataTextField.text);
-        }
+        //public void OnSetPlayerDataButtonClick()
+        //{
+        //    PlayerAccount.SetPlayerData(_playerDataTextField.text);
+        //}
 
-        public void OnGetPlayerDataButtonClick()
-        {
-            PlayerAccount.GetPlayerData((data) => _playerDataTextField.text = data);
-        }
+        //public void OnGetPlayerDataButtonClick()
+        //{
+        //    PlayerAccount.GetPlayerData((data) => _playerDataTextField.text = data);
+        //}
 
         public void OnGetDeviceTypeButtonClick()
         {
