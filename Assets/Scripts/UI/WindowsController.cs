@@ -19,6 +19,9 @@ namespace Assets.Scripts.UI
 
         public T ScreenChange<T>(bool closeAllOther = true, Action<T> action = null) where T : AbstractWindow
         {
+            if (CurrentWindow != null && CurrentWindow is T)
+                return CurrentWindow as T;
+
             T window = null;
 
             if (closeAllOther)
