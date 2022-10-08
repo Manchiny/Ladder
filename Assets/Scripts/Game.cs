@@ -91,8 +91,8 @@ namespace Assets.Scripts
 
         private void OnApplicationFocus(bool focus)
         {
-            if (focus == false)
-                _saver.Save(_user);
+            //if (focus == false)
+            //    _saver.Save(_user);
         }
 
         private void OnDisable()
