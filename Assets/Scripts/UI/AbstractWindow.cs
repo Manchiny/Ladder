@@ -19,10 +19,12 @@ namespace Assets.Scripts.UI
         protected bool _isOpening = false;
         protected bool _isClosing = false;
 
-        protected Sequence _sequence;
+        protected Tween _showHideAnimation;
 
         public abstract string LockKey { get; }
         public bool AnimatedClose { get; protected set; } = false;
+        public bool NeedHideHudOnShow { get; protected set; } = false;
+
         public Promise ClosePromise { get; } = new Promise();
 
         public bool IsOpening => _isOpening;
@@ -68,14 +70,35 @@ namespace Assets.Scripts.UI
 
         public void Unhide()
         {
+            if (_showHideAnimation != null && _showHideAnimation.active)
+            {
+                _showHideAnimation.Kill();
+                _showHideAnimation = null;
+            }
+
+            OnUnhide();
+
+            if (NeedHideHudOnShow)
+                Game.Windows.HUD.Hide();
+            else
+                Game.Windows.HUD.Show();
+
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
 
-            _canvasGroup.DOFade(1, FadeDuration).SetLink(gameObject);
+            _showHideAnimation = _canvasGroup.DOFade(1, FadeDuration).SetLink(gameObject);
         }
 
         public void ForceHide()
         {
+            if (_showHideAnimation != null && _showHideAnimation.active)
+            {
+                _showHideAnimation.Kill();
+                _showHideAnimation = null;
+            }
+
+            OnHide();
+
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
             _canvasGroup.alpha = 0;
@@ -102,5 +125,7 @@ namespace Assets.Scripts.UI
         protected virtual void OnAwake() { }
         protected virtual void OnStart() { }
         protected virtual void OnClose() { }
+        protected virtual void OnHide() { }
+        protected virtual void OnUnhide() { }
     }
 }

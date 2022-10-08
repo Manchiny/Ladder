@@ -2,20 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using RSG;
 using UnityEngine;
 
 namespace Assets.Scripts.Localization
 {
     public class GameLocalization
     {
-        public static string[] AvailableLocals =
-        {
-            Locale.RU,
-            Locale.EN
-        };
-
-
         public static string[] RuLangAvailable =
         {
             Locale.RU,
@@ -34,6 +26,14 @@ namespace Assets.Scripts.Localization
             Locale.AZ
         };
 
+        public static IReadOnlyCollection<string> AvailableLocals => _availableLocals;
+
+        private static string[] _availableLocals =
+{
+            Locale.RU,
+            Locale.EN
+        };
+
         private readonly Regex _paramRegex = new Regex(@"@\d");
 
         public static string CurrentLocale { get; set; }
@@ -45,7 +45,7 @@ namespace Assets.Scripts.Localization
 
         public void LoadKeys(string locale, LocalizationDatabase database)
         {
-            if (AvailableLocals.Contains(locale) == false)
+            if (_availableLocals.Contains(locale) == false)
                 locale = Locale.EN;
 
             Dictionary<string, string> pairs = new();

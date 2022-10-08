@@ -28,6 +28,8 @@ namespace Assets.Scripts.UI
         private CanvasGroup _canvas;
         private HandsMover _hands;
 
+        protected Tween _showHideAnimation;
+
         private Tween MoneyAnimationTween;
         private IDisposable _levelChangeDispose;
 
@@ -61,12 +63,24 @@ namespace Assets.Scripts.UI
 
         public void Show()
         {
-            _canvas.DOFade(1f, FadeDuration);
+            if (_showHideAnimation != null && _showHideAnimation.active)
+            {
+                _showHideAnimation.Kill();
+                _showHideAnimation = null;
+            }
+
+            _showHideAnimation = _canvas.DOFade(1f, FadeDuration).SetLink(gameObject);
         }
 
         public void Hide()
         {
-            _canvas.DOFade(0f, FadeDuration);
+            if (_showHideAnimation != null && _showHideAnimation.active)
+            {
+                _showHideAnimation.Kill();
+                _showHideAnimation = null;
+            }
+
+            _showHideAnimation = _canvas.DOFade(0f, FadeDuration).SetLink(gameObject);
         }
 
         public void ShowFloatingMoney(int count, Hand hand)

@@ -43,6 +43,11 @@ namespace Assets.Scripts.UI
             window = OpenScreen(action);
             _windows.Push(window);
 
+            if (window.NeedHideHudOnShow)
+                _hud.Hide();
+            else
+                _hud.Show();
+
             return window;
         }
 
@@ -94,7 +99,11 @@ namespace Assets.Scripts.UI
 
                 if (CurrentWindow != null)
                     CurrentWindow?.Unhide();
+                else
+                    _hud.Show();
             }
+            else
+                _hud.Show();
         }
     }
 }

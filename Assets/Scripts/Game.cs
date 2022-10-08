@@ -76,6 +76,9 @@ namespace Assets.Scripts
             if (Input.GetKeyUp(KeyCode.F2) == true)
                 ChangeLocale(Locale.RU);
 
+            if (Input.GetKeyUp(KeyCode.F3) == true)
+                SettingsWindow.Show();
+
             if (Input.GetKeyUp(KeyCode.F4) == true)
                 Saver.RemoveAllData();
         }
@@ -98,6 +101,15 @@ namespace Assets.Scripts
         }
 
         public static string Localize(string key, params string[] parameters) => Localization?.Localize(key, parameters) ?? key;
+
+        public void ChangeLocale(string local)
+        {
+            if (local == GameLocalization.CurrentLocale)
+                return;
+
+            GameLocalization.LoadKeys(local, _localizationDatabase);
+            User.SavedLocale = GameLocalization.CurrentLocale;
+        }
 
         private void Init()
         {
@@ -138,15 +150,6 @@ namespace Assets.Scripts
 
             _userInput.Touched += _hands.TryMove;
             _userInput.Untouched += _hands.StopMovement;
-        }
-
-        private void ChangeLocale(string local)
-        {
-            if (local == GameLocalization.CurrentLocale)
-                return;
-
-            GameLocalization.LoadKeys(local, _localizationDatabase);
-            User.SavedLocale = GameLocalization.CurrentLocale;
         }
 
         private void RemoveSubscribes()

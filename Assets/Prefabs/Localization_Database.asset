@@ -82,3 +82,27 @@ MonoBehaviour:
       _value: "\u0414\u041E\u0425\u041E\u0414"
     - _language: 10
       _value: INCOME
+  - _key: language
+    _values:
+    - _language: 30
+      _value: "\u042F\u0437\u044B\u043A"
+    - _language: 10
+      _value: Language
+  - _key: RU
+    _values:
+    - _language: 30
+      _value: "\u0420\u0423\u0421\u0421\u041A\u0418\u0419"
+    - _language: 10
+      _value: "\u0420\u0423\u0421\u0421\u041A\u0418\u0419"
+  - _key: EN
+    _values:
+    - _language: 30
+      _value: ENGLISH
+    - _language: 10
+      _value: ENGLISH
+  - _key: settings
+    _values:
+    - _language: 30
+      _value: "\u041D\u0410\u0421\u0422\u0420\u041E\u0419\u041A\u0418"
+    - _language: 10
+      _value: SETTINGS

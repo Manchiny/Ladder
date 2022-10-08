@@ -9,6 +9,8 @@ namespace Assets.Scripts
         public event Action Touched;
         public event Action Untouched;
 
+        public bool IsActive => gameObject.activeInHierarchy;
+
         private void Awake()
         {
             gameObject.SetActive(false);

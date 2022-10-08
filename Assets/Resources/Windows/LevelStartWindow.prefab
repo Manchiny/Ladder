@@ -65,6 +65,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _infoText: {fileID: 5246897388036707918}
   _vignette: {fileID: 5056829228778101568}
+  _boostButtonsContainer: {fileID: 364574605396956495}
   _moneyBoostView: {fileID: 403157620035787701}
   _staminaBoostView: {fileID: 2593019689092480883}
 --- !u!1 &1863303364379467683
@@ -496,6 +497,14 @@ PrefabInstance:
       propertyPath: m_text
       value: money
       objectReference: {fileID: 0}
+    - target: {fileID: 8444271559032822230, guid: 6f87400af9c772e45857b60759684c6d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8805474166900467785, guid: 6f87400af9c772e45857b60759684c6d, type: 3}
+      propertyPath: m_IgnoreParentGroups
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f87400af9c772e45857b60759684c6d, type: 3}
 --- !u!224 &5787432948763718811 stripped
@@ -608,6 +617,14 @@ PrefabInstance:
     - target: {fileID: 6463186566207749848, guid: 6f87400af9c772e45857b60759684c6d, type: 3}
       propertyPath: m_Name
       value: BuyBoostView_stamina
+      objectReference: {fileID: 0}
+    - target: {fileID: 8444271559032822230, guid: 6f87400af9c772e45857b60759684c6d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8805474166900467785, guid: 6f87400af9c772e45857b60759684c6d, type: 3}
+      propertyPath: m_IgnoreParentGroups
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f87400af9c772e45857b60759684c6d, type: 3}

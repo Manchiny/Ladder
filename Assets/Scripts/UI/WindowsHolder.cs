@@ -12,6 +12,7 @@ namespace Assets.Scripts.UI
             [typeof(TapToCatchWindow)] = "Windows/TapToCatchWindow",
             [typeof(LevelCompleteWindow)] = "Windows/LevelCompleteWindow",
             [typeof(YouAreTiredWindow)] = "Windows/YouAreTiredWindow",
+            [typeof(SettingsWindow)] = "Windows/SettingsWindow",
         };
     }
 }

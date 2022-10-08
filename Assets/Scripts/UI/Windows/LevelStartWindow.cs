@@ -12,6 +12,7 @@ namespace Assets.Scripts.UI
         [SerializeField] private TextMeshProUGUI _infoText;
         [SerializeField] private Image _vignette;
         [Space]
+        [SerializeField] private RectTransform _boostButtonsContainer;
         [SerializeField] private BuyBoostView _moneyBoostView;
         [SerializeField] private BuyBoostView _staminaBoostView;
 
@@ -53,6 +54,17 @@ namespace Assets.Scripts.UI
         protected override void OnClose()
         {
             ActivateInput();
+        }
+
+        protected override void OnHide()
+        {
+            _boostButtonsContainer.gameObject.SetActive(false);
+        }
+
+        protected override void OnUnhide()
+        {
+            base.OnUnhide();
+            _boostButtonsContainer.gameObject.SetActive(true);
         }
 
         private void SetText()
