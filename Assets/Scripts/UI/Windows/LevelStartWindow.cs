@@ -16,6 +16,7 @@ namespace Assets.Scripts.UI
         [SerializeField] private BuyBoostView _staminaBoostView;
 
         private const float FadeDuration = 1f;
+        private const string TapToStartKey = "tapToStart";
 
         private bool _boostBuyed;
         private UserInput _userInput;
@@ -28,7 +29,7 @@ namespace Assets.Scripts.UI
         protected void Init(UserInput userInput)
         {
             _infoText.gameObject.SetActive(false);
-            _infoText.text = "TAP TO START";
+            _infoText.text = "tapToStart".Localize();
 
             Boost moneyBoost = Game.BoostsDatabase.GetBoost(Boost.BoostType.MoneyBoost);
             _moneyBoostView.Init(moneyBoost, () => OnBuyBoostButtonClick(moneyBoost, _moneyBoostView.transform as RectTransform));

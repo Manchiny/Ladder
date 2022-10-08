@@ -2,6 +2,7 @@ using Assets.Scripts.Boosts;
 using Assets.Scripts.Hands;
 using Assets.Scripts.Ladder;
 using Assets.Scripts.Levels;
+using Assets.Scripts.Localization;
 using Assets.Scripts.Social;
 using Assets.Scripts.Social.Adverts;
 using Assets.Scripts.UI;
@@ -24,6 +25,7 @@ namespace Assets.Scripts
         [SerializeField] private BoostsDatabase _boostsDatabase;
         [Space]
         [SerializeField] private Transform _backgroundObjectHolder;
+        [SerializeField] private LocalizationDatabase _localizationDatabase;
 
         private float StaminaLowEnergyFactorToShowTiredWindow = 0.5f;
 
@@ -37,6 +39,9 @@ namespace Assets.Scripts
         public event Action LevelCompleted;
 
         public static Game Instance { get; private set; }
+
+        public GameLocalization GameLocalization { get; internal set; }
+        public static GameLocalization Localization => Instance?.GameLocalization;
 
         public LevelConfiguration CurrentLevel { get; private set; }
         public ReactiveProperty<int> CurrentLevelId { get; private set; } = new ReactiveProperty<int>();
@@ -90,6 +95,11 @@ namespace Assets.Scripts
             RemoveSubscribes();
         }
 
+        public static string Localize(string key, params string[] parameters)
+        {
+            return Localization?.Localize(key, parameters) ?? key;
+        }
+
         private void Init()
         {
 #if UNITY_WEBGL || UNITY_EDITOR
@@ -99,6 +109,9 @@ namespace Assets.Scripts
             _socialAdapter.Init();
             _adverts.Init();
 #endif
+            var locale = LOCALE.RU;
+            GameLocalization = new GameLocalization();
+            GameLocalization.Load(locale, _localizationDatabase);
 
             _saver = new Saver();
             _user = _saver.LoadUserData();
