@@ -22,10 +22,19 @@ namespace Assets.Scripts.UI
         public static YouAreTiredWindow Show(Stamina stamina) =>
                         Game.Windows.ScreenChange<YouAreTiredWindow>(true, w => w.Init(stamina));
 
+        private void OnDestroy()
+        {
+            if (_checkEnergyDispose != null)
+                _checkEnergyDispose.Dispose();
+
+            Game.Localization.LanguageChanged -= SetText;
+        }
+
         protected void Init(Stamina stamina)
         {
-            _releaseHandText.text = "RELEASE YOUR HAND";
-            _youAreTiredText.text = "YOU ARE TIRED";
+            Game.Localization.LanguageChanged += SetText;
+
+            SetText();
 
             new ScalePongAnimation(_releaseHandText.transform as RectTransform);
 
@@ -33,16 +42,16 @@ namespace Assets.Scripts.UI
             _checkEnergyDispose = _stamina.CurrentEnergy.ObserveEveryValueChanged(value => value.Value).Subscribe(OnStaminaValueChanged).AddTo(this);
         }
 
+        private void SetText()
+        {
+            _releaseHandText.text = ReleaseHandLocalizationKey.Localize();
+            _youAreTiredText.text = YouAreTiredLocalizationKey.Localize();
+        }
+
         private void OnStaminaValueChanged(float value)
         {
             if (_stamina.IsLowEnergy(out float factor) == false)
                 Close();
-        }
-
-        private void OnDestroy()
-        {
-            if (_checkEnergyDispose != null)
-                _checkEnergyDispose.Dispose();
         }
     }
 }

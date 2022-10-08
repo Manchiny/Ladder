@@ -27,6 +27,18 @@ namespace Assets.Scripts.UI
         public static TapToCatchWindow Show(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived) =>
                     Game.Windows.ScreenChange<TapToCatchWindow>(true, w => w.Init(userInput, hands, onEnoughTapsRecived));
 
+        private void OnDestroy()
+        {
+            _window = null;
+            _tapCounter = 0;
+
+            _userInput.Touched -= OnStartTouch;
+            _hands.Catched -= Close;
+            _hands.Loosed -= OnLoose;
+
+            Game.Localization.LanguageChanged -= SetText;
+        }
+
         protected void Init(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived)
         {
             if (_window != null)
@@ -35,7 +47,9 @@ namespace Assets.Scripts.UI
             _window = this;
 
             Debug.Log("Tap to catch window init...");
-            _infoText.text = TapToCatchLocalizationKey.Localize();
+
+            Game.Localization.LanguageChanged += SetText;
+            SetText();
 
             _enoughTapsRecived = onEnoughTapsRecived;
 
@@ -48,6 +62,11 @@ namespace Assets.Scripts.UI
             _userInput.Touched += OnStartTouch;
 
             ScalePongAnimation textAnimation = new ScalePongAnimation(_infoText.transform as RectTransform);
+        }
+
+        private void SetText()
+        {
+            _infoText.text = TapToCatchLocalizationKey.Localize();
         }
 
         private void OnLoose()
@@ -82,16 +101,6 @@ namespace Assets.Scripts.UI
 
             if (_tapCounter >= GameConstants.NeedTapsToCatch)
                 _enoughTapsRecived?.Invoke();
-        }
-
-        private void OnDestroy()
-        {
-            _window = null;
-            _tapCounter = 0;
-
-            _userInput.Touched -= OnStartTouch;
-            _hands.Catched -= Close;
-            _hands.Loosed -= OnLoose;
         }
     }
 }

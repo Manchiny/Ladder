@@ -8,6 +8,7 @@ namespace Assets.Scripts
     {
         private const string CurrentLevelKey = "CurrentLevel";
         private const string MoneyKey = "Money";
+        private const string LocaleKey = "Locale";
 
         private Dictionary<BoostType, string> _boostsKeys = new Dictionary<BoostType, string>
         {
@@ -20,6 +21,9 @@ namespace Assets.Scripts
             PlayerPrefs.SetInt(CurrentLevelKey, data.CurrentLevelId);
             PlayerPrefs.SetInt(MoneyKey, data.Money);
 
+            if (data.SavedLocale.IsNullOrEmpty() == false)
+                PlayerPrefs.SetString(LocaleKey, data.SavedLocale);
+
             foreach (var boost in data.BoostLevels)
                 SaveBoostLevel(boost.Key, boost.Value);
         }
@@ -28,6 +32,7 @@ namespace Assets.Scripts
         {
             UserData data = new UserData(GetCurrentLevel(), GetMoney());
             data.WriteBoostsData(GetBoostsData());
+            data.SavedLocale = GetSavedLocale();
 
             return data;
         }
@@ -47,6 +52,7 @@ namespace Assets.Scripts
 
         public int GetCurrentLevel() => PlayerPrefs.GetInt(CurrentLevelKey);
         public int GetMoney() => PlayerPrefs.GetInt(MoneyKey);
+        public string GetSavedLocale() => PlayerPrefs.HasKey(LocaleKey) ? PlayerPrefs.GetString(LocaleKey) : null;
 
         public int GetLastSavedBoostLevel(BoostType type)
         {

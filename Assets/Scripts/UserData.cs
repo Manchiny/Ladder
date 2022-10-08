@@ -1,5 +1,4 @@
 using Assets.Scripts.Boosts;
-using Assets.Scripts.Levels;
 using System;
 using System.Collections.Generic;
 using static Assets.Scripts.Boosts.Boost;
@@ -8,6 +7,8 @@ namespace Assets.Scripts
 {
     public class UserData
     {
+        public string SavedLocale;
+
         private Dictionary<BoostType, int> _boostsLevels = new Dictionary<BoostType, int>();
 
         public event Action<int> MoneyChanged;

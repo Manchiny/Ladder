@@ -9,43 +9,45 @@ namespace Assets.Scripts.Localization
 {
     public class GameLocalization
     {
-        public static string[] AvailableLangs =
+        public static string[] AvailableLocals =
         {
-            LOCALE.RU,
-            LOCALE.EN
+            Locale.RU,
+            Locale.EN
         };
 
-        public static string[] RU_LANG_AVAILABLE =
+
+        public static string[] RuLangAvailable =
         {
-            LOCALE.RU,
-            LOCALE.BE,
-            LOCALE.TG,
-            LOCALE.UA,
-            LOCALE.UK,
-            LOCALE.KA,
-            LOCALE.KK,
-            LOCALE.KY,
-            LOCALE.TK,
-            LOCALE.UZ,
-            LOCALE.TT,
-            LOCALE.BA,
-            LOCALE.HY,
-            LOCALE.AZ
+            Locale.RU,
+            Locale.BE,
+            Locale.TG,
+            Locale.UA,
+            Locale.UK,
+            Locale.KA,
+            Locale.KK,
+            Locale.KY,
+            Locale.TK,
+            Locale.UZ,
+            Locale.TT,
+            Locale.BA,
+            Locale.HY,
+            Locale.AZ
         };
 
         private readonly Regex _paramRegex = new Regex(@"@\d");
 
-        public GameLocalization()
-        {
-        }
-
-        public static string Locale { get; set; } = LOCALE.EN;
-        public static bool IsLocaleRU => Locale == LOCALE.RU;
+        public static string CurrentLocale { get; set; }
+        public static bool IsLocaleRU => CurrentLocale == Locale.RU;
 
         public Dictionary<string, string> LocalizePairs { get; private set; } = new Dictionary<string, string>();
 
-        public void Load(string locale, LocalizationDatabase database)
+        public event Action LanguageChanged;
+
+        public void LoadKeys(string locale, LocalizationDatabase database)
         {
+            if (AvailableLocals.Contains(locale) == false)
+                locale = Locale.EN;
+
             Dictionary<string, string> pairs = new();
 
             foreach (var key in database.LocalizationKeys)
@@ -54,13 +56,20 @@ namespace Assets.Scripts.Localization
                 {
                     if (locale == Utils.To2LetterISOCode(value.Language))
                     {
-                        pairs.Add(key.Key, value.Value);
+                        if (pairs.TryAdd(key.Key, value.Value) == false)
+                            Debug.LogError($"{key.Key} is already contains in localization keys!");
+
                         break;
                     }
                 }
             }
 
             LocalizePairs = pairs;
+            CurrentLocale = locale;
+
+            Debug.Log("[LOCALIZTION]: language setted - " + locale);
+
+            LanguageChanged?.Invoke();
         }
 
         public string Localize(string key, params string[] parameters)
@@ -86,24 +95,16 @@ namespace Assets.Scripts.Localization
                 .Replace("\\n", Environment.NewLine);
         }
 
-        public static string GetValidLocale()
-        {
-            if (AvailableLangs.Contains(Locale, StringComparer.OrdinalIgnoreCase))
-                return Locale;
-
-            return LOCALE.EN;
-        }
-
         public bool ContainsKey(string key) => LocalizePairs.ContainsKey(key);
 
-        public static string GetLocaleByCapabilities(string lang = null)
+        public static string GetSystemLocaleByCapabilities()
         {
-            var locale = lang ?? Utils.To2LetterISOCode(Application.systemLanguage).ToUpper();
+            var locale = Utils.To2LetterISOCode(Application.systemLanguage).ToUpper();
 
-            if (RU_LANG_AVAILABLE.Contains(locale))
-                return LOCALE.RU;
+            if (RuLangAvailable.Contains(locale))
+                return Locale.RU;
 
-            return locale;
+            return Locale.EN;
         }
     }
 }

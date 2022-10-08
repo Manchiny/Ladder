@@ -1,6 +1,6 @@
 namespace Assets.Scripts.Localization
 {
-    public class LOCALE
+    public class Locale
     {
         public const string RU = "RU";
         public const string EN = "EN";

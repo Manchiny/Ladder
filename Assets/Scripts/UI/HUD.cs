@@ -40,6 +40,7 @@ namespace Assets.Scripts.UI
         {
             _levelChangeDispose?.Dispose();
             Game.User.MoneyChanged -= OnMoneyChanged;
+            Game.Localization.LanguageChanged -= OnLocalizationChanged;
         }
 
         public void Init(HandsMover hands)
@@ -50,6 +51,7 @@ namespace Assets.Scripts.UI
             SetMoneyText(Game.User.Money);
 
             Game.User.MoneyChanged += OnMoneyChanged;
+            Game.Localization.LanguageChanged += OnLocalizationChanged;
 
             _hands = hands;
             _staminaView.Init(_hands);
@@ -89,9 +91,9 @@ namespace Assets.Scripts.UI
             PlayMoneyPanelAnimation();
         }
 
-        private void SetMoneyText(int money)
+        private void SetMoneyText(int level)
         {
-            _moneyText.text = $"${money}";
+            _moneyText.text = $"${level}";
         }
 
         private void PlayMoneyPanelAnimation()
@@ -107,6 +109,11 @@ namespace Assets.Scripts.UI
             MoneyAnimationTween = sequence;
 
             MoneyAnimationTween.Play();
+        }
+
+        private void OnLocalizationChanged()
+        {
+            OnLevelChanged(Game.Instance.CurrentLevelId.Value + 1);
         }
     }
 }

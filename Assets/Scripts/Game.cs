@@ -71,11 +71,13 @@ namespace Assets.Scripts
         private void Update()
         {
             if (Input.GetKeyUp(KeyCode.F1) == true)
-                LevelCompleteWindow.Show(null);
+                ChangeLocale(Locale.EN);
+
+            if (Input.GetKeyUp(KeyCode.F2) == true)
+                ChangeLocale(Locale.RU);
 
             if (Input.GetKeyUp(KeyCode.F4) == true)
                 Saver.RemoveAllData();
-
         }
 #endif
 
@@ -95,13 +97,12 @@ namespace Assets.Scripts
             RemoveSubscribes();
         }
 
-        public static string Localize(string key, params string[] parameters)
-        {
-            return Localization?.Localize(key, parameters) ?? key;
-        }
+        public static string Localize(string key, params string[] parameters) => Localization?.Localize(key, parameters) ?? key;
 
         private void Init()
         {
+            Utils.SetMainContainer(this);
+
 #if UNITY_WEBGL || UNITY_EDITOR
             _socialAdapter = new YandexSocialAdapter();
             _adverts = new YandexAdvertisingAdapter();
@@ -109,15 +110,18 @@ namespace Assets.Scripts
             _socialAdapter.Init();
             _adverts.Init();
 #endif
-            var locale = LOCALE.RU;
-            GameLocalization = new GameLocalization();
-            GameLocalization.Load(locale, _localizationDatabase);
-
             _saver = new Saver();
             _user = _saver.LoadUserData();
             _player = new Player(_user);
 
-            Utils.SetMainContainer(this);
+            GameLocalization = new GameLocalization();
+
+            string locale = _user.SavedLocale;
+
+            if (locale.IsNullOrEmpty())
+                locale = GameLocalization.GetSystemLocaleByCapabilities();
+
+            GameLocalization.LoadKeys(locale, _localizationDatabase);
 
             _levels.Init();
 
@@ -134,6 +138,15 @@ namespace Assets.Scripts
 
             _userInput.Touched += _hands.TryMove;
             _userInput.Untouched += _hands.StopMovement;
+        }
+
+        private void ChangeLocale(string local)
+        {
+            if (local == GameLocalization.CurrentLocale)
+                return;
+
+            GameLocalization.LoadKeys(local, _localizationDatabase);
+            User.SavedLocale = GameLocalization.CurrentLocale;
         }
 
         private void RemoveSubscribes()

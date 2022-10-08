@@ -10,13 +10,25 @@ namespace Assets.Scripts.UI
         public override string LockKey => "HoldOndReleaseWindow";
         private const string HoldAndReleaseLocalizationKey = "holdAndRelease";
 
+        private void OnDestroy()
+        {
+            Game.Localization.LanguageChanged -= SetText;
+        }
+
         public static HoldAndReleaseWindow Show() =>
                         Game.Windows.ScreenChange<HoldAndReleaseWindow>(true, w => w.Init());
 
         protected void Init()
         {
-            _infoText.text = HoldAndReleaseLocalizationKey.Localize();
+            SetText();
+            Game.Localization.LanguageChanged += SetText;
+
             new ScalePongAnimation(_infoText.transform as RectTransform);
+        }
+
+        private void SetText()
+        {
+            _infoText.text = HoldAndReleaseLocalizationKey.Localize();
         }
     }
 }

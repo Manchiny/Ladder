@@ -25,6 +25,7 @@ namespace Assets.Scripts.UI
         private RectTransform _rect;
 
         private bool _locked;
+        private Boost _boost;
 
         private event Action _onClick;
 
@@ -33,11 +34,18 @@ namespace Assets.Scripts.UI
             _rect = GetComponent<RectTransform>();
         }
 
+        private void OnDestroy()
+        {
+            Game.Localization.LanguageChanged -= SetText;
+        }
+
         public void Init(Boost boost, Action onClick)
         {
             _locked = false;
+            _boost = boost;
 
-            _titleText.text = boost.Name.Localize();
+            Game.Localization.LanguageChanged += SetText;
+            SetText();
 
             if (boost.NeedShow && boost.TryGetNextLevelCost(out int cost))
             {
@@ -61,6 +69,12 @@ namespace Assets.Scripts.UI
         public void SetLocked(bool needLock)
         {
             _locked = needLock;
+        }
+
+        private void SetText()
+        {
+            if (_boost != null)
+                _titleText.text = _boost.Name.Localize();
         }
 
         private void OnClick()

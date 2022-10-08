@@ -26,10 +26,16 @@ namespace Assets.Scripts.UI
         public static LevelStartWindow Show(UserInput userInput) =>
                        Game.Windows.ScreenChange<LevelStartWindow>(true, w => w.Init(userInput));
 
+        private void OnDestroy()
+        {
+            Game.Localization.LanguageChanged -= SetText;
+        }
+
         protected void Init(UserInput userInput)
         {
+            Game.Localization.LanguageChanged += SetText;
             _infoText.gameObject.SetActive(false);
-            _infoText.text = "tapToStart".Localize();
+            SetText();
 
             Boost moneyBoost = Game.BoostsDatabase.GetBoost(Boost.BoostType.MoneyBoost);
             _moneyBoostView.Init(moneyBoost, () => OnBuyBoostButtonClick(moneyBoost, _moneyBoostView.transform as RectTransform));
@@ -47,6 +53,11 @@ namespace Assets.Scripts.UI
         protected override void OnClose()
         {
             ActivateInput();
+        }
+
+        private void SetText()
+        {
+            _infoText.text = TapToStartKey.Localize();
         }
 
         private IPromise FadeOut()

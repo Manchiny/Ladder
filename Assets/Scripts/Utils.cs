@@ -141,4 +141,12 @@ public static class Utils
     {
         return Game.Localize(str, parameters);
     }
+
+    public static bool IsNullOrEmpty(this string str)
+    {
+        if (str == null || str.Length == 0)
+            return true;
+
+        return false;
+    }
 }
