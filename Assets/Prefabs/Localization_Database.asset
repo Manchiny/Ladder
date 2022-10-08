@@ -16,6 +16,7 @@ MonoBehaviour:
   - _key: tapToStart
     _values:
     - _language: 30
-      _value: "\u0417\u0410\u0416\u041C\u0418\u0422\u0415, \u0427\u0422\u041E- \u041D\u0410\u0427\u0410\u0422\u042C"
+      _value: "\u0417\u0410\u0416\u041C\u0418\u0422\u0415, \u0427\u0422\u041E-\u0411\u042B 
+        \u041D\u0410\u0427\u0410\u0422\u042C"
     - _language: 10
       _value: TAP TO START
