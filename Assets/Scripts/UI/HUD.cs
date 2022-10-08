@@ -19,6 +19,8 @@ namespace Assets.Scripts.UI
         [Space]
         [SerializeField] private StaminaView _staminaView;
 
+        private const string LevelLocalizationKey = "level";
+
         private const float FadeDuration = 1f;
         private const float MoneyPanelAnimationDuration = 0.075f;
         private const float FloatingMoneyDeltaYStartPosition = 1f;
@@ -78,7 +80,7 @@ namespace Assets.Scripts.UI
 
         private void OnLevelChanged(int level)
         {
-            _levelText.text = $"LEVEL {level + 1}";
+            _levelText.text = LevelLocalizationKey.Localize() + $" {level + 1}";
         }
 
         private void OnMoneyChanged(int totalMoney)

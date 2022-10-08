@@ -37,7 +37,7 @@ namespace Assets.Scripts.UI
         {
             _locked = false;
 
-            _titleText.text = boost.Name;
+            _titleText.text = boost.Name.Localize();
 
             if (boost.NeedShow && boost.TryGetNextLevelCost(out int cost))
             {

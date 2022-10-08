@@ -6,7 +6,7 @@ namespace Assets.Scripts.Boosts
     public class StaminaBoost : Boost
     {
         public override BoostType Type => BoostType.StaminaBoost;
-        public override string Name => "STAMINA";
+        public override string Name => "stamina";
 
         protected override float Calculate(float baseValue, float value)
         {

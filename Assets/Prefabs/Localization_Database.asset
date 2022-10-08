@@ -20,3 +20,65 @@ MonoBehaviour:
         \u041D\u0410\u0427\u0410\u0422\u042C"
     - _language: 10
       _value: TAP TO START
+  - _key: level
+    _values:
+    - _language: 30
+      _value: "\u0423\u0420\u041E\u0412\u0415\u041D\u042C"
+    - _language: 10
+      _value: LEVEL
+  - _key: holdAndRelease
+    _values:
+    - _language: 30
+      _value: "\u0423\u0414\u0415\u0420\u0416\u0418\u0412\u0410\u0419\u0422\u0415
+        \u0418 \u041E\u0422\u041F\u0423\u0421\u0422\u0418\u0422\u0415"
+    - _language: 10
+      _value: HOLD & RELEASE
+  - _key: reachedToSky
+    _values:
+    - _language: 30
+      _value: "\u0414\u041E\u0422\u042F\u041D\u0423\u041B\u0421\u042F \u0414\u041E
+        \u041D\u0415\u0411\u0415\u0421!"
+    - _language: 10
+      _value: REACHED TO SKY!
+  - _key: tapToContinue
+    _values:
+    - _language: 30
+      _value: "\u041F\u0420\u041E\u0414\u041E\u041B\u0416\u0418\u0422\u042C"
+    - _language: 10
+      _value: TAP TO CONTINUE
+  - _key: tapToCatch
+    _values:
+    - _language: 30
+      _value: "\u041A\u041B\u0418\u041A\u0410\u0419\u0422\u0415 \u0411\u042B\u0421\u0422\u0420\u041E!"
+    - _language: 10
+      _value: TAP TAP TAP
+  - _key: releaseHand
+    _values:
+    - _language: 30
+      _value: "\u041E\u0422\u041E\u0416\u041C\u0418\u0422\u0415 \u0420\u0423\u041A\u0423"
+    - _language: 10
+      _value: RELEASE YOUR HAND
+  - _key: youAreTired
+    _values:
+    - _language: 30
+      _value: "\u0412\u042B \u0423\u0421\u0422\u0410\u041B\u0418!"
+    - _language: 10
+      _value: YOU ARE TIRED
+  - _key: stamina
+    _values:
+    - _language: 30
+      _value: "\u0412\u042B\u041D\u041E\u0421\u041B\u0418\u0412\u041E\u0421\u0422\u042C"
+    - _language: 10
+      _value: STAMINA
+  - _key: money
+    _values:
+    - _language: 30
+      _value: "\u0414\u0415\u041D\u042C\u0413\u0418"
+    - _language: 10
+      _value: MONEY
+  - _key: income
+    _values:
+    - _language: 30
+      _value: "\u0414\u041E\u0425\u041E\u0414"
+    - _language: 10
+      _value: INCOME

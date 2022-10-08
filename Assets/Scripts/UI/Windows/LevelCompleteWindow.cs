@@ -19,6 +19,9 @@ namespace Assets.Scripts.UI
 
         public override string LockKey => "LevelCompleteWindow";
 
+        private const string TitleLocalizationKey = "reachedToSky";
+        private const string ButtonLocalizationKey = "tapToContinue";
+
         private event Action _continueButtonClicked;
 
         public static LevelCompleteWindow Show(Action onContinueClicked) =>
@@ -26,8 +29,8 @@ namespace Assets.Scripts.UI
 
         protected void Init(Action onContinueClicked)
         {
-            _completeText.text = "REACHED TO SKY!";
-            _continueButtonText.text = "TAP TO CONTINUE";
+            _completeText.text = TitleLocalizationKey.Localize();
+            _continueButtonText.text = ButtonLocalizationKey.Localize();
 
             _continueButtonClicked = onContinueClicked;
             _continueButton.onClick.AddListener(OnContinueButtonClick);

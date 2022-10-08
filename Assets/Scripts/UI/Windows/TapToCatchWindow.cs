@@ -10,6 +10,7 @@ namespace Assets.Scripts.UI
         [SerializeField] private TextMeshProUGUI _infoText;
 
         public override string LockKey => "TapToCatchWindow";
+        private const string TapToCatchLocalizationKey = "tapToCatch";
 
         private static TapToCatchWindow _window;
 
@@ -34,7 +35,8 @@ namespace Assets.Scripts.UI
             _window = this;
 
             Debug.Log("Tap to catch window init...");
-            _infoText.text = "TAP TAP TAP";
+            _infoText.text = TapToCatchLocalizationKey.Localize();
+
             _enoughTapsRecived = onEnoughTapsRecived;
 
             _hands = hands;

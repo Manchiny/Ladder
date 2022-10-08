@@ -6,7 +6,7 @@ namespace Assets.Scripts.Boosts
     public class MoneyBoost : Boost
     {
         public override BoostType Type => BoostType.MoneyBoost;
-        public override string Name => "INCOME";
+        public override string Name => "income";
 
         protected override float Calculate(float baseValue, float value) => baseValue * value;
     }

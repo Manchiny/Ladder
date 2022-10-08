@@ -11,6 +11,9 @@ namespace Assets.Scripts.UI
         [SerializeField] private TextMeshProUGUI _releaseHandText;
         [SerializeField] private TextMeshProUGUI _youAreTiredText;
 
+        private const string ReleaseHandLocalizationKey = "releaseHand";
+        private const string YouAreTiredLocalizationKey = "youAreTired";
+
         public override string LockKey => "YouAreTiredWindow";
 
         private Stamina _stamina;
