@@ -23,16 +23,16 @@ namespace Assets.Scripts.Hands
         private HandsAnimations _animations;
         private Vector3 _defaultPosition;
 
+        public event Action<LadderStep, Hand> Taked;
+        public event Action<Hand> Failed;
+        public event Action Loosed;
+
         public LadderSide Side { get; private set; }
         public bool IsFalling { get; private set; }
         public LadderStep LastTakedStep { get; private set; }
 
         public bool CanMove => _isProcess == false && IsFalling == false;
         public float GetHeight => transform.position.y;
-
-        public event Action<LadderStep, Hand> Taked;
-        public event Action<Hand> Failed;
-        public event Action Loosed;
 
         private void Start()
         {

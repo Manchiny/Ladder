@@ -20,11 +20,22 @@ namespace Assets.Scripts.Levels
         [SerializeField] private LevelBackgroundObject _levelBackgroundObject;
 
         private const int MaxSummaryNonDefualtStepsChance = 100;
+        
+        private int? _notUsedRandomValue;
 
         private Dictionary<LadderStepType, int> _notDefualtStepsChanses = new();
         private System.Random _random = new System.Random();
 
-        private int? _notUsedRandomValue;
+        public enum LadderStepType
+        {
+            Default,
+            HalfDefualt,
+            HalfDynamic,
+            Hot,
+            Spiky,
+            FinishStep,
+            FinishButton
+        }
 
         public int StepsCount => _ladderStepsCount;
         public Color BackgroundColor => _backgroundColor;
@@ -37,21 +48,14 @@ namespace Assets.Scripts.Levels
 #endif
         }
 
-        public enum LadderStepType
-        {
-            Default,
-            HalfDefualt,
-            HalfDynamic,
-            Hot,
-            Spiky
-        }
-
         public void Init()
         {
             foreach (var step in _notDefaultLadderSteps)
             {
                 if (_notDefualtStepsChanses.ContainsKey(step.StepType))
                     Debug.LogError($"Incorrect level configuration! NotDefaultLadderSteps contains doubled type <{step.StepType}>! Name: {name}");
+                else if(step.StepType == LadderStepType.FinishButton || step.StepType == LadderStepType.FinishStep || step.StepType == LadderStepType.Default)
+                    Debug.LogError($"Incorrect level configuration! NotDefaultLadderSteps don't can contain Defualt, FinishStep or FinishButton types! Name: {name}");
                 else
                     _notDefualtStepsChanses.Add(step.StepType, step.Chanse);
             }

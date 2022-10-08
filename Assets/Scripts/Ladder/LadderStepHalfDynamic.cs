@@ -9,13 +9,13 @@ namespace Assets.Scripts.Ladder
 
         private const string IncriasingAnimationName = "Increasing";
 
-        public override bool CanBeTaked(LadderSide side) => base.CanBeTaked(side) && (CheckersCount > 1 || (CheckersCount > 0 && GetPhase() == Phase.Increasing));
-
         private enum Phase
         {
             Decreasing,
             Increasing
         }
+
+        public override bool CanBeTaked(LadderSide side) => base.CanBeTaked(side) && (CheckersCount > 1 || (CheckersCount > 0 && GetPhase() == Phase.Increasing));
 
         protected override void UpdateState(LadderSide side, bool handEnter)
         {

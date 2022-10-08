@@ -1,5 +1,4 @@
 using Assets.Scripts.Boosts;
-using Assets.Scripts.Ladder;
 using System;
 using UniRx;
 using UnityEngine;

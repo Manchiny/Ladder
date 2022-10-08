@@ -10,12 +10,12 @@ namespace Assets.Scripts
     {
         private Dictionary<BoostType, int> _boostsLevels = new Dictionary<BoostType, int>();
 
+        public event Action<int> MoneyChanged;
+
         public int CurrentLevelId { get; private set; }
         public int Money { get; private set; }
 
         public IReadOnlyDictionary<BoostType, int> BoostLevels => _boostsLevels;
-
-        public event Action<int> MoneyChanged;
 
         public UserData(int levelId, int money)
         {

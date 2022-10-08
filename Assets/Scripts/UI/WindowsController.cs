@@ -9,11 +9,13 @@ namespace Assets.Scripts.UI
         [SerializeField] private RectTransform _windowHolder;
         [SerializeField] private Locker _locker;
         [SerializeField] private HUD _hud;
+
+        private Stack<AbstractWindow> _windows = new Stack<AbstractWindow>();
+
         public Locker Locker => _locker;
         public HUD HUD => _hud;
         private AbstractWindow CurrentWindow => _windows.Count > 0 ? _windows.Peek() : null;
 
-        private Stack<AbstractWindow> _windows = new Stack<AbstractWindow>();
 
         public T ScreenChange<T>(bool closeAllOther = true, Action<T> action = null) where T : AbstractWindow
         {

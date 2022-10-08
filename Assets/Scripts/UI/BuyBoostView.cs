@@ -25,8 +25,8 @@ namespace Assets.Scripts.UI
         private RectTransform _rect;
 
         private bool _locked;
-        private event Action _onClick;
 
+        private event Action _onClick;
 
         private void Awake()
         {

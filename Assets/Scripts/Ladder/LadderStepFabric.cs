@@ -29,6 +29,8 @@ namespace Assets.Scripts.Ladder
             _prefabs.TryAdd(LadderStepType.HalfDynamic, _ladderStepDynamic);
             _prefabs.TryAdd(LadderStepType.Hot, _ladderStepHot);
             _prefabs.TryAdd(LadderStepType.Spiky, _spikyLadderStep);
+            _prefabs.TryAdd(LadderStepType.FinishStep, _finishLadderStepPrefab);
+            _prefabs.TryAdd(LadderStepType.FinishButton, _finishButtonPrefab);
         }
 
         public LadderStep CreateStep(LadderStepType type, Vector3 position, LadderSide side = LadderSide.Default)
@@ -43,9 +45,6 @@ namespace Assets.Scripts.Ladder
                 return null;
             }
         }
-
-        public LadderStep CreateFinishStep(Vector3 position) => CreateStep(_finishLadderStepPrefab, position);
-        public LadderStep CreateFinishButton(Vector3 position) => CreateStep(_finishButtonPrefab, position);
 
         private LadderStep CreateStep(LadderStep stepPrefab, Vector3 position) => Instantiate(stepPrefab, position, Quaternion.identity, _container);
     }

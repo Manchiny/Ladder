@@ -10,10 +10,10 @@ namespace Assets.Scripts
         private const string MoneyKey = "Money";
 
         private Dictionary<BoostType, string> _boostsKeys = new Dictionary<BoostType, string>
-    {
-        { BoostType.MoneyBoost, "StaminaBoostLevel" },
-        { BoostType.StaminaBoost, "MoneyBoostLevel" }
-    };
+        {
+            { BoostType.MoneyBoost, "StaminaBoostLevel" },
+            { BoostType.StaminaBoost, "MoneyBoostLevel" }
+        };
 
         public void Save(UserData data)
         {
@@ -47,6 +47,7 @@ namespace Assets.Scripts
 
         public int GetCurrentLevel() => PlayerPrefs.GetInt(CurrentLevelKey);
         public int GetMoney() => PlayerPrefs.GetInt(MoneyKey);
+
         public int GetLastSavedBoostLevel(BoostType type)
         {
             string key = GetBoostSaveKey(type);
@@ -95,7 +96,6 @@ namespace Assets.Scripts
                 Debug.LogError($"There is no save key for {type}!");
 
             return null;
-
         }
     }
 }

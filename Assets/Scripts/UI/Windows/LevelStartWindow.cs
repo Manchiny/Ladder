@@ -15,12 +15,12 @@ namespace Assets.Scripts.UI
         [SerializeField] private BuyBoostView _moneyBoostView;
         [SerializeField] private BuyBoostView _staminaBoostView;
 
-        private bool _boostBuyed;
-
         private const float FadeDuration = 1f;
-        public override string LockKey => "LevelStartWindow";
 
+        private bool _boostBuyed;
         private UserInput _userInput;
+
+        public override string LockKey => "LevelStartWindow";
 
         public static LevelStartWindow Show(UserInput userInput) =>
                        Game.Windows.ScreenChange<LevelStartWindow>(true, w => w.Init(userInput));

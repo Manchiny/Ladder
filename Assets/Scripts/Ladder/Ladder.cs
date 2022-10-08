@@ -21,15 +21,15 @@ namespace Assets.Scripts.Ladder
 
         private bool _inited;
 
-        public LadderStep NextFreeStep(LadderStep lastStep) => lastStep == null ? _steps[2] : _steps.Where(step => step.Id == lastStep.Id + 1).FirstOrDefault();
-        public LadderStep NextFreeStep(int lastStepId) => _steps.Where(step => step.Id == lastStepId + 1).FirstOrDefault();
-
         public enum LadderSide
         {
             Left,
             Right,
             Default
         }
+
+        public LadderStep NextFreeStep(LadderStep lastStep) => lastStep == null ? _steps[2] : _steps.Where(step => step.Id == lastStep.Id + 1).FirstOrDefault();
+        public LadderStep NextFreeStep(int lastStepId) => _steps.Where(step => step.Id == lastStepId + 1).FirstOrDefault();
 
         public void Init(LevelConfiguration levelConfiguration)
         {
@@ -103,12 +103,9 @@ namespace Assets.Scripts.Ladder
             foreach (var border in _borders)
             {
                 Vector3 borderScale = border.transform.localScale;
-                Vector3 position = border.transform.position;
-               // position.y = - GameConstants.LadderDeltaStep;
 
                 borderScale.y = totalHeight;
                 border.transform.localScale = borderScale;
-              //  border.transform.position = position;
             }
         }
 
@@ -119,31 +116,25 @@ namespace Assets.Scripts.Ladder
 
             for (int i = 0; i < _levelConfiguration.StepsCount; i++)
             {
-                position.y = currentHeight;
-
-                LadderStep step = null;
                 LadderStepType type = _levelConfiguration.GetRandomType(i);
-
-                step = _fabric.CreateStep(type, position, SideByStepId(i));
-
-                currentHeight += GameConstants.LadderDeltaStep;
-
-                step.Init(i);
-                _steps.Add(step);
+                AddStep(type, position, i, ref currentHeight, SideByStepId(i));
             }
 
-            position.y = currentHeight;
-            var finishStep = _fabric.CreateFinishStep(position);
-            finishStep.Init(_levelConfiguration.StepsCount);
-            _steps.Add(finishStep);
-            currentHeight += GameConstants.LadderDeltaStep;
-
-            position.y = currentHeight;
-            var finishButton = _fabric.CreateFinishButton(position);
-            finishButton.Init(_levelConfiguration.StepsCount + 1);
-            _steps.Add(finishButton);
+            AddStep(LadderStepType.FinishStep, position, _levelConfiguration.StepsCount, ref currentHeight);
+            AddStep(LadderStepType.FinishButton, position, _levelConfiguration.StepsCount + 1, ref currentHeight);
 
             _steps.OrderBy(step => step.Id);
+        }
+
+        private void AddStep(LadderStepType type, Vector3 position, int id, ref float height, LadderSide side = LadderSide.Default)
+        {
+            position.y = height;
+            LadderStep step = _fabric.CreateStep(type, position, side);
+
+            step.Init(id);
+            _steps.Add(step);
+
+            height += GameConstants.LadderDeltaStep;
         }
 
         private LadderSide SideByStepId(int stepId) => stepId % 2 == 0 ? LadderSide.Right : LadderSide.Left;

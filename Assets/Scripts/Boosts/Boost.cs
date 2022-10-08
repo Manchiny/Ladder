@@ -18,6 +18,7 @@ namespace Assets.Scripts.Boosts
         public Sprite Icon => _icon;
         public Color ViewColor => _viewColor;
         public ParticleSystem BuyEffect => _buyEffect;
+
         public bool NeedShow => HasBoostLevel(GetBoostLevel(Game.User)) && Game.Instance.CurrentLevelId.Value >= GameConstants.MinLevelToShowBoostsShop;
 
         public enum BoostType

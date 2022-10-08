@@ -19,7 +19,7 @@ namespace Assets.Scripts.UI
 
         public override string LockKey => "LevelCompleteWindow";
 
-        private event Action _onContinueClick;
+        private event Action _continueButtonClicked;
 
         public static LevelCompleteWindow Show(Action onContinueClicked) =>
                    Game.Windows.ScreenChange<LevelCompleteWindow>(true, w => w.Init(onContinueClicked));
@@ -29,7 +29,7 @@ namespace Assets.Scripts.UI
             _completeText.text = "REACHED TO SKY!";
             _continueButtonText.text = "TAP TO CONTINUE";
 
-            _onContinueClick = onContinueClicked;
+            _continueButtonClicked = onContinueClicked;
             _continueButton.onClick.AddListener(OnContinueButtonClick);
 
             _panelWithStars.localScale = Vector3.zero;
@@ -88,8 +88,8 @@ namespace Assets.Scripts.UI
 
         private void OnContinueButtonClick()
         {
-            if (_onContinueClick != null)
-                _onContinueClick?.Invoke();
+            if (_continueButtonClicked != null)
+                _continueButtonClicked?.Invoke();
 
             _continueButton.onClick.RemoveAllListeners();
 
