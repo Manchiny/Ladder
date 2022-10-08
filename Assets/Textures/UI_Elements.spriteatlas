@@ -59,6 +59,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 06aacde49acbfba43838bd896d409c1b, type: 3}
   - {fileID: 21300000, guid: 4e731a2c560cd5e45a26ba266fae5e14, type: 3}
   - {fileID: 21300000, guid: 20b14e8d3287f664191351be8bd39391, type: 3}
+  - {fileID: 21300000, guid: 42c1920e8a44f6c45b79cc3cb44c832b, type: 3}
   - {fileID: 21300000, guid: 098c7b4ee8c945149a3ae4a17124f442, type: 3}
   - {fileID: 21300000, guid: bfede5fe2382365428295299a6721a57, type: 3}
   - {fileID: 21300000, guid: d497835fd0dd76745b39d2a261969789, type: 3}
@@ -73,6 +74,7 @@ SpriteAtlas:
   - basicBorder_3
   - MoneyBoostIcon
   - Star
+  - SettingIcon
   - UIBackground_1
   - banknots
   - Complete_bg

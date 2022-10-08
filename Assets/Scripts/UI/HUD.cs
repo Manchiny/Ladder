@@ -1,10 +1,10 @@
 using Assets.Scripts.Hands;
-using Assets.Scripts.Levels;
 using DG.Tweening;
 using System;
 using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
@@ -18,6 +18,8 @@ namespace Assets.Scripts.UI
         [SerializeField] private FloatingMoneyText _floatingMoneyPrefab;
         [Space]
         [SerializeField] private StaminaView _staminaView;
+        [Space]
+        [SerializeField] private Button _settingsButton;
 
         private const string LevelLocalizationKey = "level";
 
@@ -41,14 +43,19 @@ namespace Assets.Scripts.UI
         private void OnDestroy()
         {
             _levelChangeDispose?.Dispose();
+
             Game.User.MoneyChanged -= OnMoneyChanged;
             Game.Localization.LanguageChanged -= OnLocalizationChanged;
+
+            _settingsButton.onClick.RemoveListener(OnSettingsButtonClick);
         }
 
         public void Init(HandsMover hands)
         {
             _canvas.alpha = 0;
             _levelChangeDispose = Game.Instance.CurrentLevelId.ObserveEveryValueChanged(x => x.Value).Subscribe(OnLevelChanged).AddTo(this);
+
+            _settingsButton.onClick.AddListener(OnSettingsButtonClick);
 
             SetMoneyText(Game.User.Money);
 
@@ -123,6 +130,11 @@ namespace Assets.Scripts.UI
             MoneyAnimationTween = sequence;
 
             MoneyAnimationTween.Play();
+        }
+
+        private void OnSettingsButtonClick()
+        {
+            SettingsWindow.Show();
         }
 
         private void OnLocalizationChanged()
