@@ -236,8 +236,11 @@ namespace Assets.Scripts
 
             void OnContinueButtonClick()
             {
-                _adverts.TryShowInterstitial(_socialAdapter)
-                    .Then(() => StartLevel(CurrentLevel, false));
+                if (_adverts != null)
+                    _adverts.TryShowInterstitial(_socialAdapter)
+                            .Then(() => StartLevel(CurrentLevel, false));
+                else
+                    StartLevel(CurrentLevel, false);
             }
         }
 
