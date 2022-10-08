@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI_Elements
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 4096
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 8
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 01db28ceba01d0a42a553ced867ac8ff, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: f31f96514a6616c44b89af5dfcb303ab, type: 3}
+  - {fileID: 21300000, guid: 726a5a623acc3e04d94a1a40b8cb2978, type: 3}
+  - {fileID: 21300000, guid: 695a2533c461ab84491699b130df5a01, type: 3}
+  - {fileID: 21300000, guid: 9557abc331e9239488e7763c97a8ee98, type: 3}
+  - {fileID: 21300000, guid: 6675eb44c5bbd0148a91b297393c625f, type: 3}
+  - {fileID: 21300000, guid: 4cabac9444e813b4386f9d8617958a4d, type: 3}
+  - {fileID: 21300000, guid: 06aacde49acbfba43838bd896d409c1b, type: 3}
+  - {fileID: 21300000, guid: 4e731a2c560cd5e45a26ba266fae5e14, type: 3}
+  - {fileID: 21300000, guid: 20b14e8d3287f664191351be8bd39391, type: 3}
+  - {fileID: 21300000, guid: 098c7b4ee8c945149a3ae4a17124f442, type: 3}
+  - {fileID: 21300000, guid: bfede5fe2382365428295299a6721a57, type: 3}
+  - {fileID: 21300000, guid: d497835fd0dd76745b39d2a261969789, type: 3}
+  - {fileID: 21300000, guid: c1bc858f6dc778b498a247c829787944, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - button_yellow
+  - Stamina_Icon
+  - Plashka_bg
+  - finger
+  - Circle_Sprite
+  - UIBackground_2
+  - basicBorder_3
+  - MoneyBoostIcon
+  - Star
+  - UIBackground_1
+  - banknots
+  - Complete_bg
+  - Plashka_header
+  m_RenderDataMap: {}
+  m_Tag: UI_Elements
+  m_IsVariant: 0
