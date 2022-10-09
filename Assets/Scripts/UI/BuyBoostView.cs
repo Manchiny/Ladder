@@ -11,7 +11,7 @@ namespace Assets.Scripts.UI
     [RequireComponent(typeof(RectTransform))]
     public class BuyBoostView : MonoBehaviour
     {
-        [SerializeField] private Button _button;
+        [SerializeField] private BasicButton _button;
         [Space]
         [SerializeField] private TextMeshProUGUI _titleText;
         [SerializeField] private TextMeshProUGUI _priceText;
@@ -60,7 +60,7 @@ namespace Assets.Scripts.UI
                     image.color = boost.ViewColor;
 
                 _onClick = onClick;
-                _button.onClick.AddListener(OnClick);
+                _button.AddListener(OnClick);
             }
             else
                 gameObject.SetActive(false);

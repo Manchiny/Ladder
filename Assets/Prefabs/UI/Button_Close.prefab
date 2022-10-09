@@ -148,6 +148,8 @@ GameObject:
   - component: {fileID: 5373730160864434669}
   - component: {fileID: 3446496503175507606}
   - component: {fileID: 6166037674806044415}
+  - component: {fileID: 2873927766132824542}
+  - component: {fileID: 954015075827139979}
   m_Layer: 5
   m_Name: Button_Close
   m_TagString: Untagged
@@ -270,3 +272,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f04db6c49aa7db247b0b674fc92f1c22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &2873927766132824542
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6962635522262847108}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &954015075827139979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6962635522262847108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c363dd33b650f3147afc468dea3efb4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _effect: {fileID: 0}
+  _needAnimateOnClick: 1
+  _text: {fileID: 693690266995505134}

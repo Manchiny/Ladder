@@ -69,8 +69,7 @@ MonoBehaviour:
   - {fileID: 5603506256677076026}
   - {fileID: 2775346290684700437}
   - {fileID: 3625161926627056291}
-  _continueButton: {fileID: 4156787337950847227}
-  _continueButtonText: {fileID: 4951871620299712628}
+  _continueButton: {fileID: 8286417336234872335}
 --- !u!1 &1549434943378608825
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,6 +158,8 @@ GameObject:
   - component: {fileID: 5320904577977932245}
   - component: {fileID: 3866071493646899058}
   - component: {fileID: 4156787337950847227}
+  - component: {fileID: 5769959738799746938}
+  - component: {fileID: 8286417336234872335}
   m_Layer: 5
   m_Name: Button_Continue
   m_TagString: Untagged
@@ -269,6 +270,33 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!225 &5769959738799746938
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3310133518477691323}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &8286417336234872335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3310133518477691323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c363dd33b650f3147afc468dea3efb4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _effect: {fileID: 0}
+  _needAnimateOnClick: 1
+  _text: {fileID: 4951871620299712628}
 --- !u!1 &4766872500060079021
 GameObject:
   m_ObjectHideFlags: 0

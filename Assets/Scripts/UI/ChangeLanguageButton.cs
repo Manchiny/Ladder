@@ -1,16 +1,15 @@
 using Assets.Scripts.Localization;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
-    [RequireComponent(typeof(Button))]
+    [RequireComponent(typeof(BasicButton))]
     public class ChangeLanguageButton : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI _languageText;
 
-        private Button _button;
+        private BasicButton _button;
         private string _locale;
 
         private Color _baseColor;
@@ -19,31 +18,32 @@ namespace Assets.Scripts.UI
 
         private void Awake()
         {
-            _button = GetComponent<Button>();
-            _baseColor = _button.image.color;
+            _button = GetComponent<BasicButton>();
         }
 
         private void OnDestroy()
         {
             Game.Localization.LanguageChanged -= SetActive;
-            _button.onClick.RemoveListener(OnButtonClick);
+            _button.RemoveListener(OnButtonClick);
         }
 
         public void Init(string locale)
         {
+            _baseColor = _button.Button.image.color;
+
             _locale = locale;
             _languageText.text = locale.Localize();
 
             Game.Instance.GameLocalization.LanguageChanged += SetActive;
 
             SetActive();
-            _button.onClick.AddListener(OnButtonClick);
+            _button.AddListener(OnButtonClick);
         }
 
         private void SetActive()
         {
             _isActive = _locale != GameLocalization.CurrentLocale;
-            _button.image.color = _isActive ? _baseColor : Color.gray;
+            _button.Button.image.color = _isActive ? _baseColor : Color.gray;
         }
 
         private void OnButtonClick()

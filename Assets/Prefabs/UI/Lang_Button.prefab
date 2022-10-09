@@ -148,6 +148,8 @@ GameObject:
   - component: {fileID: 6918959699999823856}
   - component: {fileID: 7786159386145792121}
   - component: {fileID: 3536052956145556766}
+  - component: {fileID: 768282122689520474}
+  - component: {fileID: 7310187700974947525}
   m_Layer: 5
   m_Name: Lang_Button
   m_TagString: Untagged
@@ -271,3 +273,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _languageText: {fileID: 1232451082238601462}
+--- !u!225 &768282122689520474
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8668842554543294777}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &7310187700974947525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8668842554543294777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c363dd33b650f3147afc468dea3efb4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _effect: {fileID: 0}
+  _needAnimateOnClick: 1
+  _text: {fileID: 1232451082238601462}

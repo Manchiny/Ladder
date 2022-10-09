@@ -1,28 +1,38 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
-    [RequireComponent(typeof(Button))]
+    [RequireComponent(typeof(BasicButton))]
     public class CloseButton : MonoBehaviour
     {
-        private Button _button;
+        private BasicButton _button;
         private AbstractWindow _window;
 
         private void Awake()
         {
             _window = transform.GetComponentInParent<AbstractWindow>();
-            _button = GetComponent<Button>();
+            _button = GetComponent<BasicButton>();
+        }
+
+        private void Start()
+        {
+            _button.SetOnClick(OnClick);
         }
 
         private void OnEnable()
         {
-            _button.onClick.AddListener(_window.Close);
+            _button.SetOnClick(OnClick);
         }
 
         private void OnDisable()
         {
-            _button.onClick.RemoveListener(_window.Close);
+            _button.RemoveListener(OnClick);
+        }
+
+        private void OnClick()
+        {
+            Debug.Log("Close clicked");
+            _window.Close();
         }
     }
 }

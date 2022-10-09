@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
@@ -14,8 +13,8 @@ namespace Assets.Scripts.UI
         [SerializeField] private RectTransform _panelWithStars;
         [SerializeField] private List<RectTransform> _stars;
         [Space]
-        [SerializeField] private Button _continueButton;
-        [SerializeField] private TextMeshProUGUI _continueButtonText;
+        [SerializeField] private BasicButton _continueButton;
+     //   [SerializeField] private TextMeshProUGUI _continueButtonText;
 
         public override string LockKey => "LevelCompleteWindow";
 
@@ -32,7 +31,7 @@ namespace Assets.Scripts.UI
             SetText();
 
             _continueButtonClicked = onContinueClicked;
-            _continueButton.onClick.AddListener(OnContinueButtonClick);
+            _continueButton.AddListener(OnContinueButtonClick);
 
             _panelWithStars.localScale = Vector3.zero;
             _stars.ForEach(star => star.localScale = Vector3.zero);
@@ -93,7 +92,7 @@ namespace Assets.Scripts.UI
             if (_continueButtonClicked != null)
                 _continueButtonClicked?.Invoke();
 
-            _continueButton.onClick.RemoveAllListeners();
+            _continueButton.RemoveAllListeners();
 
             Close();
         }
@@ -101,7 +100,7 @@ namespace Assets.Scripts.UI
         protected override void SetText()
         {
             _completeText.text = TitleLocalizationKey.Localize();
-            _continueButtonText.text = ButtonLocalizationKey.Localize();
+            _continueButton.Text = ButtonLocalizationKey.Localize();
         }
     }
 }

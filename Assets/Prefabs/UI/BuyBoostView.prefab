@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c59c4564ab55f06429ced7e9a65578ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _button: {fileID: 7515178389972463682}
+  _button: {fileID: 0}
   _titleText: {fileID: 8208918974176742058}
   _priceText: {fileID: 4843713260437362470}
   _icon: {fileID: 4272000610351086659}
@@ -759,6 +759,7 @@ GameObject:
   - component: {fileID: 8805474166900467785}
   - component: {fileID: 4050156505312458580}
   - component: {fileID: 4898816150458841091}
+  - component: {fileID: 2019664022323717615}
   m_Layer: 5
   m_Name: BuyBoostView
   m_TagString: Untagged
@@ -848,7 +849,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c59c4564ab55f06429ced7e9a65578ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _button: {fileID: 7515178389972463682}
+  _button: {fileID: 2019664022323717615}
   _titleText: {fileID: 8208918974176742058}
   _priceText: {fileID: 4843713260437362470}
   _icon: {fileID: 4272000610351086659}
@@ -891,6 +892,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6463186566207749848}
   m_CullTransparentMesh: 1
+--- !u!114 &2019664022323717615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6463186566207749848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c363dd33b650f3147afc468dea3efb4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _effect: {fileID: 0}
+  _needAnimateOnClick: 1
+  _text: {fileID: 0}
 --- !u!1 &7133240769710918188
 GameObject:
   m_ObjectHideFlags: 0

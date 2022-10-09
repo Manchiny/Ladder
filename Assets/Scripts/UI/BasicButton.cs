@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,9 +15,9 @@ namespace Assets.Scripts.UI
     {
         [SerializeField] private ParticleSystem _effect;
         [SerializeField] private bool _needAnimateOnClick = true;
+        [SerializeField] private TextMeshProUGUI _text;
 
         private Button _button;
-
 
         private RectTransform _rectTransform;
         private CanvasGroup _group;
@@ -73,6 +74,18 @@ namespace Assets.Scripts.UI
             }
         }
 
+        public string Text
+        {
+            get => _text.text;
+            set
+            {
+                if(_text != null)
+                    _text.text = value;
+
+                //Scripts.Utils.Utils.ForceRebuildLayoutOnNextFrame(_text.transform.parent as RectTransform);
+            }
+        }
+
         public void Awake()
         {
             if (!_button)
@@ -105,20 +118,24 @@ namespace Assets.Scripts.UI
 
         public void SetOnClick(Action onClick)
         {
-            this.OnClick.RemoveAllListeners();
-            this.OnClick.AddListener(() => onClick?.Invoke());
+            OnClick.RemoveAllListeners();
+            OnClick.AddListener(() => onClick?.Invoke());
         }
 
         public void AddListener(Action onClick)
         {
-            this.OnClick.AddListener(() => onClick?.Invoke());
+            OnClick.AddListener(() => onClick?.Invoke());
         }
 
         public void RemoveListener(Action onClick)
         {
-            this.OnClick.RemoveListener(() => onClick?.Invoke());
+            OnClick.RemoveListener(() => onClick?.Invoke());
         }
 
+        public void RemoveAllListeners()
+        {
+            OnClick.RemoveAllListeners();
+        }
 
         public void SetOnDownCallback(Action callback)
         {
