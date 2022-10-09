@@ -77,7 +77,7 @@ namespace Assets.Scripts.UI
         private void ActivateInput()
         {
             _infoText.gameObject.SetActive(true);
-            _userInput.Activate();
+            _userInput.SetActive(true);
         }
 
         private void OnStartTouch()

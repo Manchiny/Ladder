@@ -9,15 +9,17 @@ namespace Assets.Scripts
         public event Action Touched;
         public event Action Untouched;
 
-        public bool IsActive => gameObject.activeInHierarchy;
+        private bool _isActive;
+        public bool IsActive => _isActive && gameObject.activeInHierarchy;
 
         private void Awake()
         {
-            gameObject.SetActive(false);
+            SetActive(false);
         }
-        public void Activate()
+
+        public void SetActive(bool isActive)
         {
-            gameObject.SetActive(true);
+            _isActive = isActive;
         }
 
         public void OnPointerClick(PointerEventData eventData) { }

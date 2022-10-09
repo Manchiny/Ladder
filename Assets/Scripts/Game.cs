@@ -142,8 +142,8 @@ namespace Assets.Scripts
             _hands.Completed += OnLevelComplete;
             _hands.Taked += OnStepTaked;
 
-            _userInput.Touched += _hands.TryMove;
-            _userInput.Untouched += _hands.StopMovement;
+            _userInput.Touched += OnInputTouch;
+            _userInput.Untouched += OnInputUntouch;
         }
 
         private void RemoveSubscribes()
@@ -155,8 +155,8 @@ namespace Assets.Scripts
             _hands.Taked -= OnStepTaked;
             _hands.Taked -= ShowTiredWindowIfNeed;
 
-            _userInput.Touched -= _hands.TryMove;
-            _userInput.Untouched -= _hands.StopMovement;
+            _userInput.Touched -= OnInputTouch;
+            _userInput.Untouched -= OnInputUntouch;
 
             CurrentLevelId.Dispose();
         }
@@ -248,7 +248,7 @@ namespace Assets.Scripts
         private void OnLoose()
         {
             Debug.Log("Game Loosed");
-            _userInput.gameObject.SetActive(false);
+            _userInput.SetActive(false);
 
             _effects.StopFallingEffect();
             Saver.Save(_user);
@@ -258,7 +258,7 @@ namespace Assets.Scripts
 
         private void OnLevelComplete()
         {
-            _userInput.gameObject.SetActive(false);
+            _userInput.SetActive(false);
 
             int nextLevel = CurrentLevelId.Value + 1;
 
@@ -293,6 +293,17 @@ namespace Assets.Scripts
         private void AddMoney(int count, Hand hand = null)
         {
             _user.AddMoney(count);
+        }
+
+        private void OnInputTouch()
+        {
+            if(UserInput.IsActive)
+                _hands.TryMove();
+        }
+
+        private void OnInputUntouch()
+        {
+            _hands.StopMovement();
         }
     }
 }

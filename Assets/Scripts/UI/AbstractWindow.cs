@@ -13,43 +13,40 @@ namespace Assets.Scripts.UI
         private const float CloseAnimationMoveUpDuration = 0.3f;
         private const float CloseAnimationMoveDownDistance = 100f;
 
-        protected CanvasGroup _canvasGroup;
-        protected RectTransform _content;
+        protected CanvasGroup CanvasGroup;
+        protected RectTransform Content;
 
-        protected bool _isOpening = false;
-        protected bool _isClosing = false;
-
-        protected Tween _showHideAnimation;
+        private Tween _showHideAnimation;
 
         public abstract string LockKey { get; }
         public bool AnimatedClose { get; protected set; } = false;
         public bool NeedHideHudOnShow { get; protected set; } = false;
 
-        public Promise ClosePromise { get; } = new Promise();
+        public bool IsOpening { get; private set; } = false;
+        public bool IsClosing { get; private set; } = false;
 
-        public bool IsOpening => _isOpening;
-        public bool IsClosing => _isClosing;
+        public Promise ClosePromise { get; } = new Promise();
 
         protected virtual void Awake()
         {
-            _canvasGroup = GetComponent<CanvasGroup>();
-            _content = transform.Find("Content").transform as RectTransform;
+            CanvasGroup = GetComponent<CanvasGroup>();
+            Content = transform.Find("Content").transform as RectTransform;
             OnAwake();
         }
 
         protected virtual void Start()
         {
             OnStart();
-            _isOpening = true;
+            IsOpening = true;
             Game.Localization.LanguageChanged += SetText;
         }
 
         public virtual void Close()
         {
-            if (_isClosing)
+            if (IsClosing)
                 return;
 
-            _isClosing = true;
+            IsClosing = true;
 
             Game.Localization.LanguageChanged -= SetText;
 
@@ -82,10 +79,10 @@ namespace Assets.Scripts.UI
             else
                 Game.Windows.HUD.Show();
 
-            _canvasGroup.interactable = true;
-            _canvasGroup.blocksRaycasts = true;
+            CanvasGroup.interactable = true;
+            CanvasGroup.blocksRaycasts = true;
 
-            _showHideAnimation = _canvasGroup.DOFade(1, FadeDuration).SetLink(gameObject);
+            _showHideAnimation = CanvasGroup.DOFade(1, FadeDuration).SetLink(gameObject);
         }
 
         public void ForceHide()
@@ -98,16 +95,16 @@ namespace Assets.Scripts.UI
 
             OnHide();
 
-            _canvasGroup.interactable = false;
-            _canvasGroup.blocksRaycasts = false;
-            _canvasGroup.alpha = 0;
+            CanvasGroup.interactable = false;
+            CanvasGroup.blocksRaycasts = false;
+            CanvasGroup.alpha = 0;
         }
 
         protected virtual IPromise PlayCloseAnimation()
         {
             Promise promise = new Promise();
 
-            RectTransform _rectTransform = (RectTransform)_content.transform;
+            RectTransform _rectTransform = (RectTransform)Content.transform;
             Sequence sequence = DOTween.Sequence()
                     .SetLink(gameObject)
                     .Append(_rectTransform.DOMoveY(_rectTransform.position.y - CloseAnimationMoveDownDistance, CloseAnimationMoveDownDuration))

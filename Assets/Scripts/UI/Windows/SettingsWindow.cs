@@ -1,7 +1,6 @@
 using Assets.Scripts.Localization;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
@@ -23,11 +22,12 @@ namespace Assets.Scripts.UI
 
         public static SettingsWindow Show() =>
                        Game.Windows.ScreenChange<SettingsWindow>(false, w => w.Init());
+
         protected void Init()
         {
             _userInput = Game.UserInput;
             _userInputActive = _userInput.IsActive;
-            _userInput.gameObject.SetActive(false);
+            _userInput.SetActive(false);
 
             SetText();
 
@@ -43,7 +43,7 @@ namespace Assets.Scripts.UI
 
         protected override void OnClose()
         {
-            _userInput.gameObject.SetActive(_userInputActive);
+            _userInput.SetActive(_userInputActive);
         }
 
         protected override void SetText()
