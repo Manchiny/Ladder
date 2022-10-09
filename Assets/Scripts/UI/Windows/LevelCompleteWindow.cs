@@ -27,16 +27,9 @@ namespace Assets.Scripts.UI
         public static LevelCompleteWindow Show(Action onContinueClicked) =>
                    Game.Windows.ScreenChange<LevelCompleteWindow>(true, w => w.Init(onContinueClicked));
 
-        private void OnDestroy()
-        {
-            Game.Localization.LanguageChanged -= SetText;
-        }
-
         protected void Init(Action onContinueClicked)
         {
             SetText();
-
-            Game.Localization.LanguageChanged += SetText;
 
             _continueButtonClicked = onContinueClicked;
             _continueButton.onClick.AddListener(OnContinueButtonClick);
@@ -105,7 +98,7 @@ namespace Assets.Scripts.UI
             Close();
         }
 
-        private void SetText()
+        protected override void SetText()
         {
             _completeText.text = TitleLocalizationKey.Localize();
             _continueButtonText.text = ButtonLocalizationKey.Localize();

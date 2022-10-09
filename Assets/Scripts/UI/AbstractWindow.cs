@@ -41,6 +41,7 @@ namespace Assets.Scripts.UI
         {
             OnStart();
             _isOpening = true;
+            Game.Localization.LanguageChanged += SetText;
         }
 
         public virtual void Close()
@@ -50,17 +51,15 @@ namespace Assets.Scripts.UI
 
             _isClosing = true;
 
+            Game.Localization.LanguageChanged -= SetText;
+
             if (AnimatedClose == true)
-            {
                 PlayCloseAnimation()
-                     .Then(() =>
-                     {
-                         OnClose();
-                         Destroy(gameObject);
-                         ClosePromise.Resolve();
-                     });
-            }
+                     .Then(() => BaseClose());
             else
+                BaseClose();
+
+            void BaseClose()
             {
                 OnClose();
                 Destroy(gameObject);
@@ -121,6 +120,8 @@ namespace Assets.Scripts.UI
 
             return promise;
         }
+
+        protected abstract void SetText();
 
         protected virtual void OnAwake() { }
         protected virtual void OnStart() { }

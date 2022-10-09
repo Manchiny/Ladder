@@ -23,12 +23,6 @@ namespace Assets.Scripts.UI
 
         public static SettingsWindow Show() =>
                        Game.Windows.ScreenChange<SettingsWindow>(false, w => w.Init());
-
-        private void OnDestroy()
-        {
-            Game.Localization.LanguageChanged -= SetText;
-        }
-
         protected void Init()
         {
             _userInput = Game.UserInput;
@@ -36,7 +30,6 @@ namespace Assets.Scripts.UI
             _userInput.gameObject.SetActive(false);
 
             SetText();
-            Game.Localization.LanguageChanged += SetText;
 
             AnimatedClose = true;
             NeedHideHudOnShow = true;
@@ -53,7 +46,7 @@ namespace Assets.Scripts.UI
             _userInput.gameObject.SetActive(_userInputActive);
         }
 
-        private void SetText()
+        protected override void SetText()
         {
             _languageSettingsText.text = LanguageLocalizationKey.Localize() + ":";
             _titleText.text = TitleLocalizationKey.Localize();

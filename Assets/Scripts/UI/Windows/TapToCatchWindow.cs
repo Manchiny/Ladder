@@ -35,8 +35,6 @@ namespace Assets.Scripts.UI
             _userInput.Touched -= OnStartTouch;
             _hands.Catched -= Close;
             _hands.Loosed -= OnLoose;
-
-            Game.Localization.LanguageChanged -= SetText;
         }
 
         protected void Init(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived)
@@ -48,7 +46,6 @@ namespace Assets.Scripts.UI
 
             Debug.Log("Tap to catch window init...");
 
-            Game.Localization.LanguageChanged += SetText;
             SetText();
 
             _enoughTapsRecived = onEnoughTapsRecived;
@@ -64,7 +61,7 @@ namespace Assets.Scripts.UI
             ScalePongAnimation textAnimation = new ScalePongAnimation(_infoText.transform as RectTransform);
         }
 
-        private void SetText()
+        protected override void SetText()
         {
             _infoText.text = TapToCatchLocalizationKey.Localize();
         }

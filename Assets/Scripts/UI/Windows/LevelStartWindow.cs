@@ -26,15 +26,8 @@ namespace Assets.Scripts.UI
 
         public static LevelStartWindow Show(UserInput userInput) =>
                        Game.Windows.ScreenChange<LevelStartWindow>(true, w => w.Init(userInput));
-
-        private void OnDestroy()
-        {
-            Game.Localization.LanguageChanged -= SetText;
-        }
-
         protected void Init(UserInput userInput)
         {
-            Game.Localization.LanguageChanged += SetText;
             _infoText.gameObject.SetActive(false);
             SetText();
 
@@ -67,7 +60,7 @@ namespace Assets.Scripts.UI
             _boostButtonsContainer.gameObject.SetActive(true);
         }
 
-        private void SetText()
+        protected override void SetText()
         {
             _infoText.text = TapToStartKey.Localize();
         }

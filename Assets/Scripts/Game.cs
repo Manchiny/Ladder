@@ -114,14 +114,8 @@ namespace Assets.Scripts
         private void Init()
         {
             Utils.SetMainContainer(this);
+            InitSocialAdapter();
 
-#if UNITY_WEBGL || UNITY_EDITOR
-            _socialAdapter = new YandexSocialAdapter();
-            _adverts = new YandexAdvertisingAdapter();
-
-            _socialAdapter.Init();
-            _adverts.Init();
-#endif
             _saver = new Saver();
             _user = _saver.LoadUserData();
             _player = new Player(_user);
@@ -165,6 +159,21 @@ namespace Assets.Scripts
             _userInput.Untouched -= _hands.StopMovement;
 
             CurrentLevelId.Dispose();
+        }
+
+        private void InitSocialAdapter()
+        {
+#if UNITY_WEBGL || UNITY_EDITOR
+#if YANDEX_GAMES
+            _socialAdapter = new YandexSocialAdapter();
+            _adverts = new YandexAdvertisingAdapter();
+#endif
+#endif
+            if (_socialAdapter != null)
+            {
+                _socialAdapter.Init();
+                _adverts.Init(_socialAdapter);
+            }
         }
 
         private void StartLevel(LevelConfiguration level, bool isReinit)
@@ -253,7 +262,7 @@ namespace Assets.Scripts
 
             int nextLevel = CurrentLevelId.Value + 1;
 
-            CurrentLevel =_levels.GetLevelConfiguration(nextLevel);
+            CurrentLevel = _levels.GetLevelConfiguration(nextLevel);
 
             _user.SetCurrentLevelId(nextLevel);
             _saver.Save(_user);
@@ -266,7 +275,7 @@ namespace Assets.Scripts
             void OnContinueButtonClick()
             {
                 if (_adverts != null)
-                    _adverts.TryShowInterstitial(_socialAdapter)
+                    _adverts.TryShowInterstitial()
                             .Then(() => StartLevel(CurrentLevel, false));
                 else
                     StartLevel(CurrentLevel, false);

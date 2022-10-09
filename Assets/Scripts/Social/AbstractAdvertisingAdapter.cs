@@ -6,6 +6,8 @@ namespace Assets.Scripts.Social.Adverts
 {
     public abstract class AbstractAdvertisingAdapter
     {
+        private AbstractSocialAdapter _socialAdapter;
+
         private Promise _interstitialPromise;
         private int _showInterstitialAfterLevelCounter;
 
@@ -22,22 +24,23 @@ namespace Assets.Scripts.Social.Adverts
             Game.Instance.LevelCompleted -= OnLevelComplete;
         }
 
-        public void Init()
+        public void Init(AbstractSocialAdapter socialAdapter)
         {
+            _socialAdapter = socialAdapter;
             _showInterstitialAfterLevelCounter = GameConstants.LevelsCountBetweenInterstitialShow;
             Game.Instance.LevelCompleted += OnLevelComplete;
         }
 
-        public Promise TryShowInterstitial(AbstractSocialAdapter social)
+        public Promise TryShowInterstitial()
         {
             Debug.Log($"[{Tag}] Try show Interstitial... ");
 
-            if (social.IsInited == false || NeedShowInterstitial == false)
+            if (_socialAdapter == null || _socialAdapter.IsInited == false || NeedShowInterstitial == false)
             {
                 Promise promise = new Promise();
                 promise.Resolve();
 
-                Debug.Log($"[{Tag}] Interstitial rejected: social adapetr inited = {social.IsInited}, need show interstitial = {NeedShowInterstitial}, show interstitial counter = {_showInterstitialAfterLevelCounter}");
+                Debug.Log($"[{Tag}] Interstitial rejected: social adapetr inited = {_socialAdapter.IsInited}, need show interstitial = {NeedShowInterstitial}, show interstitial counter = {_showInterstitialAfterLevelCounter}");
 
                 return promise;
             }
@@ -57,9 +60,9 @@ namespace Assets.Scripts.Social.Adverts
             }
         }
 
-        public void TryShowRewardedVideo(AbstractSocialAdapter social, Action onOpen, Action onRewarded, Action onClose, Action onError)
+        public void TryShowRewardedVideo(Action onOpen, Action onRewarded, Action onClose, Action onError)
         {
-            if (social.IsInited == false)
+            if (_socialAdapter == null || _socialAdapter.IsInited == false)
                 return;
 
             RevardedAdsOpened = onOpen;

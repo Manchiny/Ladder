@@ -26,14 +26,10 @@ namespace Assets.Scripts.UI
         {
             if (_checkEnergyDispose != null)
                 _checkEnergyDispose.Dispose();
-
-            Game.Localization.LanguageChanged -= SetText;
         }
 
         protected void Init(Stamina stamina)
         {
-            Game.Localization.LanguageChanged += SetText;
-
             SetText();
 
             new ScalePongAnimation(_releaseHandText.transform as RectTransform);
@@ -42,7 +38,7 @@ namespace Assets.Scripts.UI
             _checkEnergyDispose = _stamina.CurrentEnergy.ObserveEveryValueChanged(value => value.Value).Subscribe(OnStaminaValueChanged).AddTo(this);
         }
 
-        private void SetText()
+        protected override void SetText()
         {
             _releaseHandText.text = ReleaseHandLocalizationKey.Localize();
             _youAreTiredText.text = YouAreTiredLocalizationKey.Localize();
