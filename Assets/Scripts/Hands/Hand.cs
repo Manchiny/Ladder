@@ -7,6 +7,7 @@ using static Assets.Scripts.Ladder.Ladder;
 
 namespace Assets.Scripts.Hands
 {
+    [RequireComponent(typeof(AudioSource))]
     public class Hand : MonoBehaviour
     {
         [SerializeField] private Animator _animator;
@@ -30,9 +31,15 @@ namespace Assets.Scripts.Hands
         public LadderSide Side { get; private set; }
         public bool IsFalling { get; private set; }
         public LadderStep LastTakedStep { get; private set; }
+        public AudioSource AudioSource { get; private set; }
 
         public bool CanMove => _isProcess == false && IsFalling == false;
         public float GetHeight => transform.position.y;
+
+        private void Awake()
+        {
+            AudioSource = GetComponent<AudioSource>();   
+        }
 
         private void Start()
         {
@@ -162,6 +169,8 @@ namespace Assets.Scripts.Hands
         {
             _isProcess = false;
             IsFalling = true;
+
+            Game.Sound.PlayFailedSound(AudioSource);
             Failed?.Invoke(this);
         }
 

@@ -8,6 +8,7 @@ namespace Assets.Scripts
     public class UserData
     {
         public string SavedLocale;
+        public bool NeedSound;
 
         private Dictionary<BoostType, int> _boostsLevels = new Dictionary<BoostType, int>();
 

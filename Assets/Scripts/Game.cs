@@ -5,6 +5,7 @@ using Assets.Scripts.Levels;
 using Assets.Scripts.Localization;
 using Assets.Scripts.Social;
 using Assets.Scripts.Social.Adverts;
+using Assets.Scripts.Sound;
 using Assets.Scripts.UI;
 using System;
 using UniRx;
@@ -26,6 +27,8 @@ namespace Assets.Scripts
         [Space]
         [SerializeField] private Transform _backgroundObjectHolder;
         [SerializeField] private LocalizationDatabase _localizationDatabase;
+        [Space]
+        [SerializeField] private GameSound _gameSound;
 
         private float StaminaLowEnergyFactorToShowTiredWindow = 0.5f;
 
@@ -53,6 +56,7 @@ namespace Assets.Scripts
         public static Saver Saver => Instance._saver;
         public static UserInput UserInput => Instance._userInput;
         public static HandsMover Hands => Instance._hands;
+        public static GameSound Sound => Instance._gameSound;
 
         private void Awake()
         {
@@ -71,10 +75,10 @@ namespace Assets.Scripts
         private void Update()
         {
             if (Input.GetKeyUp(KeyCode.F1) == true)
-                ChangeLocale(Locale.EN);
+                SetSound(true);
 
             if (Input.GetKeyUp(KeyCode.F2) == true)
-                ChangeLocale(Locale.RU);
+                SetSound(false);
 
             if (Input.GetKeyUp(KeyCode.F3) == true)
                 SettingsWindow.Show();
@@ -111,6 +115,13 @@ namespace Assets.Scripts
             User.SavedLocale = GameLocalization.CurrentLocale;
         }
 
+        public void SetSound(bool needOn)
+        {
+            User.NeedSound = needOn;
+            _saver.Save(User);
+            _gameSound.SetSound(needOn);
+        }
+
         private void Init()
         {
             Utils.SetMainContainer(this);
@@ -130,6 +141,7 @@ namespace Assets.Scripts
             GameLocalization.LoadKeys(locale, _localizationDatabase);
 
             _levels.Init();
+            _gameSound.Init();
 
             var nextLevel = _levels.GetLevelConfiguration(_user.CurrentLevelId);
 

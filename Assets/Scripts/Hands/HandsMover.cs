@@ -17,8 +17,6 @@ namespace Assets.Scripts.Hands
 
         private const float FallingPerStepDuration = 0.2f;
 
-        private Hand _downHand;
-
         private IDisposable _moveDispose;
         private bool _isProcess;
 
@@ -29,6 +27,7 @@ namespace Assets.Scripts.Hands
         public event Action<LadderStep, Hand> Taked;
         public event Action Stopped;
 
+        public Hand DownHand { get; private set; }
         public Stamina Stamina { get; private set; }
 
         public bool IsFalling => _leftHand.IsFalling || _rightHand.IsFalling;
@@ -56,7 +55,7 @@ namespace Assets.Scripts.Hands
 
             AddSubscribes();
 
-            _downHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;
+            DownHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;
         }
 
         public void TryMove()
@@ -69,7 +68,7 @@ namespace Assets.Scripts.Hands
                         return;
 
                     ValidateDownHand();
-                    _downHand.TryMove(_ladder.NextFreeStep(GetUpperHand().LastTakedStep));
+                    DownHand.TryMove(_ladder.NextFreeStep(GetUpperHand().LastTakedStep));
                 });
             }
         }
@@ -95,7 +94,7 @@ namespace Assets.Scripts.Hands
             ValidateDownHand();
             Hand upperHand = GetUpperHand();
 
-            LadderStep downStep = _ladder.GetNearestStep(_downHand.GetHeight, _downHand.LastTakedStep.Id);
+            LadderStep downStep = _ladder.GetNearestStep(DownHand.GetHeight, DownHand.LastTakedStep.Id);
 
             if (downStep != null)
             {
@@ -107,9 +106,9 @@ namespace Assets.Scripts.Hands
                     return;
                 }
 
-                if (downStep.CanBeTaked(_downHand.Side) && upperStep.CanBeTaked(upperHand.Side))
+                if (downStep.CanBeTaked(DownHand.Side) && upperStep.CanBeTaked(upperHand.Side))
                     Catch(upperHand, downStep, upperStep);
-                else if (downStep.CanBeTaked(upperHand.Side) && upperStep.CanBeTaked(_downHand.Side))
+                else if (downStep.CanBeTaked(upperHand.Side) && upperStep.CanBeTaked(DownHand.Side))
                     Catch(upperHand, upperStep, downStep);
 
                 ValidateDownHand();
@@ -135,7 +134,7 @@ namespace Assets.Scripts.Hands
 
         private void Catch(Hand upperHand, LadderStep downHandStep, LadderStep upperHandStep)
         {
-            _downHand.ForceTake(downHandStep);
+            DownHand.ForceTake(downHandStep);
             upperHand.ForceTake(upperHandStep);
 
             Catched?.Invoke();
@@ -222,7 +221,7 @@ namespace Assets.Scripts.Hands
             Loosed?.Invoke();
         }
 
-        private void ValidateDownHand() => _downHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;
-        private Hand GetUpperHand() => _downHand == _leftHand ? _rightHand : _leftHand;
+        private void ValidateDownHand() => DownHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;
+        private Hand GetUpperHand() => DownHand == _leftHand ? _rightHand : _leftHand;
     }
 }

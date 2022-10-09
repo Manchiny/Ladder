@@ -9,6 +9,7 @@ namespace Assets.Scripts
         private const string CurrentLevelKey = "CurrentLevel";
         private const string MoneyKey = "Money";
         private const string LocaleKey = "Locale";
+        private const string SoundKey = "Sound";
 
         private Dictionary<BoostType, string> _boostsKeys = new Dictionary<BoostType, string>
         {
@@ -20,6 +21,7 @@ namespace Assets.Scripts
         {
             PlayerPrefs.SetInt(CurrentLevelKey, data.CurrentLevelId);
             PlayerPrefs.SetInt(MoneyKey, data.Money);
+            PlayerPrefs.SetInt(SoundKey, BoolToInt(data.NeedSound));
 
             if (data.SavedLocale.IsNullOrEmpty() == false)
                 PlayerPrefs.SetString(LocaleKey, data.SavedLocale);
@@ -33,6 +35,7 @@ namespace Assets.Scripts
             UserData data = new UserData(GetCurrentLevel(), GetMoney());
             data.WriteBoostsData(GetBoostsData());
             data.SavedLocale = GetSavedLocale();
+            data.NeedSound = GetNeedSound();
 
             return data;
         }
@@ -53,6 +56,14 @@ namespace Assets.Scripts
         public int GetCurrentLevel() => PlayerPrefs.GetInt(CurrentLevelKey);
         public int GetMoney() => PlayerPrefs.GetInt(MoneyKey);
         public string GetSavedLocale() => PlayerPrefs.HasKey(LocaleKey) ? PlayerPrefs.GetString(LocaleKey) : null;
+
+        public bool GetNeedSound()
+        {
+            if (PlayerPrefs.HasKey(SoundKey))
+                return IntToBool(PlayerPrefs.GetInt(SoundKey));
+
+            return true;
+        }
 
         public int GetLastSavedBoostLevel(BoostType type)
         {
@@ -103,6 +114,9 @@ namespace Assets.Scripts
 
             return null;
         }
+
+        private int BoolToInt(bool value) => value == true ? 1 : 0;
+        private bool IntToBool(int value) => value == 1 ? true : false;
     }
 }
 

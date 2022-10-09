@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 5764521479242231335}
   - component: {fileID: 5764521479242231332}
   - component: {fileID: 5764521479242231334}
+  - component: {fileID: 6245360937435694104}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -239,6 +240,7 @@ MonoBehaviour:
   _boostsDatabase: {fileID: 11400000, guid: 1aea61563fb04564c9c085ff3daa1d29, type: 2}
   _backgroundObjectHolder: {fileID: 0}
   _localizationDatabase: {fileID: 11400000, guid: dd178293ca60d5949a149655109d06fb, type: 2}
+  _gameSound: {fileID: 6245360937435694104}
 --- !u!114 &5764521479242231332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +270,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _falling: {fileID: 0}
   _konfetti: {fileID: 0}
+--- !u!114 &6245360937435694104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5764521479242231329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 950e844a32d7bc74ba8513746534d043, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _takeSound: {fileID: 8300000, guid: 23214e2554d0e164d8a92b8f3c524382, type: 3}
+  _failSound: {fileID: 0}
 --- !u!1001 &1229232363673924814
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -298,6 +314,14 @@ PrefabInstance:
     - target: {fileID: 6841159063793146896, guid: dff6497f4e503ba48b10f6cd181ca64b, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6841159063793146896, guid: dff6497f4e503ba48b10f6cd181ca64b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6841159063793146896, guid: dff6497f4e503ba48b10f6cd181ca64b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6841159063793146896, guid: dff6497f4e503ba48b10f6cd181ca64b, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -398,6 +422,10 @@ PrefabInstance:
     - target: {fileID: 6841159063925758474, guid: dff6497f4e503ba48b10f6cd181ca64b, type: 3}
       propertyPath: m_Name
       value: HUD
+      objectReference: {fileID: 0}
+    - target: {fileID: 6841159064117548810, guid: dff6497f4e503ba48b10f6cd181ca64b, type: 3}
+      propertyPath: m_Spacing
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 6841159064117548812, guid: dff6497f4e503ba48b10f6cd181ca64b, type: 3}
       propertyPath: m_SizeDelta.x

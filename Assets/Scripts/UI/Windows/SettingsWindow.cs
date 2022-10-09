@@ -7,6 +7,7 @@ namespace Assets.Scripts.UI
     public class SettingsWindow : AbstractWindow
     {
         [SerializeField] private TextMeshProUGUI _titleText;
+        [SerializeField] private TextMeshProUGUI _soundText;
         [Space]
         [SerializeField] private TextMeshProUGUI _languageSettingsText;
         [SerializeField] private RectTransform _languageButtonContainer;
