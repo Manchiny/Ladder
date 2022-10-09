@@ -15,10 +15,11 @@ namespace Assets.Scripts.UI
         private const string LanguageLocalizationKey = "language";
         private const string TitleLocalizationKey = "settings";
 
-        public override string LockKey => "SettingsWindow";
-
         private UserInput _userInput;
         private bool _userInputActive;
+
+        public override string LockKey => "SettingsWindow";
+        protected override bool NeedCloseOnOutOfClick => true;
 
         public static SettingsWindow Show() =>
                        Game.Windows.ScreenChange<SettingsWindow>(false, w => w.Init());

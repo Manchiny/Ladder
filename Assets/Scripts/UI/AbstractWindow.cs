@@ -17,10 +17,14 @@ namespace Assets.Scripts.UI
         protected RectTransform Content;
 
         private Tween _showHideAnimation;
+        private bool _isHide;
 
         public abstract string LockKey { get; }
+
         public bool AnimatedClose { get; protected set; } = false;
         public bool NeedHideHudOnShow { get; protected set; } = false;
+
+        protected virtual bool NeedCloseOnOutOfClick => false;
 
         public bool IsOpening { get; private set; } = false;
         public bool IsClosing { get; private set; } = false;
@@ -38,7 +42,11 @@ namespace Assets.Scripts.UI
         {
             OnStart();
             IsOpening = true;
+
             Game.Localization.LanguageChanged += SetText;
+
+            if(NeedCloseOnOutOfClick)
+                Game.UserInput.Touched += OnOutOfClick;
         }
 
         public virtual void Close()
@@ -48,7 +56,11 @@ namespace Assets.Scripts.UI
 
             IsClosing = true;
 
+            if (NeedCloseOnOutOfClick)
+                Game.UserInput.Touched -= OnOutOfClick;
+
             Game.Localization.LanguageChanged -= SetText;
+
 
             if (AnimatedClose == true)
                 PlayCloseAnimation()
@@ -66,6 +78,11 @@ namespace Assets.Scripts.UI
 
         public void Unhide()
         {
+            if (_isHide==false)
+                return;
+
+            _isHide = false;
+
             if (_showHideAnimation != null && _showHideAnimation.active)
             {
                 _showHideAnimation.Kill();
@@ -87,6 +104,11 @@ namespace Assets.Scripts.UI
 
         public void ForceHide()
         {
+            if (_isHide)
+                return;
+
+            _isHide = true;
+
             if (_showHideAnimation != null && _showHideAnimation.active)
             {
                 _showHideAnimation.Kill();
@@ -125,5 +147,11 @@ namespace Assets.Scripts.UI
         protected virtual void OnClose() { }
         protected virtual void OnHide() { }
         protected virtual void OnUnhide() { }
+
+        private void OnOutOfClick()
+        {
+            if(NeedCloseOnOutOfClick && _isHide == false)
+                Close();
+        }
     }
 }
