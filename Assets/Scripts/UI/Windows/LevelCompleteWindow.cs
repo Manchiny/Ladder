@@ -14,7 +14,6 @@ namespace Assets.Scripts.UI
         [SerializeField] private List<RectTransform> _stars;
         [Space]
         [SerializeField] private BasicButton _continueButton;
-     //   [SerializeField] private TextMeshProUGUI _continueButtonText;
 
         public override string LockKey => "LevelCompleteWindow";
 

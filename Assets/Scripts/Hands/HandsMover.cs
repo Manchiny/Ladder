@@ -34,7 +34,6 @@ namespace Assets.Scripts.Hands
         public float GetAverageValue => (_leftHand.GetHeight + _rightHand.GetHeight) / 2f;
         public bool CanMove => _leftHand.CanMove && _rightHand.CanMove;
 
-
         private void OnDisable()
         {
             RemoveSubscribes();
@@ -131,6 +130,8 @@ namespace Assets.Scripts.Hands
 
             Failed?.Invoke();
         }
+
+        public Hand GetAnotherHand(Hand hand) => hand == _rightHand ? _leftHand : _rightHand;
 
         private void Catch(Hand upperHand, LadderStep downHandStep, LadderStep upperHandStep)
         {
