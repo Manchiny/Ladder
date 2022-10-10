@@ -16,11 +16,13 @@ namespace Assets.Scripts.UI
         public HUD HUD => _hud;
         private AbstractWindow CurrentWindow => _windows.Count > 0 ? _windows.Peek() : null;
 
-
         public T ScreenChange<T>(bool closeAllOther = true, Action<T> action = null) where T : AbstractWindow
         {
-            if (CurrentWindow != null && CurrentWindow is T)
+            if (CurrentWindow != null && CurrentWindow is T && CurrentWindow.IsClosing == false)
+            {
+                Debug.Log($"WindowsConntroller: rejected open window {CurrentWindow.LockKey}");
                 return CurrentWindow as T;
+            }
 
             T window = null;
 
@@ -31,7 +33,6 @@ namespace Assets.Scripts.UI
                     int counter = _windows.Count;
                     while (counter > 0)
                     {
-                        Debug.Log($"count: {_windows.Count}");
                         CloseCurrentWindow();
                         counter--;
                     }

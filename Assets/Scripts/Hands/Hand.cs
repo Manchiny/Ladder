@@ -20,6 +20,7 @@ namespace Assets.Scripts.Hands
 
         private bool _isProcess;
         private Tween _fallingTween;
+        private Promise _forceTakePromise;
 
         private HandsAnimations _animations;
         private Vector3 _defaultPosition;
@@ -69,6 +70,8 @@ namespace Assets.Scripts.Hands
 
         public void FallDown(float duration)
         {
+            Debug.Log($"Hand {Side} force fail");
+
             IsFalling = true;
             _isProcess = false;
 
@@ -96,13 +99,19 @@ namespace Assets.Scripts.Hands
             return true;
         }
 
-        public bool ForceTake(LadderStep step)
+        public Promise ForceTake(LadderStep step)
         {
-            if (_isProcess)
-                return false;
+            Debug.Log($"Hand {Side} try catch. ForceTakePromise exist: {_forceTakePromise != null}, IsProcess = {_isProcess}, IsFalling = {IsFalling}");
+            if(_forceTakePromise != null)
+                Debug.Log($"Hand {Side} ForceTakePromise  state: {_forceTakePromise.CurState}");
+
+            if (_forceTakePromise != null)
+                return _forceTakePromise;
 
             _isProcess = true;
             IsFalling = false;
+
+            _forceTakePromise = new Promise();
 
             _animations.PlayClasp();
 
@@ -114,7 +123,7 @@ namespace Assets.Scripts.Hands
                  .SetEase(Ease.Linear)
                  .OnComplete(() => Take(step));
 
-            return true;
+            return _forceTakePromise;
         }
 
         private void Loose()
@@ -167,8 +176,8 @@ namespace Assets.Scripts.Hands
 
         private void FailTake()
         {
-            _isProcess = false;
             IsFalling = true;
+            _isProcess = false;
 
             Game.Sound.PlayFailedSound(AudioSource);
             Failed?.Invoke(this);
@@ -204,11 +213,16 @@ namespace Assets.Scripts.Hands
                 LastTakedStep.Hand = null;
 
             LastTakedStep = step;
+            _fogEffect.Play();
+
+            if (_forceTakePromise != null)
+            {
+                _forceTakePromise.ResolveOnce();
+                _forceTakePromise = null;
+            }
 
             IsFalling = false;
             _isProcess = false;
-
-            _fogEffect.Play();
 
             Taked?.Invoke(step, this);
         }

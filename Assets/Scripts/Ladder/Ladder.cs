@@ -74,7 +74,7 @@ namespace Assets.Scripts.Ladder
             }
 
 
-            if (stepsToSearch.Count > 0)
+            if (stepsToSearch.Count > 1)
             {
                 stepsToSearch.OrderBy(step => (step.Height - height));
                 return stepsToSearch.First();

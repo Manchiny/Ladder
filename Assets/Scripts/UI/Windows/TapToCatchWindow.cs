@@ -33,18 +33,18 @@ namespace Assets.Scripts.UI
             _tapCounter = 0;
 
             _userInput.Touched -= OnStartTouch;
-            _hands.Catched -= Close;
             _hands.Loosed -= OnLoose;
         }
 
         protected void Init(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived)
         {
+            Debug.Log("Tap to catch window try init...");
             if (_window != null)
                 _window.Close();
 
             _window = this;
 
-            Debug.Log("Tap to catch window init...");
+            Debug.Log("Tap to catch window inited");
 
             SetText();
 
@@ -52,7 +52,6 @@ namespace Assets.Scripts.UI
 
             _hands = hands;
 
-            _hands.Catched += OnCatch;
             _hands.Loosed += OnLoose;
 
             _userInput = userInput;
@@ -68,14 +67,6 @@ namespace Assets.Scripts.UI
 
         private void OnLoose()
         {
-            Close();
-        }
-
-        private void OnCatch()
-        {
-            _cathced = true;
-
-            _tapCounter = 0;
             Close();
         }
 

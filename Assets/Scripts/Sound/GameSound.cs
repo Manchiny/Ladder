@@ -22,6 +22,8 @@ namespace Assets.Scripts.Sound
 
         private bool _backgroundPlaying;
 
+        public bool Enabled { get; private set; }
+
         private void OnDestroy()
         {
             Game.Hands.Taked -= PlayTakedSound;
@@ -52,6 +54,8 @@ namespace Assets.Scripts.Sound
 
         public void SetSound(bool needActivate)
         {
+            Enabled = needActivate;
+
             AudioListener.pause = !needActivate;
             AudioListener.volume = needActivate ? 1 : 0;
         }

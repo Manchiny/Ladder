@@ -231,13 +231,16 @@ namespace Assets.Scripts
 
         private void OnFail()
         {
+            Debug.Log("Game: on fail");
             _effects.PlayFallingEffect();
 
-            TapToCatchWindow.Show(_userInput, _hands, OnEnoughTaps);
+            AbstractWindow window = null;
+            window = TapToCatchWindow.Show(_userInput, _hands, OnEnoughTaps);
 
             void OnEnoughTaps()
             {
-                _hands.TryCatch();
+                if(_hands.TryCatch())
+                    window?.Close();
             }
         }
 

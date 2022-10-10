@@ -7,7 +7,7 @@ namespace Assets.Scripts.UI
     public class SettingsWindow : AbstractWindow
     {
         [SerializeField] private TextMeshProUGUI _titleText;
-        [SerializeField] private TextMeshProUGUI _soundText;
+        [SerializeField] private SliderParametrPanel _soundPanlel;
         [Space]
         [SerializeField] private TextMeshProUGUI _languageSettingsText;
         [SerializeField] private RectTransform _languageButtonContainer;
@@ -15,6 +15,7 @@ namespace Assets.Scripts.UI
 
         private const string LanguageLocalizationKey = "language";
         private const string TitleLocalizationKey = "settings";
+        private const string SoundLocalizationKey = "sound";
 
         private UserInput _userInput;
         private bool _userInputActive;
@@ -41,6 +42,8 @@ namespace Assets.Scripts.UI
                 ChangeLanguageButton button = Instantiate(_languageButtonPrefab, _languageButtonContainer);
                 button.Init(lang);
             }
+
+            _soundPanlel.Init(Game.Sound.Enabled, SoundLocalizationKey.Localize(), OnSoundSliderClicked);
         }
 
         protected override void OnClose()
@@ -52,6 +55,13 @@ namespace Assets.Scripts.UI
         {
             _languageSettingsText.text = LanguageLocalizationKey.Localize() + ":";
             _titleText.text = TitleLocalizationKey.Localize();
+
+            _soundPanlel.SetText(SoundLocalizationKey);
+        }
+
+        private void OnSoundSliderClicked(bool enabled)
+        {
+            Game.Instance.SetSound(enabled);
         }
     }
 }

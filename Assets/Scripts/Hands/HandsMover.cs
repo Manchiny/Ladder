@@ -1,6 +1,7 @@
 using Assets.Scripts.Ladder;
 using RSG;
 using System;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 using static Assets.Scripts.Ladder.Ladder;
@@ -19,6 +20,7 @@ namespace Assets.Scripts.Hands
 
         private IDisposable _moveDispose;
         private bool _isProcess;
+        private Promise _catchingPromise;
 
         public event Action Failed;
         public event Action Loosed;
@@ -43,6 +45,9 @@ namespace Assets.Scripts.Hands
         {
             if (isReinit)
                 RemoveSubscribes();
+
+            //if (_catchingPromise != null)
+            //    _catchingPromise = null;
 
             if (Stamina == null)
                 Stamina = GetComponent<Stamina>();
@@ -83,10 +88,12 @@ namespace Assets.Scripts.Hands
             Stopped?.Invoke();
         }
 
-        public void TryCatch()
+        public bool TryCatch()
         {
+            Debug.Log($"Hands mover try catch: IsFalling = {IsFalling}, isProcess = {_isProcess}");
+
             if (IsFalling == false || _isProcess)
-                return;
+                return false;
 
             _isProcess = true;
 
@@ -95,6 +102,8 @@ namespace Assets.Scripts.Hands
 
             LadderStep downStep = _ladder.GetNearestStep(DownHand.GetHeight, DownHand.LastTakedStep.Id);
 
+            bool result = false;
+
             if (downStep != null)
             {
                 LadderStep upperStep = _ladder.GetStepById(downStep.Id + 1);
@@ -102,22 +111,32 @@ namespace Assets.Scripts.Hands
                 if (upperStep == null)
                 {
                     _isProcess = false;
-                    return;
+                    return false;
                 }
 
                 if (downStep.CanBeTaked(DownHand.Side) && upperStep.CanBeTaked(upperHand.Side))
-                    Catch(upperHand, downStep, upperStep);
-                else if (downStep.CanBeTaked(upperHand.Side) && upperStep.CanBeTaked(DownHand.Side))
-                    Catch(upperHand, upperStep, downStep);
+                {
+                    result = true;
 
-                ValidateDownHand();
+                    Catch(upperHand, downStep, upperStep)
+                        .Then(() => ValidateDownHand());
+                }
+                else if (downStep.CanBeTaked(upperHand.Side) && upperStep.CanBeTaked(DownHand.Side))
+                {
+                    result = true;
+
+                    Catch(upperHand, upperStep, downStep)
+                        .Then(() => ValidateDownHand());
+                }                
             }
 
             _isProcess = false;
+            return result;
         }
 
         public void ForceFail(LadderStep step)
         {
+            Debug.Log("Force fail: IsFalling: " + IsFalling);
             if (IsFalling)
                 return;
 
@@ -133,12 +152,25 @@ namespace Assets.Scripts.Hands
 
         public Hand GetAnotherHand(Hand hand) => hand == _rightHand ? _leftHand : _rightHand;
 
-        private void Catch(Hand upperHand, LadderStep downHandStep, LadderStep upperHandStep)
+        private Promise Catch(Hand upperHand, LadderStep downHandStep, LadderStep upperHandStep)
         {
-            DownHand.ForceTake(downHandStep);
-            upperHand.ForceTake(upperHandStep);
+            //if (_catchingPromise != null)
+            //    return _catchingPromise;
 
-            Catched?.Invoke();
+            _catchingPromise = new Promise();
+            List<IPromise> sequense = new();
+
+            sequense.Add(DownHand.ForceTake(downHandStep));
+            sequense.Add(upperHand.ForceTake(upperHandStep));
+
+            Promise.All(sequense)
+                .Then(() =>
+                {
+                    Catched?.Invoke();
+                    _catchingPromise.Resolve();
+                });
+
+            return _catchingPromise;
         }
 
         private void AddSubscribes()
@@ -189,6 +221,8 @@ namespace Assets.Scripts.Hands
 
         private void OnFail(Hand hand)
         {
+            Debug.Log("On fail: IsFalling: " + IsFalling);
+
             StopMovement();
 
             IPromise failAnimation = new Promise();

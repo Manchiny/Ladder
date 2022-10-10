@@ -51,16 +51,18 @@ namespace Assets.Scripts.UI
 
         public virtual void Close()
         {
+            IsOpening = false;
+
             if (IsClosing)
                 return;
 
             IsClosing = true;
+            Debug.Log(LockKey + " closing");
 
             if (NeedCloseOnOutOfClick)
                 Game.UserInput.Touched -= OnOutOfClick;
 
             Game.Localization.LanguageChanged -= SetText;
-
 
             if (AnimatedClose == true)
                 PlayCloseAnimation()
