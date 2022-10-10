@@ -154,9 +154,6 @@ namespace Assets.Scripts.Hands
 
         private Promise Catch(Hand upperHand, LadderStep downHandStep, LadderStep upperHandStep)
         {
-            //if (_catchingPromise != null)
-            //    return _catchingPromise;
-
             _catchingPromise = new Promise();
             List<IPromise> sequense = new();
 
