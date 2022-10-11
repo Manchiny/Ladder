@@ -11,18 +11,12 @@ namespace Assets.Scripts.Ladder
 
         private IDisposable _extraEnergExpendSubscribtion;
 
-        protected override void UpdateState(Ladder.LadderSide side, bool handEnter)
-        {
-            if (handEnter)
-                StartExtraExpendEnergy();
-            else if (Hand == null)
-                StopExtraExpendEnergy();
-        }
-
         protected override void OnHandSeted(Hand hand)
         {
             if (hand == null && _extraEnergExpendSubscribtion != null)
                 StopExtraExpendEnergy();
+            else if (hand != null)
+                StartExtraExpendEnergy();
         }
 
         private void StartExtraExpendEnergy()

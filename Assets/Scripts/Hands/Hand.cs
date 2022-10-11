@@ -165,6 +165,9 @@ namespace Assets.Scripts.Hands
         {
             Debug.Log($"Hand {Side} try take step {step.Id}");
 
+            if (LastTakedStep != null)
+                LastTakedStep.Hand = null;
+
             _animations.PlayClasp();
 
             if (step.CanBeTaked(Side))
@@ -226,9 +229,6 @@ namespace Assets.Scripts.Hands
 
         private void Take(LadderStep step)
         {
-            if (LastTakedStep != null)
-                LastTakedStep.Hand = null;
-
             LastTakedStep = step;
             _fogEffect.Play();
             

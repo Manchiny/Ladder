@@ -22,9 +22,7 @@ namespace Assets.Scripts.Ladder
                 if (value != _hand)
                 {
                     _hand = value;
-
-                    if (value != null)
-                        OnHandSeted(value);
+                    OnHandSeted(value);
                 }
             }
         }
