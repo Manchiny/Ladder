@@ -630,7 +630,7 @@ GameObject:
   - component: {fileID: 932309522}
   - component: {fileID: 932309521}
   m_Layer: 0
-  m_Name: Background
+  m_Name: Background_Gradient
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -25,7 +25,7 @@ namespace Assets.Scripts.Ladder
         {
             if (hand != null && _isSpikeActive)
             {
-                Game.Hands.ForceFail(this);
+                Game.Hands.ForceFail(this, hand);
             }
         }
 
@@ -35,14 +35,14 @@ namespace Assets.Scripts.Ladder
                 return;
 
             if (Hand != null)
-                Game.Hands.ForceFail(this);
+                Game.Hands.ForceFail(this, Hand);
 
             PlayShow()
                 .Then(() => Utils.WaitSeconds(ActiveStatePause))
                 .Then(() =>
                 {
                     if (Hand != null)
-                        Game.Hands.ForceFail(this);
+                        Game.Hands.ForceFail(this, Hand);
 
                     PlayHide();
                 })

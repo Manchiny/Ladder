@@ -20,6 +20,8 @@ namespace Assets.Scripts.Hands
 
         private bool _isProcess;
         private Tween _fallingTween;
+        private Tween _moveUpTween;
+
         private Promise _forceTakePromise;
 
         private HandsAnimations _animations;
@@ -39,7 +41,7 @@ namespace Assets.Scripts.Hands
 
         private void Awake()
         {
-            AudioSource = GetComponent<AudioSource>();   
+            AudioSource = GetComponent<AudioSource>();
         }
 
         private void Start()
@@ -71,6 +73,7 @@ namespace Assets.Scripts.Hands
         public void FallDown(float duration)
         {
             Debug.Log($"Hand {Side} force fail");
+            _moveUpTween?.Kill();
 
             IsFalling = true;
             _isProcess = false;
@@ -79,6 +82,9 @@ namespace Assets.Scripts.Hands
                 LastTakedStep.Hand = null;
 
             _animations.PlayRelease();
+
+            if (_fallingTween != null)
+                _fallingTween.Kill();
 
             _fallingTween = transform.DOMoveY(0, duration)
                              .SetLink(gameObject)
@@ -99,29 +105,34 @@ namespace Assets.Scripts.Hands
             return true;
         }
 
+        private Tween _forceTakeTween;
+
         public Promise ForceTake(LadderStep step)
         {
             Debug.Log($"Hand {Side} try catch. ForceTakePromise exist: {_forceTakePromise != null}, IsProcess = {_isProcess}, IsFalling = {IsFalling}");
-            if(_forceTakePromise != null)
-                Debug.Log($"Hand {Side} ForceTakePromise  state: {_forceTakePromise.CurState}");
+
+            _forceTakeTween?.Kill();
 
             if (_forceTakePromise != null)
-                return _forceTakePromise;
+            {
+                Debug.Log($"Hand {Side} ForceTakePromise rejected!  state: {_forceTakePromise.CurState}");
+                _forceTakePromise.Reject(null);
+            }
 
             _isProcess = true;
             IsFalling = false;
 
             _forceTakePromise = new Promise();
 
-            _animations.PlayClasp();
-
             if (_fallingTween != null)
                 _fallingTween.Kill();
 
-            transform.DOMoveY(step.Height, ForceMoveStepDuration)
-                 .SetLink(gameObject)
-                 .SetEase(Ease.Linear)
-                 .OnComplete(() => Take(step));
+            _animations.PlayClasp();
+
+            _forceTakeTween = transform.DOMoveY(step.Height, ForceMoveStepDuration)
+                   .SetLink(gameObject)
+                   .SetEase(Ease.Linear)
+                   .OnComplete(() => Take(step));
 
             return _forceTakePromise;
         }
@@ -136,20 +147,24 @@ namespace Assets.Scripts.Hands
 
         private void MoveUpStep(LadderStep step)
         {
+            Debug.Log($"Hand {Side} start Move up step {step.Id}");
+
             _isProcess = true;
             _animations.PlayRelease();
 
             if (LastTakedStep != null)
                 LastTakedStep.Hand = null;
 
-            transform.DOMoveY(step.Height, MoveUpDuration)
-                 .SetLink(gameObject)
-                 .SetEase(Ease.Linear)
-                 .OnComplete(() => TryTake(step));
+            _moveUpTween =  transform.DOMoveY(step.Height, MoveUpDuration)
+                                     .SetLink(gameObject)
+                                     .SetEase(Ease.Linear)
+                                     .OnComplete(() => TryTake(step));
         }
 
         private bool TryTake(LadderStep step)
         {
+            Debug.Log($"Hand {Side} try take step {step.Id}");
+
             _animations.PlayClasp();
 
             if (step.CanBeTaked(Side))
@@ -176,6 +191,8 @@ namespace Assets.Scripts.Hands
 
         private void FailTake()
         {
+            Debug.Log($"Hand {Side} fail take!");
+
             IsFalling = true;
             _isProcess = false;
 
@@ -214,7 +231,7 @@ namespace Assets.Scripts.Hands
 
             LastTakedStep = step;
             _fogEffect.Play();
-
+            
             if (_forceTakePromise != null)
             {
                 _forceTakePromise.ResolveOnce();

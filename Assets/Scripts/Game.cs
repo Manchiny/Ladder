@@ -48,11 +48,10 @@ namespace Assets.Scripts
 
         public static Game Instance { get; private set; }
 
-        public static GameLocalization Localization => Instance?._gameLocalization;
-
         public LevelConfiguration CurrentLevel { get; private set; }
         public ReactiveProperty<int> CurrentLevelId { get; private set; } = new ReactiveProperty<int>();
 
+        public static GameLocalization Localization => Instance?._gameLocalization;
         public static WindowsController Windows => Instance._windowsController;
         public static UserData User => Instance._user;
         public static Player Player => Instance._player;
@@ -91,13 +90,12 @@ namespace Assets.Scripts
                 Saver.RemoveAllData();
 #endif
 
-                if (_resolution.x != Screen.width || _resolution.y != Screen.height)
-                {
-                    _resolution.x = Screen.width;
-                    _resolution.y = Screen.height;
-                    ScreenResized?.Invoke();
-                }
-            
+            if (_resolution.x != Screen.width || _resolution.y != Screen.height)
+            {
+                _resolution.x = Screen.width;
+                _resolution.y = Screen.height;
+                ScreenResized?.Invoke();
+            }
         }
 
         private void Start()
@@ -256,7 +254,7 @@ namespace Assets.Scripts
 
             void OnEnoughTaps()
             {
-                if(_hands.TryCatch())
+                if (_hands.TryCatch())
                     window?.Close();
             }
         }
@@ -329,7 +327,7 @@ namespace Assets.Scripts
 
         private void OnInputTouch()
         {
-            if(UserInput.IsActive)
+            if (UserInput.IsActive)
                 _hands.TryMove();
         }
 

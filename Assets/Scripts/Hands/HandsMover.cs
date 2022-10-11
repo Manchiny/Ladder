@@ -20,6 +20,8 @@ namespace Assets.Scripts.Hands
 
         private IDisposable _moveDispose;
         private bool _isProcess;
+        private bool _isProcessFail;
+
         private Promise _catchingPromise;
 
         public event Action Failed;
@@ -27,7 +29,6 @@ namespace Assets.Scripts.Hands
         public event Action Completed;
         public event Action Catched;
         public event Action<LadderStep, Hand> Taked;
-        public event Action Stopped;
 
         public Hand DownHand { get; private set; }
         public Stamina Stamina { get; private set; }
@@ -60,6 +61,8 @@ namespace Assets.Scripts.Hands
             AddSubscribes();
 
             DownHand = _leftHand.GetHeight < _rightHand.GetHeight ? _leftHand : _rightHand;
+
+            _isProcessFail = false;
         }
 
         public void TryMove()
@@ -79,13 +82,13 @@ namespace Assets.Scripts.Hands
 
         public void StopMovement()
         {
+            Debug.Log("HandsMover stop movement");
+
             if (_moveDispose != null)
             {
                 _moveDispose.Dispose();
                 _moveDispose = null;
             }
-
-            Stopped?.Invoke();
         }
 
         public bool TryCatch()
@@ -127,18 +130,18 @@ namespace Assets.Scripts.Hands
 
                     Catch(upperHand, upperStep, downStep)
                         .Then(() => ValidateDownHand());
-                }                
+                }
             }
 
             _isProcess = false;
             return result;
         }
 
-        public void ForceFail(LadderStep step)
+        public void ForceFail(LadderStep step, Hand hand = null)
         {
-            Debug.Log("Force fail: IsFalling: " + IsFalling);
-            if (IsFalling)
-                return;
+            Debug.Log($"HandsMover Force fail {hand?.Side}: IsFalling: " + IsFalling);
+            //if (IsFalling)
+            //    return;
 
             StopMovement();
 
@@ -154,6 +157,8 @@ namespace Assets.Scripts.Hands
 
         private Promise Catch(Hand upperHand, LadderStep downHandStep, LadderStep upperHandStep)
         {
+            Debug.Log("HandsMover Catch");
+
             _catchingPromise = new Promise();
             List<IPromise> sequense = new();
 
@@ -218,7 +223,12 @@ namespace Assets.Scripts.Hands
 
         private void OnFail(Hand hand)
         {
-            Debug.Log("On fail: IsFalling: " + IsFalling);
+            if (_isProcessFail)
+                return;
+
+            _isProcessFail = true;
+
+            Debug.Log("HandsMover On fail: IsFalling: " + IsFalling);
 
             StopMovement();
 
@@ -238,6 +248,7 @@ namespace Assets.Scripts.Hands
                     _rightHand.FallDown(duration);
 
                     Failed?.Invoke();
+                    _isProcessFail = false;
                 });
         }
 
