@@ -26,8 +26,9 @@ namespace Assets.Scripts
         [SerializeField] private BoostsDatabase _boostsDatabase;
         [Space]
         [SerializeField] private Transform _backgroundObjectHolder;
-        [SerializeField] private LocalizationDatabase _localizationDatabase;
+        [SerializeField] private SpriteRenderer _background;
         [Space]
+        [SerializeField] private LocalizationDatabase _localizationDatabase;
         [SerializeField] private GameSound _gameSound;
 
         private float StaminaLowEnergyFactorToShowTiredWindow = 0.5f;
@@ -35,16 +36,19 @@ namespace Assets.Scripts
         private UserData _user;
         private Saver _saver;
         private Player _player;
+        private GameLocalization _gameLocalization;
+
+        private Vector2 _resolution;
 
         private AbstractSocialAdapter _socialAdapter;
         private AbstractAdvertisingAdapter _adverts;
 
         public event Action LevelCompleted;
+        public event Action ScreenResized;
 
         public static Game Instance { get; private set; }
 
-        public GameLocalization GameLocalization { get; internal set; }
-        public static GameLocalization Localization => Instance?.GameLocalization;
+        public static GameLocalization Localization => Instance?._gameLocalization;
 
         public LevelConfiguration CurrentLevel { get; private set; }
         public ReactiveProperty<int> CurrentLevelId { get; private set; } = new ReactiveProperty<int>();
@@ -71,9 +75,9 @@ namespace Assets.Scripts
             Destroy(this);
         }
 
-#if UNITY_EDITOR
         private void Update()
         {
+#if UNITY_EDITOR
             if (Input.GetKeyUp(KeyCode.F1) == true)
                 SetSound(true);
 
@@ -85,8 +89,16 @@ namespace Assets.Scripts
 
             if (Input.GetKeyUp(KeyCode.F4) == true)
                 Saver.RemoveAllData();
-        }
 #endif
+
+                if (_resolution.x != Screen.width || _resolution.y != Screen.height)
+                {
+                    _resolution.x = Screen.width;
+                    _resolution.y = Screen.height;
+                    ScreenResized?.Invoke();
+                }
+            
+        }
 
         private void Start()
         {
@@ -95,8 +107,10 @@ namespace Assets.Scripts
 
         private void OnApplicationFocus(bool focus)
         {
+#if !UNITY_EDITOR
             if (focus == false)
                 _saver.Save(_user);
+#endif
         }
 
         private void OnDisable()
@@ -111,7 +125,7 @@ namespace Assets.Scripts
             if (local == GameLocalization.CurrentLocale)
                 return;
 
-            GameLocalization.LoadKeys(local, _localizationDatabase);
+            _gameLocalization.LoadKeys(local, _localizationDatabase);
             User.SavedLocale = GameLocalization.CurrentLocale;
         }
 
@@ -124,6 +138,8 @@ namespace Assets.Scripts
 
         private void Init()
         {
+            _resolution = new Vector2(Screen.width, Screen.height);
+
             Utils.SetMainContainer(this);
             InitSocialAdapter();
 
@@ -131,14 +147,14 @@ namespace Assets.Scripts
             _user = _saver.LoadUserData();
             _player = new Player(_user);
 
-            GameLocalization = new GameLocalization();
+            _gameLocalization = new GameLocalization();
 
             string locale = _user.SavedLocale;
 
             if (locale.IsNullOrEmpty())
                 locale = GameLocalization.GetSystemLocaleByCapabilities();
 
-            GameLocalization.LoadKeys(locale, _localizationDatabase);
+            _gameLocalization.LoadKeys(locale, _localizationDatabase);
 
             _levels.Init();
             _gameSound.Init();
@@ -200,7 +216,8 @@ namespace Assets.Scripts
                 if (level.BackgroundObject != null)
                     Instantiate(level.BackgroundObject, _backgroundObjectHolder);
 
-                Camera.main.backgroundColor = level.BackgroundColor;
+                Camera.main.backgroundColor = level.CameraBackgroundColor;
+                _background.color = level.BackgroundColor;
             }
 
             _ladder.Init(level);

@@ -17,6 +17,7 @@ namespace Assets.Scripts.Levels
         [SerializeField] private List<LadderStepsChanse> _notDefaultLadderSteps;
         [Space]
         [SerializeField] Color _backgroundColor;
+        [SerializeField] Color _cameraBackgroundColor;
         [SerializeField] private LevelBackgroundObject _levelBackgroundObject;
 
         private const int MaxSummaryNonDefualtStepsChance = 100;
@@ -39,6 +40,7 @@ namespace Assets.Scripts.Levels
 
         public int StepsCount => _ladderStepsCount;
         public Color BackgroundColor => _backgroundColor;
+        public Color CameraBackgroundColor => _cameraBackgroundColor;
         public LevelBackgroundObject BackgroundObject => _levelBackgroundObject;
 
         private void Awake()

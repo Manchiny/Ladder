@@ -26,4 +26,5 @@ MonoBehaviour:
   - _stepType: 3
     _chanse: 20
   _backgroundColor: {r: 0.76862746, g: 1, b: 0.7490196, a: 1}
+  _cameraBackgroundColor: {r: 1, g: 1, b: 1, a: 1}
   _levelBackgroundObject: {fileID: 0}

@@ -240,6 +240,7 @@ MonoBehaviour:
   _effects: {fileID: 5764521479242231334}
   _boostsDatabase: {fileID: 11400000, guid: 1aea61563fb04564c9c085ff3daa1d29, type: 2}
   _backgroundObjectHolder: {fileID: 0}
+  _background: {fileID: 0}
   _localizationDatabase: {fileID: 11400000, guid: dd178293ca60d5949a149655109d06fb, type: 2}
   _gameSound: {fileID: 6245360937435694104}
 --- !u!114 &5764521479242231332
@@ -284,9 +285,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _defaultAudioSource: {fileID: 295269547}
+  _backgrounsAudioSource: {fileID: 0}
   _takeSound: {fileID: 8300000, guid: 23214e2554d0e164d8a92b8f3c524382, type: 3}
   _failSound: {fileID: 8300000, guid: 38df19adbdbe2ac4097115daee8dd91a, type: 3}
-  _buttonClick: {fileID: 0}
+  _looseSound: {fileID: 8300000, guid: 0642355ad78f9c74095eed6c43899bef, type: 3}
+  _fallingSound: {fileID: 8300000, guid: f4d4a048c2343a140b0f03d0f24a1bed, type: 3}
+  _buttonClick: {fileID: 8300000, guid: 301032b312568474c910adaf38594d9d, type: 3}
+  _congratsSound: {fileID: 8300000, guid: 275dc3e7dc62ff34889007b5f3589038, type: 3}
+  _backGroundSound: {fileID: 8300000, guid: d22384377df24f74e9e5ca3d5673b166, type: 3}
 --- !u!82 &295269547
 AudioSource:
   m_ObjectHideFlags: 0

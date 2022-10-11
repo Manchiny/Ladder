@@ -34,7 +34,7 @@ namespace Assets.Scripts.UI
             _locale = locale;
             _languageText.text = locale.Localize();
 
-            Game.Instance.GameLocalization.LanguageChanged += SetActive;
+            Game.Localization.LanguageChanged += SetActive;
 
             SetActive();
             _button.AddListener(OnButtonClick);
