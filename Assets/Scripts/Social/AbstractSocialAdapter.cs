@@ -32,7 +32,7 @@ namespace Assets.Scripts.Social
 
         protected abstract void InitSdk(Action onSuccessCallback);
         public abstract void ConnectProfileToSocial(Action onSucces, Action<string> onError);
-        public abstract bool IsAuthorized(); Authorization
+        public abstract bool IsAuthorized();
 
         private void OnSdkInited()
         {
