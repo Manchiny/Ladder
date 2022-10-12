@@ -13,6 +13,7 @@ namespace Assets.Scripts.UI
             [typeof(LevelCompleteWindow)] = "Windows/LevelCompleteWindow",
             [typeof(YouAreTiredWindow)] = "Windows/YouAreTiredWindow",
             [typeof(SettingsWindow)] = "Windows/SettingsWindow",
+            [typeof(LeaderboardWindow)] = "Windows/LeaderboardWindow"
         };
     }
 }

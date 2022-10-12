@@ -23,6 +23,8 @@ namespace Assets.Scripts.UI
         private bool _userInputActive;
 
         public override string LockKey => "SettingsWindow";
+        public override bool AnimatedClose => true;
+        public override bool NeedHideHudOnShow => true;
         protected override bool NeedCloseOnOutOfClick => true;
 
         public static SettingsWindow Show() =>
@@ -37,9 +39,6 @@ namespace Assets.Scripts.UI
             InitSocialButton();
 
             SetText();
-
-            AnimatedClose = true;
-            NeedHideHudOnShow = true;
 
             foreach (var lang in GameLocalization.AvailableLocals)
             {

@@ -4,7 +4,6 @@ using System;
 using TMPro;
 using UniRx;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
@@ -20,6 +19,7 @@ namespace Assets.Scripts.UI
         [SerializeField] private StaminaView _staminaView;
         [Space]
         [SerializeField] private BasicButton _settingsButton;
+        [SerializeField] private BasicButton _leaderboardButton;
 
         private const string LevelLocalizationKey = "level";
 
@@ -50,17 +50,23 @@ namespace Assets.Scripts.UI
             _settingsButton.RemoveListener(OnSettingsButtonClick);
         }
 
-        public void Init(HandsMover hands)
+        public void Init(HandsMover hands, bool isReinit)
         {
             _canvas.alpha = 0;
             _levelChangeDispose = Game.Instance.CurrentLevelId.ObserveEveryValueChanged(x => x.Value).Subscribe(OnLevelChanged).AddTo(this);
 
-            _settingsButton.AddListener(OnSettingsButtonClick);
+            _leaderboardButton.gameObject.SetActive(Game.Social != null && Game.Social.IsInited && Game.Social.IsAuthorized());
 
             SetMoneyText(Game.User.Money);
 
-            Game.User.MoneyChanged += OnMoneyChanged;
-            Game.Localization.LanguageChanged += OnLocalizationChanged;
+            if (isReinit == false)
+            {
+                _settingsButton.AddListener(OnSettingsButtonClick);
+                _leaderboardButton.AddListener(OnLeaderboardButtonClick);
+
+                Game.User.MoneyChanged += OnMoneyChanged;
+                Game.Localization.LanguageChanged += OnLocalizationChanged;
+            }
 
             _hands = hands;
             _staminaView.Init(_hands);
@@ -140,6 +146,12 @@ namespace Assets.Scripts.UI
         private void OnLocalizationChanged()
         {
             OnLevelChanged(Game.Instance.CurrentLevelId.Value + 1);
+        }
+
+        private void OnLeaderboardButtonClick()
+        {
+            if (Game.Social != null && Game.Social.IsAuthorized())
+                LeaderboardWindow.Show(Game.Social.GetLeaderboardData());
         }
     }
 }

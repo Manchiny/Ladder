@@ -220,7 +220,7 @@ namespace Assets.Scripts
             }
 
             _ladder.Init(level);
-            Windows.HUD.Init(_hands);
+            Windows.HUD.Init(_hands, isReinit);
 
             if (CurrentLevelId.Value == 0)
                 InitTutor(LevelStartWindow.Show(_userInput));
@@ -316,7 +316,7 @@ namespace Assets.Scripts
         private void RestartGame()
         {
             _ladder.Restart();
-            Windows.HUD.Init(Hands);
+            Windows.HUD.Init(Hands, true);
 
             LevelStartWindow.Show(_userInput);
         }

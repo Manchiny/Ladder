@@ -57,6 +57,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 6675eb44c5bbd0148a91b297393c625f, type: 3}
   - {fileID: 21300000, guid: 4cabac9444e813b4386f9d8617958a4d, type: 3}
   - {fileID: 21300000, guid: 06aacde49acbfba43838bd896d409c1b, type: 3}
+  - {fileID: 21300000, guid: d64b63f4b4ed14742899917a1c50a145, type: 3}
   - {fileID: 21300000, guid: 4e731a2c560cd5e45a26ba266fae5e14, type: 3}
   - {fileID: 21300000, guid: 20b14e8d3287f664191351be8bd39391, type: 3}
   - {fileID: 21300000, guid: 42c1920e8a44f6c45b79cc3cb44c832b, type: 3}
@@ -72,6 +73,7 @@ SpriteAtlas:
   - Circle_Sprite
   - UIBackground_2
   - basicBorder_3
+  - podium 1
   - MoneyBoostIcon
   - Star
   - SettingIcon

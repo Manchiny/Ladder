@@ -131,3 +131,9 @@ MonoBehaviour:
         \u041A"
     - _language: 10
       _value: CONNECT TO
+  - _key: leaderboard
+    _values:
+    - _language: 30
+      _value: "\u041B\u0418\u0414\u0415\u0420\u042B:"
+    - _language: 10
+      _value: 'LEADERS:'

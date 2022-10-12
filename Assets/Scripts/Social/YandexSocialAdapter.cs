@@ -1,22 +1,13 @@
 using Agava.YandexGames;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.Social
 {
     public class YandexSocialAdapter : AbstractSocialAdapter
     {
-        //[SerializeField]
-        //private Text _authorizationStatusText;
-
-        //[SerializeField]
-        //private Text _personalProfileDataPermissionStatusText;
-
-        //[SerializeField]
-        //private InputField _playerDataTextField;
-
-        public override string Tag => "YandexSDK";
+        public override string Tag => "[YandexSDK]";
 
         public override string Name => "Yandex";
 
@@ -55,37 +46,6 @@ namespace Assets.Scripts.Social
             });
         }
 
-        public void OnSetLeaderboardScoreButtonClick()
-        {
-            Leaderboard.SetScore("PlaytestBoard", UnityEngine.Random.Range(1, 100));
-        }
-
-        public void OnGetLeaderboardEntriesButtonClick()
-        {
-            Leaderboard.GetEntries("PlaytestBoard", (result) =>
-            {
-                Debug.Log($"My rank = {result.userRank}");
-                foreach (var entry in result.entries)
-                {
-                    string name = entry.player.publicName;
-                    if (string.IsNullOrEmpty(name))
-                        name = "Anonymous";
-                    Debug.Log(name + " " + entry.score);
-                }
-            });
-        }
-
-        public void OnGetLeaderboardPlayerEntryButtonClick()
-        {
-            Leaderboard.GetPlayerEntry("PlaytestBoard", (result) =>
-            {
-                if (result == null)
-                    Debug.Log("Player is not present in the leaderboard.");
-                else
-                    Debug.Log($"My rank = {result.rank}, score = {result.score}");
-            });
-        }
-
         //public void OnSetPlayerDataButtonClick()
         //{
         //    PlayerAccount.SetPlayerData(_playerDataTextField.text);
@@ -106,5 +66,52 @@ namespace Assets.Scripts.Social
         }
 
         public override bool IsAuthorized() => PlayerAccount.IsAuthorized;
+
+        protected override void SetLeaderboardValue(string leaderboardName, int value)
+        {
+            Leaderboard.SetScore(leaderboardName, value);
+        }
+
+        public override List<LeaderboardData> GetLeaderboardData()
+        {
+            List<LeaderboardData> data = new();
+
+            Leaderboard.GetEntries(LeaderBoardName, OnSucces, OnError, LeaderbourdMaxCount, LeaderbourdMaxCount, true);
+
+            void OnSucces(LeaderboardGetEntriesResponse result)
+            {
+                Debug.Log($"User rank = {result.userRank}");
+
+                foreach (var entry in result.entries)
+                {
+                    string name = entry.player.publicName;
+
+                    if (name.IsNullOrEmpty())
+                        name = "Anonymous";
+
+                    int score = entry.score;
+
+                    data.Add(new LeaderboardData(name, score));
+                }
+            }
+
+            void OnError(string error)
+            {
+                Debug.Log(Tag + ": error GetLeaderboardData - " + error);
+            }
+
+            return data;
+        }
+
+        protected void GetLeaderboardPlayerEntry()
+        {
+            Leaderboard.GetPlayerEntry("PlaytestBoard", (result) =>
+            {
+                if (result == null)
+                    Debug.Log("Player is not present in the leaderboard.");
+                else
+                    Debug.Log($"My rank = {result.rank}, score = {result.score}");
+            });
+        }
     }
 }

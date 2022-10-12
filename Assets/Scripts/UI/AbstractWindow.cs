@@ -21,8 +21,8 @@ namespace Assets.Scripts.UI
 
         public abstract string LockKey { get; }
 
-        public bool AnimatedClose { get; protected set; } = false;
-        public bool NeedHideHudOnShow { get; protected set; } = false;
+        public virtual bool AnimatedClose => false;
+        public virtual bool NeedHideHudOnShow => false;
 
         protected virtual bool NeedCloseOnOutOfClick => false;
 
