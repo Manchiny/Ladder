@@ -10,10 +10,11 @@ namespace Assets.Scripts.Social
 {
     public abstract class AbstractSocialAdapter
     {
-        public abstract string Tag { get; }
-        public bool IsInited { get; private set; }
-
         private Promise _initPromise;
+
+        public abstract string Tag { get; }
+        public abstract string Name { get; }
+        public bool IsInited { get; private set; }
 
         public Promise Init()
         {
@@ -30,6 +31,8 @@ namespace Assets.Scripts.Social
         }
 
         protected abstract void InitSdk(Action onSuccessCallback);
+        public abstract void ConnectProfileToSocial(Action onSucces, Action<string> onError);
+        public abstract bool IsAuthorized(); Authorization
 
         private void OnSdkInited()
         {

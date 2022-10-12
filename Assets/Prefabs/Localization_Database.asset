@@ -124,3 +124,10 @@ MonoBehaviour:
       _value: "\u0412\u042B\u041A\u041B."
     - _language: 10
       _value: OFF
+  - _key: connect_to
+    _values:
+    - _language: 30
+      _value: "\u041F\u041E\u0414\u041A\u041B\u042E\u0427\u0418\u0422\u042C\u0421\u042F
+        \u041A"
+    - _language: 10
+      _value: CONNECT TO

@@ -18,6 +18,8 @@ namespace Assets.Scripts.Social
 
         public override string Tag => "YandexSDK";
 
+        public override string Name => "Yandex";
+
         protected override void InitSdk(Action onSuccessCallback)
         {
 #if !UNITY_WEBGL || UNITY_EDITOR
@@ -26,10 +28,17 @@ namespace Assets.Scripts.Social
             YandexGamesSdk.Initialize(onSuccessCallback);
         }
 
-        public void OnAuthorizeButtonClick()
+        public override void ConnectProfileToSocial(Action onSucces, Action<string> onError)
         {
-            PlayerAccount.Authorize();
+            if(IsInited == false)
+            {
+                onError?.Invoke($"{Tag}: connect to social failed! SDK not inited;");
+                return;
+            }
+
+            PlayerAccount.Authorize(onSucces, onError);
         }
+
         public void OnRequestPersonalProfileDataPermissionButtonClick()
         {
             PlayerAccount.RequestPersonalProfileDataPermission();
@@ -95,5 +104,7 @@ namespace Assets.Scripts.Social
         {
             Debug.Log($"Environment = {JsonUtility.ToJson(YandexGamesSdk.Environment)}");
         }
+
+        public override bool IsAuthorized() => PlayerAccount.IsAuthorized;
     }
 }

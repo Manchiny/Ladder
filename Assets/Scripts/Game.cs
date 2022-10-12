@@ -60,6 +60,7 @@ namespace Assets.Scripts
         public static UserInput UserInput => Instance._userInput;
         public static HandsMover Hands => Instance._hands;
         public static GameSound Sound => Instance._gameSound;
+        public static AbstractSocialAdapter Social => Instance._socialAdapter;
 
         private void Awake()
         {

@@ -12,6 +12,8 @@ namespace Assets.Scripts.UI
         [SerializeField] private TextMeshProUGUI _languageSettingsText;
         [SerializeField] private RectTransform _languageButtonContainer;
         [SerializeField] private ChangeLanguageButton _languageButtonPrefab;
+        [Space]
+        [SerializeField] private BasicButton _connectToSocial;
 
         private const string LanguageLocalizationKey = "language";
         private const string TitleLocalizationKey = "settings";
@@ -31,6 +33,8 @@ namespace Assets.Scripts.UI
             _userInput = Game.UserInput;
             _userInputActive = _userInput.IsActive;
             _userInput.SetActive(false);
+
+            InitSocialButton();
 
             SetText();
 
@@ -62,6 +66,35 @@ namespace Assets.Scripts.UI
         private void OnSoundSliderClicked(bool enabled)
         {
             Game.Instance.SetSound(enabled);
+        }
+
+        private void InitSocialButton()
+        {
+            if(Game.Social != null)
+            {
+                if(Game.Social.IsInited && Game.Social.IsAuthorized() == false)
+                {
+                    _connectToSocial.gameObject.SetActive(true);
+                    _connectToSocial.AddListener(() => Game.Social.ConnectProfileToSocial(OnAuthorizationSuccess, OnAuthorizationError));
+
+                    _connectToSocial.Text = "connect_to".Localize() + $" {Game.Social.Name}"; 
+
+                    return;
+                }
+            }
+
+            _connectToSocial.gameObject.SetActive(false);
+        }
+
+        private void OnAuthorizationSuccess()
+        {
+            _connectToSocial.gameObject.SetActive(false);
+        }
+
+        private void OnAuthorizationError(string text)
+        {
+            _connectToSocial.gameObject.SetActive(false);
+            Debug.Log($"Error autorization: {text}");
         }
     }
 }
