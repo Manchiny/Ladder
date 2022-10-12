@@ -67,6 +67,8 @@ namespace Assets.Scripts.UI
                 Game.User.MoneyChanged += OnMoneyChanged;
                 Game.Localization.LanguageChanged += OnLocalizationChanged;
             }
+            else
+                OnLevelChanged(Game.Instance.CurrentLevelId.Value);
 
             _hands = hands;
             _staminaView.Init(_hands);
@@ -118,9 +120,9 @@ namespace Assets.Scripts.UI
             PlayMoneyPanelAnimation();
         }
 
-        private void SetMoneyText(int level)
+        private void SetMoneyText(int moneyCount)
         {
-            _moneyText.text = $"${level}";
+            _moneyText.text = $"${moneyCount}";
         }
 
         private void PlayMoneyPanelAnimation()
@@ -145,7 +147,7 @@ namespace Assets.Scripts.UI
 
         private void OnLocalizationChanged()
         {
-            OnLevelChanged(Game.Instance.CurrentLevelId.Value + 1);
+            OnLevelChanged(Game.Instance.CurrentLevelId.Value);
         }
 
         private void OnLeaderboardButtonClick()
