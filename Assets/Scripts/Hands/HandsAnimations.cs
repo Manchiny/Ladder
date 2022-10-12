@@ -18,6 +18,8 @@ namespace Assets.Scripts.Hands
 
         private Animator _animator;
 
+        private string _lastAnimationKey;
+
         public HandsAnimations(Animator animator)
         {
             _animator = animator;
@@ -32,8 +34,15 @@ namespace Assets.Scripts.Hands
 
         private void PlayAnimation(string key)
         {
+            if (_lastAnimationKey == key)
+                return;
+
+            _lastAnimationKey = key;
+
             _animator.StopPlayback();
             _animator.CrossFade(key, CrossFadeDuration);
+
+            Debug.Log("Start animation: " + key);
         }
 
         private Promise ReturnHand(Transform hand)

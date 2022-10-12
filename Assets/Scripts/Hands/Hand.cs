@@ -68,7 +68,7 @@ namespace Assets.Scripts.Hands
             IsFalling = false;
         }
 
-        public IPromise PlayFailAnimation() => _animations.PlayFail(transform);
+        public IPromise ReturnHandBack() => _animations.PlayFail(transform);
 
         public void FallDown(float duration)
         {

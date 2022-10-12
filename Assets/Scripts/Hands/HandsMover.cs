@@ -232,16 +232,16 @@ namespace Assets.Scripts.Hands
 
             StopMovement();
 
-            IPromise failAnimation = new Promise();
+            IPromise returnHandBack = new Promise();
 
             if (hand.Side == LadderSide.Left)
-                failAnimation = _leftHand.PlayFailAnimation();
+                returnHandBack = _leftHand.ReturnHandBack();
             else
-                failAnimation = _rightHand.PlayFailAnimation();
+                returnHandBack = _rightHand.ReturnHandBack();
 
             float duration = FallingDuration();
 
-            failAnimation
+            returnHandBack
                 .Then(() =>
                 {
                     _leftHand.FallDown(duration);
