@@ -71,7 +71,7 @@ namespace Assets.Scripts.UI
         {
             if(Game.Social != null)
             {
-                if(Game.Social.IsInited && Game.Social.IsAuthorized() == false)
+                if(Game.Social.IsInited && Game.Social.IsAuthorized == false)
                 {
                     _connectToSocial.gameObject.SetActive(true);
                     _connectToSocial.AddListener(() => Game.Social.ConnectProfileToSocial(OnAuthorizationSuccess, OnAuthorizationError));
@@ -89,6 +89,7 @@ namespace Assets.Scripts.UI
         {
             _connectToSocial.gameObject.SetActive(false);
             Game.Instance.SetSaver(Game.Social.GetSaver);
+            Game.Social.RequestPersonalProfileDataPermission();
         }
 
         private void OnAuthorizationError(string text)

@@ -1,4 +1,5 @@
 using Assets.Scripts.Hands;
+using Assets.Scripts.Social;
 using DG.Tweening;
 using System;
 using TMPro;
@@ -55,7 +56,7 @@ namespace Assets.Scripts.UI
             _canvas.alpha = 0;
             _levelChangeDispose = Game.Instance.CurrentLevelId.ObserveEveryValueChanged(x => x.Value).Subscribe(OnLevelChanged).AddTo(this);
 
-            _leaderboardButton.gameObject.SetActive(Game.Social != null && Game.Social.IsInited && Game.Social.IsAuthorized());
+            _leaderboardButton.gameObject.SetActive(Game.Social != null && Game.Social.IsInited && Game.Social.IsAuthorized);
 
             SetMoneyText(Game.User.Money);
 
@@ -152,8 +153,8 @@ namespace Assets.Scripts.UI
 
         private void OnLeaderboardButtonClick()
         {
-            if (Game.Social != null && Game.Social.IsAuthorized())
-                LeaderboardWindow.Show(Game.Social.GetLeaderboardData());
+            if (Game.Social != null && Game.Social.IsAuthorized)
+                LeaderboardWindow.Show(Game.Social.GetLeaderboardData(AbstractSocialAdapter.DefaultLeaderBoardName));
         }
     }
 }

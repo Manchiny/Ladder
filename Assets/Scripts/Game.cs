@@ -152,7 +152,7 @@ namespace Assets.Scripts
             Utils.SetMainContainer(this);
             InitSocialAdapter();
 
-            if (_socialAdapter != null && _socialAdapter.IsInited && _socialAdapter.IsAuthorized())
+            if (_socialAdapter != null && _socialAdapter.IsInited && _socialAdapter.IsAuthorized)
                 _saver = _socialAdapter.GetSaver;
             else
                 _saver = new DefaultSaver();

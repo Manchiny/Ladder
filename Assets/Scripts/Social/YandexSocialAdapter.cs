@@ -1,5 +1,6 @@
 using Agava.YandexGames;
 using Assets.Scripts.Saves;
+using RSG;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Assets.Scripts.Social
         public override string Tag => "[YandexSDK]";
         public override string Name => "Yandex";
         public override Saver GetSaver => new YandexSaver();
+        public override bool IsAuthorized => PlayerAccount.IsAuthorized;
 
         protected override void InitSdk(Action onSuccessCallback)
         {
@@ -19,6 +21,7 @@ namespace Assets.Scripts.Social
 #endif
             YandexGamesSdk.Initialize(onSuccessCallback);
         }
+
 
         public override void ConnectProfileToSocial(Action onSucces, Action<string> onError)
         {
@@ -31,18 +34,20 @@ namespace Assets.Scripts.Social
             PlayerAccount.Authorize(onSucces, onError);
         }
 
-        public void OnRequestPersonalProfileDataPermissionButtonClick()
+        public override void RequestPersonalProfileDataPermission()
         {
             PlayerAccount.RequestPersonalProfileDataPermission();
         }
 
-        public void OnGetProfileDataButtonClick()
+        public void GetProfileData()
         {
             PlayerAccount.GetProfileData((result) =>
             {
                 string name = result.publicName;
+
                 if (string.IsNullOrEmpty(name))
                     name = "Anonymous";
+
                 Debug.Log($"My id = {result.uniqueID}, name = {name}");
             });
         }
@@ -51,23 +56,17 @@ namespace Assets.Scripts.Social
         {
             Debug.Log($"DeviceType = {Device.Type}");
         }
+
         public void OnGetEnvironmentButtonClick()
         {
             Debug.Log($"Environment = {JsonUtility.ToJson(YandexGamesSdk.Environment)}");
         }
 
-        public override bool IsAuthorized() => PlayerAccount.IsAuthorized;
-
-        protected override void SetLeaderboardValue(string leaderboardName, int value)
-        {
-            Leaderboard.SetScore(leaderboardName, value);
-        }
-
-        public override List<LeaderboardData> GetLeaderboardData()
+        public override List<LeaderboardData> GetLeaderboardData(string leaderBoardName)
         {
             List<LeaderboardData> data = new();
 
-            Leaderboard.GetEntries(LeaderBoardName, OnSucces, OnError, LeaderbourdMaxCount, LeaderbourdMaxCount, true);
+            Leaderboard.GetEntries(leaderBoardName, OnSucces, OnError, LeaderbourdMaxCount, LeaderbourdMaxCount, true);
 
             void OnSucces(LeaderboardGetEntriesResponse result)
             {
@@ -94,15 +93,39 @@ namespace Assets.Scripts.Social
             return data;
         }
 
-        protected void GetLeaderboardPlayerEntry()
+        protected override void SetLeaderboardValue(string leaderboardName, int value)
         {
-            Leaderboard.GetPlayerEntry("PlaytestBoard", (result) =>
+            TryGetLeaderboardPlayerEntry(leaderboardName)
+                 .Then(scores =>
+                 {
+                     if (value > scores)
+                         Leaderboard.SetScore(leaderboardName, value);
+                 });
+        }
+
+        protected Promise<int> TryGetLeaderboardPlayerEntry(string leaderBoardName)
+        {
+            Promise<int> promise = new();
+
+            int scores = -1;
+
+            Leaderboard.GetPlayerEntry(leaderBoardName, OnSucces, OnError);
+
+            void OnSucces(LeaderboardEntryResponse responce)
             {
-                if (result == null)
-                    Debug.Log("Player is not present in the leaderboard.");
+                if (responce == null)
+                    promise.Resolve(scores);
                 else
-                    Debug.Log($"My rank = {result.rank}, score = {result.score}");
-            });
+                    promise.Resolve(responce.score);
+            }
+
+            void OnError(string error)
+            {
+                promise.Reject(null);
+                Debug.Log(Tag + $" can't get Leaderboard player entry: {error}");
+            }
+
+            return promise;
         }
     }
 }

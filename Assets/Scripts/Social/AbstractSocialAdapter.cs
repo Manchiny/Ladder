@@ -12,7 +12,7 @@ namespace Assets.Scripts.Social
 {
     public abstract class AbstractSocialAdapter
     {
-        protected const string LeaderBoardName = "LevelValue";
+        public const string DefaultLeaderBoardName = "LevelValue";
         protected const int LeaderbourdMaxCount = 20;
 
         private Promise _initPromise;
@@ -21,6 +21,7 @@ namespace Assets.Scripts.Social
         public abstract string Tag { get; }
         public abstract string Name { get; }
         public bool IsInited { get; private set; }
+        public abstract bool IsAuthorized { get; }
 
         public virtual Saver GetSaver => new DefaultSaver();
 
@@ -45,8 +46,8 @@ namespace Assets.Scripts.Social
         }
 
         public abstract void ConnectProfileToSocial(Action onSucces, Action<string> onError);
-        public abstract bool IsAuthorized();
-        public abstract List<LeaderboardData> GetLeaderboardData();
+        public abstract List<LeaderboardData> GetLeaderboardData(string leaderBoardName);
+        public abstract void RequestPersonalProfileDataPermission();
 
         protected abstract void InitSdk(Action onSuccessCallback);
         protected abstract void SetLeaderboardValue(string leaderboardName, int value);
@@ -63,7 +64,7 @@ namespace Assets.Scripts.Social
 
         private void OnLevelChanged(int level)
         {
-            SetLeaderboardValue(LeaderBoardName, level + 1);
+            SetLeaderboardValue(DefaultLeaderBoardName, level + 1);
         }
 
         public class LeaderboardData
