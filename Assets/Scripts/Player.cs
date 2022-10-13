@@ -12,11 +12,11 @@ namespace Assets.Scripts
         {
             _user = data;
 
-            foreach (var pair in data.BoostLevels)
+            foreach (var pair in data.BoostsData)
             {
-                if (pair.Value >= 0)
+                if (pair.Level >= 0)
                 {
-                    Boost boost = Game.BoostsDatabase.GetBoost(pair.Key);
+                    Boost boost = Game.BoostsDatabase.GetBoost(pair.Type);
 
                     if (boost != null)
                         _boosts.Add(boost);

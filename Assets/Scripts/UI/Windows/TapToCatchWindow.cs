@@ -20,7 +20,6 @@ namespace Assets.Scripts.UI
         private int _tapCounter;
 
         private float _lastClickTime;
-        private bool _cathced;
 
         private event Action _enoughTapsRecived;
 
@@ -39,6 +38,7 @@ namespace Assets.Scripts.UI
         protected void Init(UserInput userInput, HandsMover hands, Action onEnoughTapsRecived)
         {
             Debug.Log("Tap to catch window try init...");
+
             if (_window != null)
                 _window.Close();
 
@@ -72,9 +72,6 @@ namespace Assets.Scripts.UI
 
         private void OnStartTouch()
         {
-            if (_cathced)
-                return;
-
             if (_lastClickTime > 0)
             {
                 if ((Time.realtimeSinceStartup - _lastClickTime) < GameConstants.MaxSecondsBeetweenTaps)

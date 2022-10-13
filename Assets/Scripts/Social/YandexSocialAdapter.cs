@@ -1,4 +1,5 @@
 using Agava.YandexGames;
+using Assets.Scripts.Saves;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,8 +9,8 @@ namespace Assets.Scripts.Social
     public class YandexSocialAdapter : AbstractSocialAdapter
     {
         public override string Tag => "[YandexSDK]";
-
         public override string Name => "Yandex";
+        public override Saver GetSaver => new YandexSaver();
 
         protected override void InitSdk(Action onSuccessCallback)
         {
@@ -45,16 +46,6 @@ namespace Assets.Scripts.Social
                 Debug.Log($"My id = {result.uniqueID}, name = {name}");
             });
         }
-
-        //public void OnSetPlayerDataButtonClick()
-        //{
-        //    PlayerAccount.SetPlayerData(_playerDataTextField.text);
-        //}
-
-        //public void OnGetPlayerDataButtonClick()
-        //{
-        //    PlayerAccount.GetPlayerData((data) => _playerDataTextField.text = data);
-        //}
 
         public void OnGetDeviceTypeButtonClick()
         {

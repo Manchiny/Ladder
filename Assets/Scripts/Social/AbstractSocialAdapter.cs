@@ -1,5 +1,6 @@
 #pragma warning disable
 
+using Assets.Scripts.Saves;
 using RSG;
 using System;
 using System.Collections;
@@ -20,6 +21,8 @@ namespace Assets.Scripts.Social
         public abstract string Tag { get; }
         public abstract string Name { get; }
         public bool IsInited { get; private set; }
+
+        public virtual Saver GetSaver => new DefaultSaver();
 
         ~AbstractSocialAdapter()
         {

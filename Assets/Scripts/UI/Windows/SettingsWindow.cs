@@ -88,6 +88,7 @@ namespace Assets.Scripts.UI
         private void OnAuthorizationSuccess()
         {
             _connectToSocial.gameObject.SetActive(false);
+            Game.Instance.SetSaver(Game.Social.GetSaver);
         }
 
         private void OnAuthorizationError(string text)

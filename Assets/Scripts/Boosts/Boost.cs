@@ -64,9 +64,7 @@ namespace Assets.Scripts.Boosts
         }
 
         public int GetBoostLevel(UserData user) => user.GetBoostLevel(Type);
-        public void Save(Saver saver) => saver.SaveBoostLevel(Type, GetBoostLevel(Game.User));
         protected abstract float Calculate(float baseValue, float value);
-
     }
 
     [Serializable]

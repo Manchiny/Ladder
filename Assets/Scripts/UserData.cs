@@ -1,28 +1,73 @@
 using Assets.Scripts.Boosts;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using static Assets.Scripts.Boosts.Boost;
+using static Assets.Scripts.Saves.Saver;
 
 namespace Assets.Scripts
 {
     public class UserData
     {
-        public string SavedLocale;
-        public bool NeedSound;
+        private SavingData _data = new();
 
-        private Dictionary<BoostType, int> _boostsLevels = new Dictionary<BoostType, int>();
+        public UserData(SavingData data)
+        {
+            if (data != null)
+            {
+                _data = data;
+                SavedLocale = data.SavedLocale;
+                NeedSound = data.NeedSound;
+                BoostsData = data.BoostsData;
+                CurrentLevelId = data.CurrentLevelId;
+                Money = data.Money;
+            }
+        }
 
         public event Action<int> MoneyChanged;
 
-        public int CurrentLevelId { get; private set; }
-        public int Money { get; private set; }
+        public string SavedLocale 
+        { 
+            get => _data.SavedLocale;
+            set => _data.SavedLocale = value;
+        }
 
-        public IReadOnlyDictionary<BoostType, int> BoostLevels => _boostsLevels;
-
-        public UserData(int levelId, int money)
+        public bool NeedSound
         {
-            CurrentLevelId = levelId;
-            Money = money;
+            get => _data.NeedSound;
+            set => _data.NeedSound = value;
+        }
+
+        public List<BoostData> BoostsData
+        {
+            get => _data.BoostsData;
+            private set => _data.BoostsData = value;
+        }
+
+        public int CurrentLevelId
+        {
+            get => _data.CurrentLevelId;
+            private set => _data.CurrentLevelId = value;
+        }
+
+        public int Money
+        {
+            get => _data.Money;
+            private set => _data.Money = value;
+        }
+
+        public SavingData GetData()
+        {
+            SavingData data = new();
+
+            data.SavedLocale = SavedLocale;
+            data.NeedSound = NeedSound;
+            data.BoostsData = BoostsData;
+            data.CurrentLevelId= CurrentLevelId;
+            data.Money = Money;
+
+            return data;
         }
 
         public void AddMoney(int count)
@@ -34,6 +79,11 @@ namespace Assets.Scripts
             MoneyChanged?.Invoke(Money);
         }
 
+        public void SetCurrentLevelId(int id)
+        {
+            CurrentLevelId = id;
+        }
+
         public bool BuyBoost(Boost boost)
         {
             if (boost.TryGetNextLevelCost(out int cost))
@@ -43,12 +93,17 @@ namespace Assets.Scripts
                     Money -= cost;
                     MoneyChanged?.Invoke(Money);
 
-                    if (_boostsLevels.ContainsKey(boost.Type) == false)
-                        _boostsLevels.Add(boost.Type, 0);
+                    var data = BoostsData.Where(data => data.Type == boost.Type).FirstOrDefault();
 
-                    _boostsLevels[boost.Type]++;
+                    if (data == null)
+                    {
+                        data = new BoostData(boost.Type, 0);
+                        BoostsData.Add(data);
+                    }
 
-                    Game.Saver.Save(this);
+                    data.Level++;
+
+                    Game.Saver.Save(_data);
 
                     return true;
                 }
@@ -57,22 +112,20 @@ namespace Assets.Scripts
             return false;
         }
 
-        public void SetCurrentLevelId(int id)
-        {
-            CurrentLevelId = id;
-        }
-
-        public void WriteBoostsData(Dictionary<BoostType, int> boostsLevels)
-        {
-            _boostsLevels = boostsLevels;
-        }
-
         public int GetBoostLevel(BoostType type)
         {
-            if (_boostsLevels.ContainsKey(type))
-                return _boostsLevels[type];
+            var data = BoostsData.Where(data => data.Type == type).FirstOrDefault();
+
+            if (data != null)
+                return data.Level;
 
             return -1;
+        }
+
+        public void ShowData()
+        {
+            string data = JsonUtility.ToJson(_data);
+            Debug.Log(data);
         }
     }
 }

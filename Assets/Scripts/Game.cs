@@ -3,6 +3,7 @@ using Assets.Scripts.Hands;
 using Assets.Scripts.Ladder;
 using Assets.Scripts.Levels;
 using Assets.Scripts.Localization;
+using Assets.Scripts.Saves;
 using Assets.Scripts.Social;
 using Assets.Scripts.Social.Adverts;
 using Assets.Scripts.Sound;
@@ -79,10 +80,7 @@ namespace Assets.Scripts
         {
 #if UNITY_EDITOR
             if (Input.GetKeyUp(KeyCode.F1) == true)
-                SetSound(true);
-
-            if (Input.GetKeyUp(KeyCode.F2) == true)
-                SetSound(false);
+                User.ShowData();
 
             if (Input.GetKeyUp(KeyCode.F3) == true)
                 SettingsWindow.Show();
@@ -131,8 +129,20 @@ namespace Assets.Scripts
         public void SetSound(bool needOn)
         {
             User.NeedSound = needOn;
-            _saver.Save(User);
+            _saver.Save(User.GetData());
             _gameSound.SetSound(needOn);
+        }
+
+        public void SetSaver(Saver saver)
+        {
+            if (saver == null || saver.GetType() == _saver.GetType())
+                return;
+
+            if (_saver != null)
+                _saver.Save(User.GetData());
+
+            _saver = saver;
+            _saver.Save(User.GetData());
         }
 
         private void Init()
@@ -142,7 +152,11 @@ namespace Assets.Scripts
             Utils.SetMainContainer(this);
             InitSocialAdapter();
 
-            _saver = new Saver();
+            if (_socialAdapter != null && _socialAdapter.IsInited && _socialAdapter.IsAuthorized())
+                _saver = _socialAdapter.GetSaver;
+            else
+                _saver = new DefaultSaver();
+
             _user = _saver.LoadUserData();
             _player = new Player(_user);
 
@@ -273,7 +287,7 @@ namespace Assets.Scripts
         private void OnCatch()
         {
             _effects.StopFallingEffect();
-            Saver.Save(_user);
+            Saver.Save(_user.GetData());
         }
 
         private void OnLoose()
@@ -282,7 +296,7 @@ namespace Assets.Scripts
             _userInput.SetActive(false);
 
             _effects.StopFallingEffect();
-            Saver.Save(_user);
+            Saver.Save(_user.GetData());
 
             RestartGame();
         }
@@ -296,7 +310,7 @@ namespace Assets.Scripts
             CurrentLevel = _levels.GetLevelConfiguration(nextLevel);
 
             _user.SetCurrentLevelId(nextLevel);
-            _saver.Save(_user);
+            _saver.Save(_user.GetData());
 
             LevelCompleteWindow.Show(OnContinueButtonClick);
             _effects.PlayKonfettiEffect();
