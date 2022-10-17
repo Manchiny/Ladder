@@ -106,7 +106,7 @@ namespace Assets.Scripts
         {
 #if !UNITY_EDITOR
             if (focus == false)
-                _saver.Save(_user);
+                _saver.Save(User.GetData());
 #endif
         }
 
