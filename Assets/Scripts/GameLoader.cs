@@ -22,7 +22,6 @@ namespace Assets.Scripts
             if (_socialAdapter != null)
             {
                 _socialAdapter.gameObject.SetActive(true);
-
                 yield return _socialAdapter.Init();
             }
 

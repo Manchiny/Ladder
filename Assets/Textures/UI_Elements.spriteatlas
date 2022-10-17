@@ -60,6 +60,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: d64b63f4b4ed14742899917a1c50a145, type: 3}
   - {fileID: 21300000, guid: 4e731a2c560cd5e45a26ba266fae5e14, type: 3}
   - {fileID: 21300000, guid: 20b14e8d3287f664191351be8bd39391, type: 3}
+  - {fileID: 21300000, guid: b77ad6bd6997a24498293433236f54fe, type: 3}
   - {fileID: 21300000, guid: 42c1920e8a44f6c45b79cc3cb44c832b, type: 3}
   - {fileID: 21300000, guid: 098c7b4ee8c945149a3ae4a17124f442, type: 3}
   - {fileID: 21300000, guid: bfede5fe2382365428295299a6721a57, type: 3}
@@ -76,6 +77,7 @@ SpriteAtlas:
   - podium 1
   - MoneyBoostIcon
   - Star
+  - Loader_2
   - SettingIcon
   - UIBackground_1
   - banknots
