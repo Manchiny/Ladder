@@ -1044,6 +1044,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: HandRight
       objectReference: {fileID: 0}
+    - target: {fileID: 6841841392519647639, guid: d77ea2aaa1ac8934abb8bfeb48b97987, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6841841392519647639, guid: d77ea2aaa1ac8934abb8bfeb48b97987, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6841841392519647639, guid: d77ea2aaa1ac8934abb8bfeb48b97987, type: 3}
+      propertyPath: m_ReflectionProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6841841392519647639, guid: d77ea2aaa1ac8934abb8bfeb48b97987, type: 3}
+      propertyPath: m_SkinnedMotionVectors
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d77ea2aaa1ac8934abb8bfeb48b97987, type: 3}
 --- !u!1 &1218250325
@@ -1422,6 +1438,22 @@ PrefabInstance:
     - target: {fileID: 4801629616397610641, guid: d77ea2aaa1ac8934abb8bfeb48b97987, type: 3}
       propertyPath: m_Name
       value: HandLeft
+      objectReference: {fileID: 0}
+    - target: {fileID: 6841841392519647639, guid: d77ea2aaa1ac8934abb8bfeb48b97987, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6841841392519647639, guid: d77ea2aaa1ac8934abb8bfeb48b97987, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6841841392519647639, guid: d77ea2aaa1ac8934abb8bfeb48b97987, type: 3}
+      propertyPath: m_ReflectionProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6841841392519647639, guid: d77ea2aaa1ac8934abb8bfeb48b97987, type: 3}
+      propertyPath: m_SkinnedMotionVectors
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d77ea2aaa1ac8934abb8bfeb48b97987, type: 3}

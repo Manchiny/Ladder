@@ -12,7 +12,12 @@ namespace Assets.Scripts.Social
         public override string Tag => "[YandexSDK]";
         public override string Name => "Yandex";
         public override Saver GetSaver => new YandexSaver();
-        public override bool IsAuthorized => PlayerAccount.IsAuthorized;
+        public override bool IsAuthorized => IsInited && PlayerAccount.IsAuthorized;
+
+        public YandexSocialAdapter()
+        {
+            YandexGamesSdk.CallbackLogging = true;
+        }
 
         protected override void InitSdk(Action onSuccessCallback)
         {

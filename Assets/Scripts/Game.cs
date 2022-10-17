@@ -212,8 +212,8 @@ namespace Assets.Scripts
 #endif
             if (_socialAdapter != null)
             {
-                _socialAdapter.Init();
-                _adverts.Init(_socialAdapter);
+                _socialAdapter.Init()
+                    .Then(() => _adverts.Init(_socialAdapter));
             }
         }
 
