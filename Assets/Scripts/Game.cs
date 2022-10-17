@@ -8,7 +8,9 @@ using Assets.Scripts.Social;
 using Assets.Scripts.Social.Adverts;
 using Assets.Scripts.Sound;
 using Assets.Scripts.UI;
+using RSG;
 using System;
+using System.Linq;
 using UniRx;
 using UnityEngine;
 
@@ -106,7 +108,7 @@ namespace Assets.Scripts
         {
 #if !UNITY_EDITOR
             if (focus == false)
-                _saver.Save(User.GetData());
+                _saver?.Save(User.GetData());
 #endif
         }
 
@@ -149,8 +151,13 @@ namespace Assets.Scripts
         {
             _resolution = new Vector2(Screen.width, Screen.height);
 
+            _socialAdapter = FindObjectsOfType<AbstractSocialAdapter>().Where(adapter => adapter.IsInited).FirstOrDefault();
+
+            if (_socialAdapter != null)
+                _socialAdapter.AfterSceneLoaded();
+
             Utils.SetMainContainer(this);
-            InitSocialAdapter();
+            InitAdverts();
 
             if (_socialAdapter != null && _socialAdapter.IsInited && _socialAdapter.IsAuthorized)
                 _saver = _socialAdapter.GetSaver;
@@ -202,19 +209,15 @@ namespace Assets.Scripts
             CurrentLevelId.Dispose();
         }
 
-        private void InitSocialAdapter()
+        private void InitAdverts()
         {
 #if UNITY_WEBGL || UNITY_EDITOR
 #if YANDEX_GAMES
-            _socialAdapter = new YandexSocialAdapter();
             _adverts = new YandexAdvertisingAdapter();
 #endif
 #endif
-            if (_socialAdapter != null)
-            {
-                _socialAdapter.Init()
-                    .Then(() => _adverts.Init(_socialAdapter));
-            }
+            if (_socialAdapter != null && _adverts != null)
+                _adverts.Init(_socialAdapter);
         }
 
         private void StartLevel(LevelConfiguration level, bool isReinit)

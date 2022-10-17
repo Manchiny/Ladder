@@ -10,12 +10,11 @@ using UnityEngine;
 
 namespace Assets.Scripts.Social
 {
-    public abstract class AbstractSocialAdapter
+    public abstract class AbstractSocialAdapter : MonoBehaviour
     {
         public const string DefaultLeaderBoardName = "LevelValue";
         protected const int LeaderbourdMaxCount = 20;
 
-        private Promise _initPromise;
         private IDisposable _levelIdSubscriprion;
 
         public abstract string Tag { get; }
@@ -25,41 +24,37 @@ namespace Assets.Scripts.Social
 
         public virtual Saver GetSaver => new DefaultSaver();
 
-        ~AbstractSocialAdapter()
+        private void OnDestroy()
         {
             if (_levelIdSubscriprion != null)
                 _levelIdSubscriprion.Dispose();
         }
 
-        public Promise Init()
+        public IEnumerator Init()
         {
-            if (_initPromise != null && _initPromise.CurState == PromiseState.Pending)
-                return _initPromise;
-
             Debug.Log($"{Tag} adapter start initializing...");
 
-            _initPromise = new Promise();
+            DontDestroyOnLoad(gameObject);
 
-            InitSdk(OnSdkInited);
+            yield return InitSdk(OnSdkInited);
+        }
 
-            return _initPromise;
+        public void AfterSceneLoaded()
+        {
+            _levelIdSubscriprion = Game.Instance.CurrentLevelId.ObserveEveryValueChanged(x => x.Value).Subscribe(OnLevelChanged).AddTo(Game.Instance.gameObject);
         }
 
         public abstract void ConnectProfileToSocial(Action onSucces, Action<string> onError);
         public abstract List<LeaderboardData> GetLeaderboardData(string leaderBoardName);
         public abstract void RequestPersonalProfileDataPermission();
 
-        protected abstract void InitSdk(Action onSuccessCallback);
+        protected abstract IEnumerator InitSdk(Action onSuccessCallback);
         protected abstract void SetLeaderboardValue(string leaderboardName, int value);
 
         private void OnSdkInited()
         {
             IsInited = true;
             Debug.Log($"{Tag} adapter successful initialized.");
-
-            _levelIdSubscriprion = Game.Instance.CurrentLevelId.ObserveEveryValueChanged(x => x.Value).Subscribe(OnLevelChanged).AddTo(Game.Instance.gameObject);
-
-            _initPromise.ResolveOnce();
         }
 
         private void OnLevelChanged(int level)

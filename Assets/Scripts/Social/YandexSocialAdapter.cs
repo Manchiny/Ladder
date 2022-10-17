@@ -2,6 +2,7 @@ using Agava.YandexGames;
 using Assets.Scripts.Saves;
 using RSG;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,20 +14,18 @@ namespace Assets.Scripts.Social
         public override string Name => "Yandex";
         public override Saver GetSaver => new YandexSaver();
         public override bool IsAuthorized => IsInited && PlayerAccount.IsAuthorized;
-
-        public YandexSocialAdapter()
+ 
+        protected override IEnumerator InitSdk(Action onSuccessCallback)
         {
+#if YANDEX_GAMES && UNITY_EDITOR
+            yield break;
+#elif !UNITY_WEBGL || UNITY_EDITOR
+            yield break;
+#else
             YandexGamesSdk.CallbackLogging = true;
-        }
-
-        protected override void InitSdk(Action onSuccessCallback)
-        {
-#if !UNITY_WEBGL || UNITY_EDITOR
-            return;
+            yield return YandexGamesSdk.Initialize(onSuccessCallback);
 #endif
-            YandexGamesSdk.Initialize(onSuccessCallback);
         }
-
 
         public override void ConnectProfileToSocial(Action onSucces, Action<string> onError)
         {
