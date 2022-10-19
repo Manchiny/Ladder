@@ -40,7 +40,7 @@ namespace Assets.Scripts.Social.Adverts
                 Promise promise = new Promise();
                 promise.Resolve();
 
-                Debug.Log($"[{Tag}] Interstitial rejected: social adapetr inited = {_socialAdapter.IsInited}, need show interstitial = {NeedShowInterstitial}, show interstitial counter = {_showInterstitialAfterLevelCounter}");
+                Debug.Log($"[{Tag}] Interstitial rejected: social adapetr inited = {_socialAdapter?.IsInited}, need show interstitial = {NeedShowInterstitial}, show interstitial counter = {_showInterstitialAfterLevelCounter}");
 
                 return promise;
             }

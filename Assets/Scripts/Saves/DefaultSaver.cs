@@ -1,3 +1,4 @@
+using RSG;
 using System.Collections.Generic;
 using UnityEngine;
 using static Assets.Scripts.Boosts.Boost;
@@ -25,8 +26,10 @@ namespace Assets.Scripts.Saves
             Debug.Log("Player prefs removed!");
         }
 
-        protected override SavingData LoadData()
+        protected override Promise<SavingData> LoadData()
         {
+            Promise<SavingData> promise = new();
+
             SavingData data = new SavingData();
 
             data.Money = GetMoney();
@@ -35,7 +38,8 @@ namespace Assets.Scripts.Saves
             data.SavedLocale = GetSavedLocale();
             data.NeedSound = GetNeedSound();
 
-            return data;
+            promise.Resolve(data);
+            return promise;
         }
 
         protected override void WriteData(SavingData savingData)

@@ -1,3 +1,4 @@
+using RSG;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,14 +18,24 @@ namespace Assets.Scripts.Saves
             Debug.Log(Tag + ": save progress.");
         }
 
-        public UserData LoadUserData()
+        public Promise<UserData> LoadUserData()
         {
+            Promise<UserData> promie = new();
+
             Debug.Log(Tag + ": load progress.");
-            return new UserData(LoadData());
+
+            LoadData()
+                .Then(data =>
+                {
+                    UserData userData = new UserData(data);
+                    promie.Resolve(userData);
+                });
+
+            return promie;
         }
 
         protected abstract void WriteData(SavingData savingData);
-        protected abstract SavingData LoadData();
+        protected abstract Promise<SavingData> LoadData();
 
         [Serializable]
         public class SavingData

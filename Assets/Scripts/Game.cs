@@ -164,34 +164,38 @@ namespace Assets.Scripts
             else
                 _saver = new DefaultSaver();
 
-            _user = _saver.LoadUserData();
-            _player = new Player(_user);
+            _saver.LoadUserData()
+                .Then(data => _user = data)
+                .Then(_ =>
+                {
+                    _player = new Player(_user);
 
-            _gameLocalization = new GameLocalization();
+                    _gameLocalization = new GameLocalization();
 
-            string locale = _user.SavedLocale;
+                    string locale = _user.SavedLocale;
 
-            if (locale.IsNullOrEmpty())
-                locale = GameLocalization.GetSystemLocaleByCapabilities();
+                    if (locale.IsNullOrEmpty())
+                        locale = GameLocalization.GetSystemLocaleByCapabilities();
 
-            _gameLocalization.LoadKeys(locale, _localizationDatabase);
+                    _gameLocalization.LoadKeys(locale, _localizationDatabase);
 
-            _levels.Init();
-            _gameSound.Init();
+                    _levels.Init();
+                    _gameSound.Init();
 
-            var nextLevel = _levels.GetLevelConfiguration(_user.CurrentLevelId);
+                    var nextLevel = _levels.GetLevelConfiguration(_user.CurrentLevelId);
 
-            CurrentLevel = nextLevel;
-            StartLevel(CurrentLevel, false);
+                    CurrentLevel = nextLevel;
+                    StartLevel(CurrentLevel, false);
 
-            _hands.Failed += OnFail;
-            _hands.Catched += OnCatch;
-            _hands.Loosed += OnLoose;
-            _hands.Completed += OnLevelComplete;
-            _hands.Taked += OnStepTaked;
+                    _hands.Failed += OnFail;
+                    _hands.Catched += OnCatch;
+                    _hands.Loosed += OnLoose;
+                    _hands.Completed += OnLevelComplete;
+                    _hands.Taked += OnStepTaked;
 
-            _userInput.Touched += OnInputTouch;
-            _userInput.Untouched += OnInputUntouch;
+                    _userInput.Touched += OnInputTouch;
+                    _userInput.Untouched += OnInputUntouch;
+                });
         }
 
         private void RemoveSubscribes()

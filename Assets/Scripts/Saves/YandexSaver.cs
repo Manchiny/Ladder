@@ -1,4 +1,5 @@
 using Agava.YandexGames;
+using RSG;
 using UnityEngine;
 
 namespace Assets.Scripts.Saves
@@ -12,14 +13,27 @@ namespace Assets.Scripts.Saves
             Save(new SavingData());
         }
 
-        protected override SavingData LoadData()
+        protected override Promise<SavingData> LoadData()
         {
-            string dataString = "";
-            PlayerAccount.GetPlayerData((data) => dataString = data);
+            Promise<SavingData> promise = new();
 
-            SavingData userData = JsonUtility.FromJson<SavingData>(dataString);
+            PlayerAccount.GetPlayerData(OnSuccess, OnError);
+            return promise;
 
-            return userData;
+            void OnSuccess(string data)
+            {
+                string dataString = data;
+                SavingData userData = JsonUtility.FromJson<SavingData>(dataString);
+
+                promise.Resolve(userData);
+            }
+
+            void OnError(string error)
+            {
+                Debug.LogError(Tag + " get player data error: " + error);
+                SavingData data = new SavingData();
+                promise.Resolve(data);
+            }
         }
 
         protected override void WriteData(SavingData savingData)
