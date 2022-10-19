@@ -195,6 +195,8 @@ namespace Assets.Scripts
 
                     _userInput.Touched += OnInputTouch;
                     _userInput.Untouched += OnInputUntouch;
+
+                    Windows.HUD.HideLoader();
                 });
         }
 

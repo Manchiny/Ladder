@@ -21,6 +21,8 @@ namespace Assets.Scripts.UI
         [Space]
         [SerializeField] private BasicButton _settingsButton;
         [SerializeField] private BasicButton _leaderboardButton;
+        [Space]
+        [SerializeField] private GameObject _loader;
 
         private const string LevelLocalizationKey = "level";
 
@@ -108,6 +110,11 @@ namespace Assets.Scripts.UI
 
             floatingMoney.transform.position = Camera.main.WorldToScreenPoint(position);
             floatingMoney.Init(count);
+        }
+
+        public void HideLoader()
+        {
+            _loader.gameObject.SetActive(false);
         }
 
         private void OnLevelChanged(int level)
