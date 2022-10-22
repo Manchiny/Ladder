@@ -161,7 +161,7 @@ namespace Assets.Scripts.UI
         private void OnLeaderboardButtonClick()
         {
             if (Game.Social != null && Game.Social.IsAuthorized)
-                LeaderboardWindow.Show(Game.Social.GetLeaderboardData(AbstractSocialAdapter.DefaultLeaderBoardName));
+                LeaderboardWindow.Show();
         }
     }
 }

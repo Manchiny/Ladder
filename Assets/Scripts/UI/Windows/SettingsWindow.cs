@@ -59,6 +59,9 @@ namespace Assets.Scripts.UI
             _languageSettingsText.text = LanguageLocalizationKey.Localize() + ":";
             _titleText.text = TitleLocalizationKey.Localize();
 
+            if(_connectToSocial.gameObject.activeInHierarchy)
+                 _connectToSocial.Text = "connect_to".Localize() + $" {Game.Social.Name}";
+
             _soundPanlel.SetText(SoundLocalizationKey);
         }
 
@@ -71,12 +74,10 @@ namespace Assets.Scripts.UI
         {
             if(Game.Social != null)
             {
-                if(Game.Social.IsInited && Game.Social.IsAuthorized == false)
+                if(Game.Social.IsInited && Game.Social.IsAuthorized == false || Game.Social.IsInited && Game.Social.HasPersonalDataPermission == false)
                 {
                     _connectToSocial.gameObject.SetActive(true);
                     _connectToSocial.AddListener(() => Game.Social.ConnectProfileToSocial(OnAuthorizationSuccess, OnAuthorizationError));
-
-                    _connectToSocial.Text = "connect_to".Localize() + $" {Game.Social.Name}"; 
 
                     return;
                 }

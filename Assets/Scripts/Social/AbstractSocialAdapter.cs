@@ -21,6 +21,7 @@ namespace Assets.Scripts.Social
         public abstract string Name { get; }
         public bool IsInited { get; private set; }
         public abstract bool IsAuthorized { get; }
+        public abstract bool HasPersonalDataPermission { get; }
 
         public virtual Saver GetSaver => new DefaultSaver();
 
@@ -45,7 +46,7 @@ namespace Assets.Scripts.Social
         }
 
         public abstract void ConnectProfileToSocial(Action onSucces, Action<string> onError);
-        public abstract List<LeaderboardData> GetLeaderboardData(string leaderBoardName);
+        public abstract Promise<List<LeaderboardData>> GetLeaderboardData(string leaderBoardName);
         public abstract void RequestPersonalProfileDataPermission();
 
         protected abstract IEnumerator InitSdk(Action onSuccessCallback);

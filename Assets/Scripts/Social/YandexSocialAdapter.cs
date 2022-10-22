@@ -14,7 +14,8 @@ namespace Assets.Scripts.Social
         public override string Name => "Yandex";
         public override Saver GetSaver => new YandexSaver();
         public override bool IsAuthorized => IsInited && PlayerAccount.IsAuthorized;
- 
+        public override bool HasPersonalDataPermission => PlayerAccount.HasPersonalProfileDataPermission;
+
         protected override IEnumerator InitSdk(Action onSuccessCallback)
         {
 #if YANDEX_GAMES && UNITY_EDITOR
@@ -29,7 +30,7 @@ namespace Assets.Scripts.Social
 
         public override void ConnectProfileToSocial(Action onSucces, Action<string> onError)
         {
-            if(IsInited == false)
+            if (IsInited == false)
             {
                 onError?.Invoke($"{Tag}: connect to social failed! SDK not inited;");
                 return;
@@ -66,8 +67,9 @@ namespace Assets.Scripts.Social
             Debug.Log($"Environment = {JsonUtility.ToJson(YandexGamesSdk.Environment)}");
         }
 
-        public override List<LeaderboardData> GetLeaderboardData(string leaderBoardName)
+        public override Promise<List<LeaderboardData>> GetLeaderboardData(string leaderBoardName)
         {
+            Promise<List<LeaderboardData>> promise = new();
             List<LeaderboardData> data = new();
 
             Leaderboard.GetEntries(leaderBoardName, OnSucces, OnError, LeaderbourdMaxCount, LeaderbourdMaxCount, true);
@@ -87,24 +89,42 @@ namespace Assets.Scripts.Social
 
                     data.Add(new LeaderboardData(name, score));
                 }
+
+                promise.Resolve(data);
             }
 
             void OnError(string error)
             {
                 Debug.Log(Tag + ": error GetLeaderboardData - " + error);
+                promise.Resolve(data);
             }
 
-            return data;
+            return promise;
         }
 
         protected override void SetLeaderboardValue(string leaderboardName, int value)
         {
-            TryGetLeaderboardPlayerEntry(leaderboardName)
-                 .Then(scores =>
-                 {
-                     if (value > scores)
-                         Leaderboard.SetScore(leaderboardName, value);
-                 });
+            Leaderboard.SetScore(leaderboardName, value, OnSucces, OnError);
+            //TryGetLeaderboardPlayerEntry(leaderboardName)
+            //     .Then(scores =>
+            //     {
+            //         if (value > scores)
+            //             Leaderboard.SetScore(leaderboardName, value);
+            //     })
+            //     .Catch(_ =>
+            //     {
+            //         Leaderboard.SetScore(leaderboardName, value);
+            //     });
+
+            void OnSucces()
+            {
+                Debug.Log($"{Tag}: player's leaderboard data succesfully updated!");
+            }
+
+            void OnError(string error)
+            {
+                Debug.Log($"{Tag}: player's leaderboard data update failed - {error}");
+            }
         }
 
         protected Promise<int> TryGetLeaderboardPlayerEntry(string leaderBoardName)
