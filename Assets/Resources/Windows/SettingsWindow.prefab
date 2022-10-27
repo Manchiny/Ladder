@@ -951,6 +951,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7799018667017056640, guid: 8fbf520d18a7d0f47b896d35b4e9ed8b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 12.400024
+      objectReference: {fileID: 0}
     - target: {fileID: 8668842554543294777, guid: 8fbf520d18a7d0f47b896d35b4e9ed8b, type: 3}
       propertyPath: m_Name
       value: Button_Connect

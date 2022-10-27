@@ -69,7 +69,7 @@ namespace Assets.Scripts.UI
             if (_sliderAnimation != null)
                 _sliderAnimation.Kill();
 
-            _sliderAnimation = _slider.DOValue(value, duration);
+            _sliderAnimation = _slider.DOValue(value, duration).SetUpdate(true);
         }
     }
 }

@@ -134,7 +134,7 @@ namespace Assets.Scripts.UI
                     .Append(_rectTransform.DOMoveY(_rectTransform.position.y - CloseAnimationMoveDownDistance, CloseAnimationMoveDownDuration))
                     .Append(_rectTransform.DOMoveY(Screen.safeArea.height * 2f, CloseAnimationMoveUpDuration));
 
-            sequence.SetLink(gameObject);
+            sequence.SetLink(gameObject).SetUpdate(true);
 
             sequence.Play()
                 .OnComplete(() => promise.Resolve());
