@@ -14,6 +14,6 @@ namespace Assets.Scripts
         public const int BaseMoneyBonusForStep = 1;
         public const float HandDafaultXPosition = 0.6f;
 
-        public const int LevelsCountBetweenInterstitialShow = 3;
+        public const int LevelsCountBetweenInterstitialShow = 0;
     }
 }
